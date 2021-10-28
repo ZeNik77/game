@@ -16,15 +16,29 @@ class Player(pygame.sprite.Sprite):
     def __init__(self):
         pygame.sprite.Sprite.__init__(self)
         img_dir = path.join(path.dirname(__file__), 'Assets')
-        self.image = pygame.image.load(path.join(img_dir, 'sprite2.png')).convert()
+        self.image = pygame.image.load(path.join(img_dir, 'sprite-temp.png')).convert()
         self.image.set_colorkey((255, 255, 255))
+        #self.image_right = pygame.image.load(path.join(img_dir, 'sprite2.png')).convert()
+        #self.image_right.set_colorkey((255, 255, 255))
         self.rect = self.image.get_rect()
         self.rect.center = (WIDTH / 2, HEIGHT / 2)
-        self.speedx = 2.5
     def update(self):
+        self.speedx = 0
         self.rect.x += self.speedx
-        if self.rect.right >= WIDTH or self.rect.left <= 0:
-            self.speedx = -1 * self.speedx
+        keystate = pygame.key.get_pressed()
+        if keystate[pygame.K_LEFT]:
+            self.speedx = -8
+            self.image = pygame.image.load(path.join(img_dir, 'sprite2.png')).convert()
+            self.image.set_colorkey((255, 255, 255))
+        if keystate[pygame.K_RIGHT]:
+            self.speedx = 8
+            self.image = pygame.image.load(path.join(img_dir, 'sprite-temp.png')).convert()
+            self.image.set_colorkey((255, 255, 255))
+        if self.rect.right > WIDTH:
+            self.rect.right = WIDTH
+        if self.rect.left < 0:
+            self.rect.left = 0
+        self.rect.x += self.speedx
 
 
 # Создаем игру и окно
@@ -35,6 +49,7 @@ pygame.display.set_caption("My Game")
 clock = pygame.time.Clock()
 all_sprites = pygame.sprite.Group()
 player = Player()
+print(player)
 all_sprites.add(player)
 img_dir = path.join(path.dirname(__file__), 'Assets')
 bg = pygame.image.load(path.join(img_dir, 'image.png')).convert()
