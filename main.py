@@ -18,10 +18,9 @@ class Player(pygame.sprite.Sprite):
         img_dir = path.join(path.dirname(__file__), 'Assets')
         self.image = pygame.image.load(path.join(img_dir, 'sprite-temp.png')).convert()
         self.image.set_colorkey((255, 255, 255))
-        #self.image_right = pygame.image.load(path.join(img_dir, 'sprite2.png')).convert()
-        #self.image_right.set_colorkey((255, 255, 255))
         self.rect = self.image.get_rect()
-        self.rect.center = (WIDTH / 2, HEIGHT / 2)
+        print(self.image.get_rect())
+        self.rect.center = (33, HEIGHT - 70)
     def update(self):
         self.speedx = 0
         self.rect.x += self.speedx
@@ -49,7 +48,6 @@ pygame.display.set_caption("My Game")
 clock = pygame.time.Clock()
 all_sprites = pygame.sprite.Group()
 player = Player()
-print(player)
 all_sprites.add(player)
 img_dir = path.join(path.dirname(__file__), 'Assets')
 bg = pygame.image.load(path.join(img_dir, 'image.png')).convert()
