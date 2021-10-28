@@ -20,7 +20,7 @@ class Player(pygame.sprite.Sprite):
         self.image.set_colorkey((255, 255, 255))
         self.rect = self.image.get_rect()
         print(self.image.get_rect())
-        self.rect.center = (33, HEIGHT - 70)
+        self.rect.center = (33, HEIGHT - 100)
     def update(self):
         self.speedx = 0
         self.rect.x += self.speedx
