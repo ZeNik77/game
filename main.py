@@ -16,7 +16,7 @@ class Player(pygame.sprite.Sprite):
     def __init__(self):
         pygame.sprite.Sprite.__init__(self)
         img_dir = path.join(path.dirname(__file__), 'Assets')
-        self.image = pygame.image.load(path.join(img_dir, 'sprite-temp.png')).convert()
+        self.image = pygame.image.load(path.join(img_dir, 'blue1.png')).convert()
         self.image.set_colorkey((255, 255, 255))
         self.rect = self.image.get_rect()
         print(self.image.get_rect())
@@ -27,11 +27,11 @@ class Player(pygame.sprite.Sprite):
         keystate = pygame.key.get_pressed()
         if keystate[pygame.K_LEFT]:
             self.speedx = -8
-            self.image = pygame.image.load(path.join(img_dir, 'sprite2.png')).convert()
+            self.image = pygame.image.load(path.join(img_dir, 'blue2.png')).convert()
             self.image.set_colorkey((255, 255, 255))
         if keystate[pygame.K_RIGHT]:
             self.speedx = 8
-            self.image = pygame.image.load(path.join(img_dir, 'sprite-temp.png')).convert()
+            self.image = pygame.image.load(path.join(img_dir, 'blue1.png')).convert()
             self.image.set_colorkey((255, 255, 255))
         if self.rect.right > WIDTH:
             self.rect.right = WIDTH
