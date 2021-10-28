@@ -15,8 +15,9 @@ BLUE = (0, 0, 255)
 class Player(pygame.sprite.Sprite):
     def __init__(self):
         pygame.sprite.Sprite.__init__(self)
-        self.image = pygame.Surface((50, 50))
-        self.image.fill(GREEN)
+        img_dir = path.join(path.dirname(__file__), 'Assets')
+        self.image = pygame.image.load(path.join(img_dir, 'sprite2.png')).convert()
+        self.image.set_colorkey((255, 255, 255))
         self.rect = self.image.get_rect()
         self.rect.center = (WIDTH / 2, HEIGHT / 2)
         self.speedx = 2.5
