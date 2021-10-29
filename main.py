@@ -64,7 +64,6 @@ class Player(pygame.sprite.Sprite):
         self.image.set_colorkey((255, 255, 255))
         self.rect.x += self.speedx
 
-
 # Создаем игру и окно
 pygame.init()
 pygame.mixer.init()
