@@ -88,8 +88,6 @@ class Player(pygame.sprite.Sprite):
         self.rect.x += self.speedx
         if keystate[pygame.K_q]:
             self.flag_ability = True
-        # self.image_rect = self.image.get_rect()
-        # self.image_rect.centerx, self.image_rect.centery =
         self.screen.blit(self.image, self.rect)
 class Nikita_Dev(Player, pygame.sprite.Sprite):
     def __init__(self, screen):
