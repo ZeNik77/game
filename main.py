@@ -46,7 +46,7 @@ t_chr1_rect.centery = 30
 font2 = pygame.font.Font(None, 100)
 font2_color = (0,155,255)
 font2_background = (0,0,0)
-t = font2.render("game xd. press f to start", True, font2_color, font2_background)
+t = font2.render("game xd. press z to start", True, font2_color, font2_background)
 t_rect = t.get_rect()
 t_rect.centerx, t_rect.centery = 500, 50
 # Цикл игры
@@ -57,7 +57,7 @@ while running:
         if event.type == pygame.QUIT:
             running = False
         if event.type == pygame.KEYDOWN:
-            if event.key == pygame.K_f:
+            if event.key == pygame.K_z:
                 flag_menu = False
     all_sprites.update()
     player.update2()

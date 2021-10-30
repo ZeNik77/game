@@ -24,6 +24,8 @@ class Player(pygame.sprite.Sprite):
         self.speedx = 0
         self.rect.x += self.speedx
         keystate = pygame.key.get_pressed()
+        if keystate[pygame.K_f]:
+            self.canmove = False
         if self.animcount + 1 >= 60:
             self.animcount = 1
         if self.canmove:
@@ -32,14 +34,12 @@ class Player(pygame.sprite.Sprite):
                 self.left = True
                 self.right = False
                 self.speedx = -8
-                # self.image = pygame.image.load(path.join(img_dir, 'blue2.png')).convert()
                 self.image.set_colorkey((255, 255, 255))
             elif keystate[pygame.K_RIGHT]:
                 self.last = True
                 self.right = True
                 self.left = False
                 self.speedx = 8
-                # self.image = pygame.image.load(path.join(img_dir, 'blue1.png')).convert()
                 self.image.set_colorkey((255, 255, 255))
             else:
                 self.left = False
@@ -60,13 +60,16 @@ class Player(pygame.sprite.Sprite):
                 else:
                     self.image = pygame.image.load(path.join(img_dir, 'blue2_0.png')).convert()
         else:
-            if self.last:
-                self.image = pygame.image.load(path.join(img_dir, 'blue1_0.png')).convert()
+            if keystate[pygame.K_f]:
+                if self.last:
+                    self.image = pygame.image.load(path.join(img_dir, 'blue1_block.png')).convert()
+                else:
+                    self.image = pygame.image.load(path.join(img_dir, 'blue2_block.png')).convert()
             else:
-                self.image = pygame.image.load(path.join(img_dir, 'blue2_0.png')).convert()
+                self.canmove = True
         self.image.set_colorkey((255, 255, 255))
         self.rect.x += self.speedx
-        if keystate[pygame.K_f]:
+        if keystate[pygame.K_q]:
             self.flag_ability = True
 class Nikita_Dev(Player, pygame.sprite.Sprite):
     def __init__(self):
