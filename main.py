@@ -18,7 +18,7 @@ BLUE = (0, 0, 255)
 pygame.init()
 pygame.mixer.init()
 screen = pygame.display.set_mode((WIDTH, HEIGHT))
-pygame.display.set_caption("My Game")
+pygame.display.set_caption("xd")
 clock = pygame.time.Clock()
 all_sprites = pygame.sprite.Group()
 player = chr.Nikita_Dev()
@@ -47,6 +47,7 @@ while running:
             if event.key == pygame.K_f:
                 flag_menu = False
     all_sprites.update()
+    player.update2()
     screen.fill(BLACK)
     if not flag_menu:
         screen.blit(bg, bg_rect)
