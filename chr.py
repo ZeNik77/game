@@ -6,7 +6,11 @@ class Player(pygame.sprite.Sprite):
     def __init__(self):
         pygame.sprite.Sprite.__init__(self)
         img_dir = path.join(path.dirname(__file__), 'Assets')
-        self.image = pygame.image.load(path.join(img_dir, 'blue1_0.png')).convert()
+        self.last = True
+        if self.last:
+            self.image = pygame.image.load(path.join(img_dir, 'blue1_0.png')).convert()
+        else:
+            self.image = pygame.image.load(path.join(img_dir, 'blue2_0.png')).convert()
         self.image.set_colorkey((255, 255, 255))
         self.rect = self.image.get_rect()
         self.rect.center = (33, HEIGHT - 100)
@@ -22,12 +26,14 @@ class Player(pygame.sprite.Sprite):
         if self.animcount + 1 >= 60:
             self.animcount = 1
         if keystate[pygame.K_LEFT]:
+            self.last = False
             self.left = True
             self.right = False
             self.speedx = -8
             # self.image = pygame.image.load(path.join(img_dir, 'blue2.png')).convert()
             self.image.set_colorkey((255, 255, 255))
         elif keystate[pygame.K_RIGHT]:
+            self.last = True
             self.right = True
             self.left = False
             self.speedx = 8
@@ -44,8 +50,13 @@ class Player(pygame.sprite.Sprite):
         self.animcount += 1
         if self.left:
             self.image = pygame.image.load(path.join(img_dir, f'blue2_{self.animcount // 9}.png')).convert()
-        else:
+        elif self.right:
             self.image = pygame.image.load(path.join(img_dir, f'blue1_{self.animcount // 9}.png')).convert()
+        else:
+            if self.last:
+                self.image = pygame.image.load(path.join(img_dir, 'blue1_0.png')).convert()
+            else:
+                self.image = pygame.image.load(path.join(img_dir, 'blue2_0.png')).convert()
         self.image.set_colorkey((255, 255, 255))
         self.rect.x += self.speedx
         if keystate[pygame.K_f]:
