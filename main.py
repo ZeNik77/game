@@ -43,7 +43,7 @@ t_chr1_rect.centerx = 170
 t_chr1_rect.centery = 30
 
 font2 = pygame.font.Font(None, 100)
-font2_color = (0,255,255)
+font2_color = (0,255,220)
 font2_background = (0,0,0)
 t = font2.render("game xd. press z to start", True, font2_color, font2_background)
 t_rect = t.get_rect()
