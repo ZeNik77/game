@@ -20,6 +20,13 @@ class Player(pygame.sprite.Sprite):
         self.attack_r.rect = self.attack_r.image.get_rect()
         self.attack_r.image.fill((255, 255, 255))
 
+        self.block_cd = 0
+        self.block_r = pygame.sprite.Sprite()
+        self.block_r.image = pygame.Surface((50, 100))
+        self.block_r.rect = self.attack_r.image.get_rect()
+        self.block_r.image.fill((255, 255, 255))
+        self.block_r.canblock = True
+
         self.blocking = False
         self.attacking = False
         if self.last:
@@ -43,25 +50,35 @@ class Player(pygame.sprite.Sprite):
         self.screen.blit(self.attack_r.image, self.attack_r.rect, special_flags=pygame.BLEND_RGBA_MULT)
 
     def block(self):
-        self.block_r = pygame.Surface((50, 100), pygame.SRCALPHA, 32)
-        self.block_r.fill((255, 255, 255))
-        self.block_rect = self.block_r.get_rect()
-        # tmp = pygame.Surface(self.rect.size, pygame.SRCALPHA)
-        # tmp.fill((255, 255, 255, 128))
         if not self.last:
-            self.block_rect.centerx, self.block_rect.centery = self.rect.x, self.rect.y + 50
+            self.block_r.rect.x, self.block_r.rect.y = self.rect.x-12.5, self.rect.y
         else:
-            self.block_rect.centerx, self.block_rect.centery = self.rect.x + 85, self.rect.y + 50
-        self.screen.blit(self.block_r, self.block_rect, special_flags=pygame.BLEND_RGBA_MULT)
+            self.block_r.rect.x, self.block_r.rect.y = self.rect.x+55, self.rect.y
+        self.screen.blit(self.block_r.image, self.block_r.rect, special_flags=pygame.BLEND_RGBA_MULT)
 
     def update(self):
+        # print(self.hp)
         img_dir = path.join(path.dirname(__file__), 'Assets')
         self.speedx = 0
-        # self.rect.x += self.speedx
+        # print(f'canblock {self.block_r.canblock}   blocking {self.blocking}    cooldown {self.block_cd}')
         keystate = pygame.key.get_pressed()
-        if keystate[pygame.K_f]:
+        if keystate[pygame.K_f] and self.block_r.canblock:
             self.blocking = True
             self.canmove = False
+        elif keystate[pygame.K_c] or self.attacking == True:
+            self.canmove = False
+            self.attacking = True
+        else:
+            self.blocking = False
+            self.canmove = True
+        if self.block_r.canblock == False:
+            self.block_r.rect.x, self.block_r.rect.y = 800, 500
+            self.blocking = False
+            self.block_cd += 1
+            if self.block_cd >= 90:
+                self.block_cd = 0
+                self.block_r.canblock = True
+
         if keystate[pygame.K_c]:
             self.attacking = True
             self.canmove = False
@@ -100,8 +117,9 @@ class Player(pygame.sprite.Sprite):
                     self.image = pygame.image.load(path.join(img_dir, 'blue1_0.png')).convert()
                 else:
                     self.image = pygame.image.load(path.join(img_dir, 'blue2_0.png')).convert()
+        # else:
         else:
-            if keystate[pygame.K_f]:
+            if self.blocking:
                 if self.last:
                     self.image = pygame.image.load(path.join(img_dir, 'blue1_block.png')).convert()
                 else:
@@ -154,3 +172,27 @@ class Dummy(pygame.sprite.Sprite):
         self.rect.x, self.rect.y = 250, HEIGHT - 100
     def update(self):
         self.screen.blit(self.image, self.rect)
+        # print(self.hp)
+class TestingBullet(pygame.sprite.Sprite):
+    def __init__(self, screen, enemygroup, speed, x):
+        self.screen = screen
+        self.speed = speed
+        self.enemygroup = enemygroup
+        pygame.sprite.Sprite.__init__(self)
+        img_dir = path.join(path.dirname(__file__), 'Assets')
+        self.image = self.image = pygame.image.load(path.join(img_dir, 'testing-bullet.png')).convert()
+        self.rect = self.image.get_rect()
+        self.rect.x, self.rect.y = x, HEIGHT - 100
+        self.flag = True
+    def update(self):
+        if self.flag:
+            self.rect.x -= self.speed
+            hit = pygame.sprite.spritecollide(self, self.enemygroup, False)
+            for el in hit:
+                try:
+                    el.hp -= 99
+                    self.flag = False
+                except:
+                    el.canblock = False
+                    self.flag = False
+            self.screen.blit(self.image, self.rect)
