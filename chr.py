@@ -8,7 +8,7 @@ HEIGHT = 650
 class Player(pygame.sprite.Sprite):
     def __init__(self, screen):
         self.screen = screen
-        self.hp = 100
+        self.hp = 2000
         self.enemy = 0
         self.enemygroup = 0
         pygame.sprite.Sprite.__init__(self)
@@ -181,17 +181,26 @@ class Lesha(Player, pygame.sprite.Sprite):
         self.screen = screen
         self.ability1 = 0
         self.ability1_cd = 0
+        self.ability2 = 0
+        self.ability2_cd = 0
+        self.flag_ability2 = False
         pygame.sprite.Sprite.__init__(self)
         Player.__init__(self, self.screen)
         img_dir = path.join(path.dirname(__file__), 'Assets')
     def update2(self):
         keystate = pygame.key.get_pressed()
+        if (keystate[pygame.K_w] or self.flag_ability2) and self.ability2_cd == 0:
+            self.slowness()
         if (keystate[pygame.K_q] or self.flag_ability1) and self.ability1_cd == 0:
             self.laser()
         if self.ability1_cd != 0:
             self.ability1_cd += 1
             if self.ability1_cd >= 150:
                 self.ability1_cd = 0
+        if self.ability2_cd != 0:
+            self.ability2_cd += 1
+            if self.ability2_cd >= 600:
+                self.ability2_cd = 0
     def laser(self):
         flag = True
         self.flag_ability = True
@@ -222,12 +231,37 @@ class Lesha(Player, pygame.sprite.Sprite):
             self.flag_ability1 = False
             self.canmove = True
             self.ability1 = 0
-
-
+    def slowness(self):
+        # print('xd')
+        self.flag_ability = True
+        self.flag_ability2 = True
+        self.canmove = True
+        self.circle = pygame.sprite.Sprite()
+        self.circle.image = pygame.Surface((500, 500))
+        self.circle.image.fill((0, 100, 255))
+        self.circle.rect = self.circle.image.get_rect()
+        if self.ability2 <= 300:
+            self.circle.rect.x = self.rect.x - 210
+            self.circle.rect.y = self.rect.y - 210
+            self.ability2 += 1
+            hits = pygame.sprite.spritecollide(self.circle, self.enemygroup, False)
+            for hit in hits:
+                try:
+                    hit.speedx = hit.speedx // 2
+                    if abs(hit.speedx) <= 4:
+                        hit.speedx *= 2
+                except:
+                    print('xd')
+            self.screen.blit(self.circle.image, self.circle.rect)
+        else:
+            self.ability2 = 0
+            self.ability2_cd = 1
+            self.flag_ability2 = False
+            self.flag_ability = False
 
 class Dummy(pygame.sprite.Sprite):
     def __init__(self, screen):
-        self.hp = 100
+        self.hp = 2000
         self.screen = screen
         pygame.sprite.Sprite.__init__(self)
         img_dir = path.join(path.dirname(__file__), 'Assets')

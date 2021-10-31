@@ -48,7 +48,6 @@ font2_background = (0,0,0)
 t = font2.render("game xd. press z to start", True, font2_color, font2_background)
 t_rect = t.get_rect()
 t_rect.centerx, t_rect.centery = 500, 50
-
 player1_group = pygame.sprite.Group()
 player1_group.add(player)
 player1_group.add(player.block_r)
@@ -75,8 +74,8 @@ while running:
         screen.blit(bg, bg_rect)
         screen.blit(t_chr1, t_chr1_rect)
         # all_sprites.draw(screen)
-        player.update()
         player.update2()
+        player.update()
         dummy.update()
         # bullet1.update()
         screen.blit(chr_1, chr_rect)
