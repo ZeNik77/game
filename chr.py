@@ -94,13 +94,13 @@ class Player(pygame.sprite.Sprite):
         if self.canmove:
             self.attack_r.rect.x = 800
             self.attack_r.rect.y = 500
-            if keystate[pygame.K_LEFT]:
+            if keystate[pygame.K_a]:
                 self.last = False
                 self.left = True
                 self.right = False
                 self.speedx = -8
                 self.image.set_colorkey((255, 255, 255))
-            elif keystate[pygame.K_RIGHT]:
+            elif keystate[pygame.K_d]:
                 self.last = True
                 self.right = True
                 self.left = False
