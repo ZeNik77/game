@@ -1,7 +1,10 @@
 import pygame
 from os import path
+
 WIDTH = 1000
 HEIGHT = 650
+
+
 class Player(pygame.sprite.Sprite):
     def __init__(self, screen):
         self.screen = screen
@@ -10,6 +13,7 @@ class Player(pygame.sprite.Sprite):
         self.last = True
         self.canmove = True
         self.blocking = False
+        self.attacking = False
         if self.last:
             self.image = pygame.image.load(path.join(img_dir, 'blue1_0.png')).convert()
         else:
@@ -20,7 +24,19 @@ class Player(pygame.sprite.Sprite):
         self.left = 0
         self.right = 0
         self.animcount = 0
+        self.attackacount = 15
         self.flag_ability = False
+
+    def attack(self):
+        self.attack_r = pygame.Surface((50, 100), pygame.SRCALPHA, 32)
+        self.attack_r.fill((255, 255, 255))
+        self.attack_rect = self.attack_r.get_rect()
+        if not self.last:
+            self.attack_rect.centerx, self.attack_rect.centery = self.rect.x, self.rect.y + 50
+        else:
+            self.attack_rect.centerx, self.attack_rect.centery = self.rect.x + 85, self.rect.y + 50
+        self.screen.blit(self.attack_r, self.attack_rect, special_flags=pygame.BLEND_RGBA_MULT)
+
     def block(self):
         self.block_r = pygame.Surface((50, 100), pygame.SRCALPHA, 32)
         self.block_r.fill((255, 255, 255))
@@ -32,6 +48,7 @@ class Player(pygame.sprite.Sprite):
         else:
             self.block_rect.centerx, self.block_rect.centery = self.rect.x + 85, self.rect.y + 50
         self.screen.blit(self.block_r, self.block_rect, special_flags=pygame.BLEND_RGBA_MULT)
+
     def update(self):
         img_dir = path.join(path.dirname(__file__), 'Assets')
         self.speedx = 0
@@ -39,6 +56,9 @@ class Player(pygame.sprite.Sprite):
         keystate = pygame.key.get_pressed()
         if keystate[pygame.K_f]:
             self.blocking = True
+            self.canmove = False
+        if keystate[pygame.K_c]:
+            self.attacking = True
             self.canmove = False
         if self.animcount + 1 >= 60:
             self.animcount = 1
@@ -80,6 +100,22 @@ class Player(pygame.sprite.Sprite):
                 else:
                     self.image = pygame.image.load(path.join(img_dir, 'blue2_block.png')).convert()
                 self.block()
+            elif self.attacking:
+                self.attackacount += 1
+                if self.attackacount >= 30:
+                    if self.last:
+                        self.rect.x += 10
+                    else:
+                        self.rect.x -= 10
+                if self.last:
+                    self.image = pygame.image.load(path.join(img_dir, f'blue1_a_{self.attackacount // 15}.png')).convert()
+                else:
+                    self.image = pygame.image.load(path.join(img_dir, f'blue2_a_{self.attackacount // 15}.png')).convert()
+                self.attack()
+                if self.attackacount >= 40:
+                    self.attackacount = 15
+                    self.canmove = True
+                    self.attacking = False
             else:
                 self.animcount = 0
                 self.blocking = False
@@ -89,12 +125,15 @@ class Player(pygame.sprite.Sprite):
         if keystate[pygame.K_q]:
             self.flag_ability = True
         self.screen.blit(self.image, self.rect)
+
+
 class Nikita_Dev(Player, pygame.sprite.Sprite):
     def __init__(self, screen):
         self.screen = screen
         pygame.sprite.Sprite.__init__(self)
         Player.__init__(self, self.screen)
         img_dir = path.join(path.dirname(__file__), 'Assets')
+
     def update2(self):
         if self.flag_ability:
             keystate = pygame.key.get_pressed()
