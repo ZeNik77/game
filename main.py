@@ -22,13 +22,14 @@ pygame.display.set_caption("xd")
 clock = pygame.time.Clock()
 img_dir = path.join(path.dirname(__file__), 'Assets')
 
-# all_sprites = pygame.sprite.Group()
+all_sprites = pygame.sprite.Group()
 chr_1 = pygame.image.load(path.join(img_dir, 'gaster.png')).convert()
 chr_rect = chr_1.get_rect()
 chr_rect.centerx = 110
 chr_rect.centery = 150
 player = chr.Nikita_Dev(screen)
-# all_sprites.add(player)
+dummy = chr.Dummy(screen)
+player.enemy = dummy
 
 flag_menu = True
 main_menu = pygame.image.load(path.join(img_dir, 'main_menu.png')).convert()
@@ -59,13 +60,13 @@ while running:
             if event.key == pygame.K_z:
                 flag_menu = False
     # all_sprites.update()
-    player.update2()
     screen.fill(BLACK)
     if not flag_menu:
         screen.blit(bg, bg_rect)
         screen.blit(t_chr1, t_chr1_rect)
         # all_sprites.draw(screen)
         player.update()
+        dummy.update()
         screen.blit(chr_1, chr_rect)
     else:
         screen.blit(main_menu, main_menu_rect)

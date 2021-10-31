@@ -8,10 +8,18 @@ HEIGHT = 650
 class Player(pygame.sprite.Sprite):
     def __init__(self, screen):
         self.screen = screen
+        self.hp = 100
+        self.enemy = 0
         pygame.sprite.Sprite.__init__(self)
         img_dir = path.join(path.dirname(__file__), 'Assets')
         self.last = True
         self.canmove = True
+
+        self.attack_r = pygame.sprite.Sprite()
+        self.attack_r.image = pygame.Surface((50, 100))
+        self.attack_r.rect = self.attack_r.image.get_rect()
+        self.attack_r.image.fill((255, 255, 255))
+
         self.blocking = False
         self.attacking = False
         if self.last:
@@ -25,17 +33,14 @@ class Player(pygame.sprite.Sprite):
         self.right = 0
         self.animcount = 0
         self.attackacount = 15
-        self.flag_ability = False
 
     def attack(self):
-        self.attack_r = pygame.Surface((50, 100), pygame.SRCALPHA, 32)
-        self.attack_r.fill((255, 255, 255))
-        self.attack_rect = self.attack_r.get_rect()
+        # , special_flags=pygame.BLEND_RGBA_MULT
         if not self.last:
-            self.attack_rect.centerx, self.attack_rect.centery = self.rect.x, self.rect.y + 50
+            self.attack_r.rect.x, self.attack_r.rect.y = self.rect.x-12.5, self.rect.y
         else:
-            self.attack_rect.centerx, self.attack_rect.centery = self.rect.x + 85, self.rect.y + 50
-        self.screen.blit(self.attack_r, self.attack_rect, special_flags=pygame.BLEND_RGBA_MULT)
+            self.attack_r.rect.x, self.attack_r.rect.y = self.rect.x+55, self.rect.y
+        self.screen.blit(self.attack_r.image, self.attack_r.rect, special_flags=pygame.BLEND_RGBA_MULT)
 
     def block(self):
         self.block_r = pygame.Surface((50, 100), pygame.SRCALPHA, 32)
@@ -52,7 +57,7 @@ class Player(pygame.sprite.Sprite):
     def update(self):
         img_dir = path.join(path.dirname(__file__), 'Assets')
         self.speedx = 0
-        self.rect.x += self.speedx
+        # self.rect.x += self.speedx
         keystate = pygame.key.get_pressed()
         if keystate[pygame.K_f]:
             self.blocking = True
@@ -63,6 +68,8 @@ class Player(pygame.sprite.Sprite):
         if self.animcount + 1 >= 60:
             self.animcount = 1
         if self.canmove:
+            self.attack_r.rect.x = 800
+            self.attack_r.rect.y = 500
             if keystate[pygame.K_LEFT]:
                 self.last = False
                 self.left = True
@@ -112,6 +119,10 @@ class Player(pygame.sprite.Sprite):
                 else:
                     self.image = pygame.image.load(path.join(img_dir, f'blue2_a_{self.attackacount // 15}.png')).convert()
                 self.attack()
+                hits = pygame.sprite.collide_rect(self.enemy, self.attack_r)
+                if hits:
+                    self.enemy.hp -= 1
+
                 if self.attackacount >= 40:
                     self.attackacount = 15
                     self.canmove = True
@@ -122,8 +133,6 @@ class Player(pygame.sprite.Sprite):
                 self.canmove = True
         self.image.set_colorkey((255, 255, 255))
         self.rect.x += self.speedx
-        if keystate[pygame.K_q]:
-            self.flag_ability = True
         self.screen.blit(self.image, self.rect)
 
 
@@ -134,8 +143,14 @@ class Nikita_Dev(Player, pygame.sprite.Sprite):
         Player.__init__(self, self.screen)
         img_dir = path.join(path.dirname(__file__), 'Assets')
 
-    def update2(self):
-        if self.flag_ability:
-            keystate = pygame.key.get_pressed()
-            if keystate[pygame.K_1]:
-                print('xd')
+class Dummy(pygame.sprite.Sprite):
+    def __init__(self, screen):
+        self.hp = 100
+        self.screen = screen
+        pygame.sprite.Sprite.__init__(self)
+        img_dir = path.join(path.dirname(__file__), 'Assets')
+        self.image = pygame.image.load(path.join(img_dir, 'blue2_0.png')).convert()
+        self.rect = self.image.get_rect()
+        self.rect.x, self.rect.y = 250, HEIGHT - 100
+    def update(self):
+        self.screen.blit(self.image, self.rect)
