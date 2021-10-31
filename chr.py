@@ -190,7 +190,7 @@ class Lesha(Player, pygame.sprite.Sprite):
             self.laser()
         if self.ability1_cd != 0:
             self.ability1_cd += 1
-            if self.ability1_cd >= 75:
+            if self.ability1_cd >= 150:
                 self.ability1_cd = 0
     def laser(self):
         flag = True
@@ -198,13 +198,13 @@ class Lesha(Player, pygame.sprite.Sprite):
         self.flag_ability1 = True
         self.canmove = False
         self.las = pygame.sprite.Sprite()
-        self.las.image = pygame.Surface((200, 20))
+        self.las.image = pygame.Surface((300, 20))
         self.las.image.fill((255, 0, 0))
         self.las.rect = self.las.image.get_rect()
         if self.last:
             self.las.rect.x, self.las.rect.y = self.rect.x + 85, self.rect.y + 50
         else:
-            self.las.rect.x, self.las.rect.y = self.rect.x - 85 - 42.5 - 23, self.rect.y + 50
+            self.las.rect.x, self.las.rect.y = self.rect.x - 85 - 42.5 - 23 - 150, self.rect.y + 50
         hit = pygame.sprite.spritecollide(self.las, self.enemygroup, False)
         for h in hit:
             if flag:
