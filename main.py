@@ -27,9 +27,8 @@ chr_1 = pygame.image.load(path.join(img_dir, 'gaster.png')).convert()
 chr_rect = chr_1.get_rect()
 chr_rect.centerx = 110
 chr_rect.centery = 150
-player = chr.Nikita_Dev(screen)
+player = chr.Lesha(screen)
 dummy = chr.Dummy(screen)
-player.enemy = dummy
 
 flag_menu = True
 main_menu = pygame.image.load(path.join(img_dir, 'main_menu.png')).convert()
@@ -53,6 +52,11 @@ t_rect.centerx, t_rect.centery = 500, 50
 player1_group = pygame.sprite.Group()
 player1_group.add(player)
 player1_group.add(player.block_r)
+player1_group.add(dummy)
+player2_group = pygame.sprite.Group()
+player2_group.add(dummy)
+player.enemy = dummy
+player.enemygroup = player2_group
 # bullet1 = chr.TestingBullet(enemygroup=player1_group, screen=screen, speed=10, x=540)
 
 # Цикл игры
@@ -72,6 +76,7 @@ while running:
         screen.blit(t_chr1, t_chr1_rect)
         # all_sprites.draw(screen)
         player.update()
+        player.update2()
         dummy.update()
         # bullet1.update()
         screen.blit(chr_1, chr_rect)

@@ -10,6 +10,7 @@ class Player(pygame.sprite.Sprite):
         self.screen = screen
         self.hp = 100
         self.enemy = 0
+        self.enemygroup = 0
         pygame.sprite.Sprite.__init__(self)
         img_dir = path.join(path.dirname(__file__), 'Assets')
         self.last = True
@@ -29,6 +30,7 @@ class Player(pygame.sprite.Sprite):
 
         self.blocking = False
         self.attacking = False
+        self.flag_ability = False
         if self.last:
             self.image = pygame.image.load(path.join(img_dir, 'blue1_0.png')).convert()
         else:
@@ -71,7 +73,7 @@ class Player(pygame.sprite.Sprite):
         else:
             self.blocking = False
             self.canmove = True
-        if self.block_r.canblock == False:
+        if self.block_r.canblock == False and self.flag_ability == False:
             self.block_r.rect.x, self.block_r.rect.y = 800, 500
             self.blocking = False
             self.canmove = False
@@ -85,10 +87,6 @@ class Player(pygame.sprite.Sprite):
             if self.block_cd >= 90:
                 self.block_cd = 0
                 self.block_r.canblock = True
-
-        if keystate[pygame.K_c]:
-            self.attacking = True
-            self.canmove = False
         if self.animcount + 1 >= 60:
             self.animcount = 1
         if self.canmove:
@@ -144,18 +142,27 @@ class Player(pygame.sprite.Sprite):
                 else:
                     self.image = pygame.image.load(path.join(img_dir, f'blue2_a_{self.attackacount // 15}.png')).convert()
                 self.attack()
-                hits = pygame.sprite.collide_rect(self.enemy, self.attack_r)
-                if hits:
-                    self.enemy.hp -= 1
+                flag = True
+                hits = pygame.sprite.spritecollide(self.attack_r, self.enemygroup, False)
+                for hit in hits:
+                    try:
+                        hit.hp -= 1
+                        print(hit.hp)
+                        break
+                    except:
+                        hit.block_r.canblock = False
+                        break
                 if self.attackacount >= 44:
                     self.attackacount = 15
                     self.canmove = True
                     self.attacking = False
+            elif self.flag_ability:
+                pass
             else:
                 self.animcount = 0
                 self.blocking = False
                 self.canmove = True
-        print(self.hp)
+        # print(self.hp)
         self.image.set_colorkey((255, 255, 255))
         self.rect.x += self.speedx
         self.screen.blit(self.image, self.rect)
@@ -167,6 +174,56 @@ class Nikita_Dev(Player, pygame.sprite.Sprite):
         pygame.sprite.Sprite.__init__(self)
         Player.__init__(self, self.screen)
         img_dir = path.join(path.dirname(__file__), 'Assets')
+
+class Lesha(Player, pygame.sprite.Sprite):
+    def __init__(self, screen):
+        self.flag_ability1 = False
+        self.screen = screen
+        self.ability1 = 0
+        self.ability1_cd = 0
+        pygame.sprite.Sprite.__init__(self)
+        Player.__init__(self, self.screen)
+        img_dir = path.join(path.dirname(__file__), 'Assets')
+    def update2(self):
+        keystate = pygame.key.get_pressed()
+        if (keystate[pygame.K_q] or self.flag_ability1) and self.ability1_cd == 0:
+            self.laser()
+        if self.ability1_cd != 0:
+            self.ability1_cd += 1
+            if self.ability1_cd >= 75:
+                self.ability1_cd = 0
+    def laser(self):
+        flag = True
+        self.flag_ability = True
+        self.flag_ability1 = True
+        self.canmove = False
+        self.las = pygame.sprite.Sprite()
+        self.las.image = pygame.Surface((200, 20))
+        self.las.image.fill((255, 0, 0))
+        self.las.rect = self.las.image.get_rect()
+        if self.last:
+            self.las.rect.x, self.las.rect.y = self.rect.x + 85, self.rect.y + 50
+        else:
+            self.las.rect.x, self.las.rect.y = self.rect.x - 85 - 42.5 - 23, self.rect.y + 50
+        hit = pygame.sprite.spritecollide(self.las, self.enemygroup, False)
+        for h in hit:
+            if flag:
+                try:
+                    h.hp -= 0.5
+                    print(h.hp)
+                    break
+                except:
+                    h.canblock = False
+        self.screen.blit(self.las.image, self.las.rect)
+        self.ability1 += 1
+        if self.ability1 >= 25:
+            self.ability1_cd = 1
+            self.flag_ability = False
+            self.flag_ability1 = False
+            self.canmove = True
+            self.ability1 = 0
+
+
 
 class Dummy(pygame.sprite.Sprite):
     def __init__(self, screen):
