@@ -53,7 +53,7 @@ t_rect.centerx, t_rect.centery = 500, 50
 player1_group = pygame.sprite.Group()
 player1_group.add(player)
 player1_group.add(player.block_r)
-bullet1 = chr.TestingBullet(enemygroup=player1_group, screen=screen, speed=0.5, x=540)
+# bullet1 = chr.TestingBullet(enemygroup=player1_group, screen=screen, speed=10, x=540)
 
 # Цикл игры
 running = True
@@ -73,7 +73,7 @@ while running:
         # all_sprites.draw(screen)
         player.update()
         dummy.update()
-        bullet1.update()
+        # bullet1.update()
         screen.blit(chr_1, chr_rect)
     else:
         screen.blit(main_menu, main_menu_rect)

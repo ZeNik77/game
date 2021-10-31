@@ -74,6 +74,13 @@ class Player(pygame.sprite.Sprite):
         if self.block_r.canblock == False:
             self.block_r.rect.x, self.block_r.rect.y = 800, 500
             self.blocking = False
+            self.canmove = False
+            if self.last:
+                self.image = pygame.image.load(path.join(img_dir, 'blue1_0.png')).convert()
+                self.rect.x -= 0.05
+            else:
+                self.image = pygame.image.load(path.join(img_dir, 'blue2_0.png')).convert()
+                self.rect.x += 0.05
             self.block_cd += 1
             if self.block_cd >= 90:
                 self.block_cd = 0
@@ -140,8 +147,7 @@ class Player(pygame.sprite.Sprite):
                 hits = pygame.sprite.collide_rect(self.enemy, self.attack_r)
                 if hits:
                     self.enemy.hp -= 1
-
-                if self.attackacount >= 40:
+                if self.attackacount >= 44:
                     self.attackacount = 15
                     self.canmove = True
                     self.attacking = False
@@ -149,6 +155,7 @@ class Player(pygame.sprite.Sprite):
                 self.animcount = 0
                 self.blocking = False
                 self.canmove = True
+        print(self.hp)
         self.image.set_colorkey((255, 255, 255))
         self.rect.x += self.speedx
         self.screen.blit(self.image, self.rect)
