@@ -1,5 +1,6 @@
 import pygame
 from os import path
+import math
 
 WIDTH = 1000
 HEIGHT = 650
@@ -177,12 +178,25 @@ class Nikita_Dev(Player, pygame.sprite.Sprite):
 
 class Lesha(Player, pygame.sprite.Sprite):
     def __init__(self, screen):
+        self.flag_vec = True
         self.flag_ability1 = False
         self.screen = screen
         self.ability1 = 0
         self.ability1_cd = 0
         self.ability2 = 0
         self.ability2_cd = 0
+        self.ability3_up = 0
+        self.ability3_down = 0
+        self.ability3 = 0
+        self.ability3_cd = 0
+        self.flag_ability3 = False
+
+        img_dir = path.join(path.dirname(__file__), 'Assets')
+        self.bullet = pygame.sprite.Sprite()
+        self.bullet.image = self.image = pygame.image.load(path.join(img_dir, 'testing-bullet.png')).convert()
+        self.bullet.rect = self.bullet.image.get_rect()
+        self.bullet.speed = 15
+
         self.flag_ability2 = False
         pygame.sprite.Sprite.__init__(self)
         Player.__init__(self, self.screen)
@@ -258,6 +272,20 @@ class Lesha(Player, pygame.sprite.Sprite):
             self.flag_ability2 = False
             self.flag_ability = False
 
+    def move_towards_player(self):
+        if self.flag_vec:
+            # Find direction vector (dx, dy) between enemy and player.
+            self.dx, self.dy = self.rect.x - self.bullet.rect.x, self.rect.y - self.bullet.rect.y
+            self.dist = math.hypot(self.dx, self.dy)
+            self.dx, self.dy = self.dx / self.dist, self.dy / self.dist  # Normalize.
+            # Move along this normalized vector towards the player at current speed.
+            self.bullet.rect.x += self.dx * self.bullet.speed
+            self.bullet.rect.y += self.dy * self.bullet.speed
+            self.flag_vec = False
+
+
+    def ult(self):
+        pass
 class Dummy(pygame.sprite.Sprite):
     def __init__(self, screen):
         self.hp = 500
