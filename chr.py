@@ -8,7 +8,7 @@ HEIGHT = 650
 class Player(pygame.sprite.Sprite):
     def __init__(self, screen):
         self.screen = screen
-        self.hp = 2000
+        self.hp = 500
         self.enemy = 0
         self.enemygroup = 0
         pygame.sprite.Sprite.__init__(self)
@@ -195,11 +195,11 @@ class Lesha(Player, pygame.sprite.Sprite):
             self.laser()
         if self.ability1_cd != 0:
             self.ability1_cd += 1
-            if self.ability1_cd >= 150:
+            if self.ability1_cd >= 300:
                 self.ability1_cd = 0
         if self.ability2_cd != 0:
             self.ability2_cd += 1
-            if self.ability2_cd >= 600:
+            if self.ability2_cd >= 1000:
                 self.ability2_cd = 0
     def laser(self):
         flag = True
@@ -218,9 +218,8 @@ class Lesha(Player, pygame.sprite.Sprite):
         for h in hit:
             if flag:
                 try:
-                    h.hp -= 0.5
+                    h.hp -= 1.5
                     print(h.hp)
-                    break
                 except:
                     h.canblock = False
         self.screen.blit(self.las.image, self.las.rect)
@@ -229,7 +228,6 @@ class Lesha(Player, pygame.sprite.Sprite):
             self.ability1_cd = 1
             self.flag_ability = False
             self.flag_ability1 = False
-            self.canmove = True
             self.ability1 = 0
     def slowness(self):
         # print('xd')
@@ -251,7 +249,8 @@ class Lesha(Player, pygame.sprite.Sprite):
                     if abs(hit.speedx) <= 4:
                         hit.speedx *= 2
                 except:
-                    print('xd')
+                    pass
+                    # print('xd')
             self.screen.blit(self.circle.image, self.circle.rect)
         else:
             self.ability2 = 0
@@ -261,7 +260,7 @@ class Lesha(Player, pygame.sprite.Sprite):
 
 class Dummy(pygame.sprite.Sprite):
     def __init__(self, screen):
-        self.hp = 2000
+        self.hp = 500
         self.screen = screen
         pygame.sprite.Sprite.__init__(self)
         img_dir = path.join(path.dirname(__file__), 'Assets')
