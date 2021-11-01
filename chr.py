@@ -8,6 +8,7 @@ HEIGHT = 650
 
 class Player(pygame.sprite.Sprite):
     def __init__(self, screen, colour):
+        self.permspeed = 1
         self.colour = colour
         self.screen = screen
         self.hp = 500
@@ -15,7 +16,12 @@ class Player(pygame.sprite.Sprite):
         self.enemygroup = 0
         pygame.sprite.Sprite.__init__(self)
         img_dir = path.join(path.dirname(__file__), 'Assets')
-        self.last = True
+        if self.colour == 'blue':
+            self.last = True
+            self.abkeys = [pygame.K_q, pygame.K_w, pygame.K_e, pygame.K_f, pygame.K_c]
+        else:
+            self.last = False
+            self.abkeys = [pygame.K_u, pygame.K_i, pygame.K_o, pygame.K_h, pygame.K_n]
         self.canmove = True
 
         self.attack_r = pygame.sprite.Sprite()
@@ -39,7 +45,10 @@ class Player(pygame.sprite.Sprite):
             self.image = pygame.image.load(path.join(img_dir, f'{self.colour}2_0.png')).convert()
         self.image.set_colorkey((255, 255, 255))
         self.rect = self.image.get_rect()
-        self.rect.center = (33, HEIGHT - 100)
+        if self.colour == 'blue':
+            self.rect.center = (33, HEIGHT - 100)
+        else:
+            self.rect.center = (WIDTH - 33, HEIGHT - 100)
         self.left = 0
         self.right = 0
         self.animcount = 0
@@ -66,10 +75,10 @@ class Player(pygame.sprite.Sprite):
         self.speedx = 0
         # print(f'canblock {self.block_r.canblock}   blocking {self.blocking}    cooldown {self.block_cd}')
         keystate = pygame.key.get_pressed()
-        if keystate[pygame.K_f] and self.block_r.canblock:
+        if keystate[self.abkeys[3]] and self.block_r.canblock:
             self.blocking = True
             self.canmove = False
-        elif keystate[pygame.K_c] or self.attacking == True:
+        elif keystate[self.abkeys[4]] or self.attacking == True:
             self.canmove = False
             self.attacking = True
         else:
@@ -84,7 +93,7 @@ class Player(pygame.sprite.Sprite):
                 self.image = pygame.image.load(path.join(img_dir, f'{self.colour}1_0.png')).convert()
                 self.rect.x -= 0.05
             else:
-                self.image = pygame.image.load(path.join(img_dir, f'{self.colour}2.png')).convert()
+                self.image = pygame.image.load(path.join(img_dir, f'{self.colour}2_0.png')).convert()
                 self.rect.x += 0.05
             self.block_cd += 1
             if self.block_cd >= 90:
@@ -95,22 +104,40 @@ class Player(pygame.sprite.Sprite):
         if self.canmove:
             self.attack_r.rect.x = 800
             self.attack_r.rect.y = 500
-            if keystate[pygame.K_a]:
-                self.last = False
-                self.left = True
-                self.right = False
-                self.speedx = -8
-                self.image.set_colorkey((255, 255, 255))
-            elif keystate[pygame.K_d]:
-                self.last = True
-                self.right = True
-                self.left = False
-                self.speedx = 8
-                self.image.set_colorkey((255, 255, 255))
-            else:
-                self.left = False
-                self.right = False
-                self.animcount = 0
+            if self.colour == 'blue':
+                if keystate[pygame.K_a]:
+                    self.last = False
+                    self.left = True
+                    self.right = False
+                    self.speedx = -8
+                    self.image.set_colorkey((255, 255, 255))
+                elif keystate[pygame.K_d]:
+                    self.last = True
+                    self.right = True
+                    self.left = False
+                    self.speedx = 8
+                    self.image.set_colorkey((255, 255, 255))
+                else:
+                    self.left = False
+                    self.right = False
+                    self.animcount = 0
+            elif self.colour == 'red':
+                if keystate[pygame.K_j]:
+                    self.last = False
+                    self.left = True
+                    self.right = False
+                    self.speedx = -8
+                    self.image.set_colorkey((255, 255, 255))
+                elif keystate[pygame.K_l]:
+                    self.last = True
+                    self.right = True
+                    self.left = False
+                    self.speedx = 8
+                    self.image.set_colorkey((255, 255, 255))
+                else:
+                    self.left = False
+                    self.right = False
+                    self.animcount = 0
             if self.rect.right > WIDTH:
                 self.rect.right = WIDTH
             if self.rect.left < 0:
@@ -153,7 +180,7 @@ class Player(pygame.sprite.Sprite):
                         # print(hit.hp)
                         break
                     except:
-                        hit.block_r.canblock = False
+                        hit.canblock = False
                         break
                 if self.attackacount >= 44:
                     self.attackacount = 15
@@ -167,7 +194,7 @@ class Player(pygame.sprite.Sprite):
                 self.canmove = True
         # print(self.hp)
         self.image.set_colorkey((255, 255, 255))
-        self.rect.x += self.speedx
+        self.rect.x += self.speedx * self.permspeed
         # print(self.flag_ability)
         self.screen.blit(self.image, self.rect)
 
@@ -210,11 +237,11 @@ class Lesha(Player, pygame.sprite.Sprite):
         img_dir = path.join(path.dirname(__file__), 'Assets')
     def update2(self):
         keystate = pygame.key.get_pressed()
-        if (keystate[pygame.K_e] or self.flag_ability3) and self.ability3_cd == 0:
+        if (keystate[self.abkeys[2]] or self.flag_ability3) and self.ability3_cd == 0:
             self.ult()
-        if (keystate[pygame.K_w] or self.flag_ability2) and self.ability2_cd == 0:
+        if (keystate[self.abkeys[1]] or self.flag_ability2) and self.ability2_cd == 0:
             self.slowness()
-        if (keystate[pygame.K_q] or self.flag_ability1) and self.ability1_cd == 0:
+        if (keystate[self.abkeys[0]] or self.flag_ability1) and self.ability1_cd == 0:
             self.laser()
         if self.ability1_cd != 0:
             self.ability1_cd += 1
@@ -271,14 +298,15 @@ class Lesha(Player, pygame.sprite.Sprite):
             hits = pygame.sprite.spritecollide(self.circle, self.enemygroup, False)
             for hit in hits:
                 try:
-                    hit.speedx = hit.speedx // 2
-                    if abs(hit.speedx) <= 4:
-                        hit.speedx *= 2
+                    hit.permspeed = 0.6
                 except:
                     pass
                     # print('xd')
+            if len(hits) == 0:
+                self.enemy.permspeed = 1
             self.screen.blit(self.circle.image, self.circle.rect)
         else:
+            self.enemy.permspeed = 1
             self.ability2 = 0
             self.ability2_cd = 1
             self.flag_ability2 = False
