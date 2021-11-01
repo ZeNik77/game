@@ -72,8 +72,9 @@ class Player(pygame.sprite.Sprite):
             self.canmove = False
             self.attacking = True
         else:
-            self.blocking = False
-            self.canmove = True
+            if not self.flag_ability:
+                self.blocking = False
+                self.canmove = True
         if self.block_r.canblock == False and self.flag_ability == False:
             self.block_r.rect.x, self.block_r.rect.y = 800, 500
             self.blocking = False
@@ -148,7 +149,7 @@ class Player(pygame.sprite.Sprite):
                 for hit in hits:
                     try:
                         hit.hp -= 1
-                        print(hit.hp)
+                        # print(hit.hp)
                         break
                     except:
                         hit.block_r.canblock = False
@@ -166,6 +167,7 @@ class Player(pygame.sprite.Sprite):
         # print(self.hp)
         self.image.set_colorkey((255, 255, 255))
         self.rect.x += self.speedx
+        # print(self.flag_ability)
         self.screen.blit(self.image, self.rect)
 
 
@@ -178,15 +180,19 @@ class Nikita_Dev(Player, pygame.sprite.Sprite):
 
 class Lesha(Player, pygame.sprite.Sprite):
     def __init__(self, screen):
-        self.flag_vec = True
+        self.bullet_sprite = []
+        self.trajectory = []
+        self.bullets = []
+        self.bullet_animcount = 0
+        self.bullet_count = 0
+        self.flag_vec = []
         self.flag_ability1 = False
         self.screen = screen
         self.ability1 = 0
         self.ability1_cd = 0
         self.ability2 = 0
         self.ability2_cd = 0
-        self.ability3_up = 0
-        self.ability3_down = 0
+        self.ability3_phase = 0
         self.ability3 = 0
         self.ability3_cd = 0
         self.flag_ability3 = False
@@ -203,6 +209,8 @@ class Lesha(Player, pygame.sprite.Sprite):
         img_dir = path.join(path.dirname(__file__), 'Assets')
     def update2(self):
         keystate = pygame.key.get_pressed()
+        if (keystate[pygame.K_e] or self.flag_ability3) and self.ability3_cd == 0:
+            self.ult()
         if (keystate[pygame.K_w] or self.flag_ability2) and self.ability2_cd == 0:
             self.slowness()
         if (keystate[pygame.K_q] or self.flag_ability1) and self.ability1_cd == 0:
@@ -215,6 +223,10 @@ class Lesha(Player, pygame.sprite.Sprite):
             self.ability2_cd += 1
             if self.ability2_cd >= 1000:
                 self.ability2_cd = 0
+        if self.ability3_cd != 0:
+            self.ability3_cd += 1
+            if self.ability3_cd >= 300:
+                self.ability3_cd = 0
     def laser(self):
         flag = True
         self.flag_ability = True
@@ -233,7 +245,7 @@ class Lesha(Player, pygame.sprite.Sprite):
             if flag:
                 try:
                     h.hp -= 1.5
-                    print(h.hp)
+                    # print(h.hp)
                 except:
                     h.canblock = False
         self.screen.blit(self.las.image, self.las.rect)
@@ -245,7 +257,6 @@ class Lesha(Player, pygame.sprite.Sprite):
             self.ability1 = 0
     def slowness(self):
         # print('xd')
-        self.flag_ability = True
         self.flag_ability2 = True
         self.canmove = True
         self.circle = pygame.sprite.Sprite()
@@ -272,20 +283,77 @@ class Lesha(Player, pygame.sprite.Sprite):
             self.flag_ability2 = False
             self.flag_ability = False
 
-    def move_towards_player(self):
-        if self.flag_vec:
+    def move_towards_player(self, bullet, i):
+        if len(self.flag_vec) == 0 or self.flag_vec[i] == False:
             # Find direction vector (dx, dy) between enemy and player.
-            self.dx, self.dy = self.rect.x - self.bullet.rect.x, self.rect.y - self.bullet.rect.y
+            self.dx, self.dy = self.enemy.rect.x - bullet.rect.x, self.enemy.rect.y - bullet.rect.y
             self.dist = math.hypot(self.dx, self.dy)
             self.dx, self.dy = self.dx / self.dist, self.dy / self.dist  # Normalize.
             # Move along this normalized vector towards the player at current speed.
-            self.bullet.rect.x += self.dx * self.bullet.speed
-            self.bullet.rect.y += self.dy * self.bullet.speed
-            self.flag_vec = False
-
+            self.trajectory.append((self.dx * bullet.speed, self.dy * bullet.speed))
+            self.flag_vec.append(True)
+            return [bullet.rect.x + self.trajectory[i][0], bullet.rect.y + self.trajectory[i][1]]
+        elif self.flag_vec[i] == True:
+            return [bullet.rect.x + self.trajectory[i][0], bullet.rect.y + self.trajectory[i][1]]
 
     def ult(self):
-        pass
+        img_dir = path.join(path.dirname(__file__), 'Assets')
+        self.flag_ability3 = True
+        self.canmove = False
+        self.flag_ability = True
+        if self.ability3_phase == 0:
+            self.rect.y -= 3
+            if self.rect.y <= 225:
+                self.ability3_phase = 1
+        elif self.ability3_phase == 1:
+            self.bullet_animcount += 1
+            if self.bullet_animcount % 30 == 0:
+                # print('BULLET!')
+                self.flag_vec.append(False)
+                self.bullets.append([pygame.image.load(path.join(img_dir, 'testing-bullet.png')).convert(), (self.rect.x + 42.5, self.rect.y + 42.5)])
+            try:
+                for i in range(len(self.bullets)):
+                    b = self.bullet_sprite[i]
+                    xd = self.move_towards_player(b, i)
+                    b.rect.x = xd[0]
+                    b.rect.y = xd[1]
+            except:
+                for i in range(len(self.bullets)):
+                    b = pygame.sprite.Sprite()
+                    b.image = self.bullets[i][0]
+                    b.rect = b.image.get_rect()
+                    b.rect.x = self.bullets[i][1][0]
+                    b.rect.y = self.bullets[i][1][1]
+                    b.speed = 20
+                    xd = self.move_towards_player(b, i)
+                    print(b.rect)
+                    b.rect.x = xd[0]
+                    b.rect.y = xd[1]
+                    self.bullets[i] = b
+                    print(b.rect)
+                    print()
+                    self.screen.blit(b.image, b.rect)
+                    hits = pygame.sprite.spritecollide(b, self.enemygroup, False)
+                    for hit in hits:
+                        try:
+                            hit.hp -= 10
+                        except:
+                            hit.canblock = False
+                if self.bullet_animcount >= 151:
+                    self.ability3_phase = 2
+        elif self.ability3_phase == 2:
+            if self.rect.center[1] < HEIGHT - 100:
+                self.rect.y += 5
+            elif self.rect.center[1] > HEIGHT - 100:
+                self.rect.y = HEIGHT - 100 - 50
+            elif self.rect.center[1] == HEIGHT - 100:
+                self.ability3_phase = 0
+                self.flag_ability3 = False
+                self.canmove = True
+                self.flag_ability = False
+                self.bullets = []
+                self.ability3_cd += 1
+                self.bullet_animcount = 0
 class Dummy(pygame.sprite.Sprite):
     def __init__(self, screen):
         self.hp = 500
@@ -305,7 +373,7 @@ class TestingBullet(pygame.sprite.Sprite):
         self.enemygroup = enemygroup
         pygame.sprite.Sprite.__init__(self)
         img_dir = path.join(path.dirname(__file__), 'Assets')
-        self.image = self.image = pygame.image.load(path.join(img_dir, 'testing-bullet.png')).convert()
+        self.image = pygame.image.load(path.join(img_dir, 'testing-bullet.png')).convert()
         self.rect = self.image.get_rect()
         self.rect.x, self.rect.y = x, HEIGHT - 100
         self.flag = True
