@@ -25,7 +25,7 @@ chr_1 = pygame.image.load(path.join(img_dir, 'gaster.png')).convert()
 chr_rect = chr_1.get_rect()
 chr_rect.centerx = 110
 chr_rect.centery = 150
-player = chr.Lesha(screen)
+player = chr.Lesha(screen, 'red')
 dummy = chr.Dummy(screen)
 
 flag_menu = True

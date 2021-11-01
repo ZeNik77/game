@@ -7,7 +7,8 @@ HEIGHT = 650
 
 
 class Player(pygame.sprite.Sprite):
-    def __init__(self, screen):
+    def __init__(self, screen, colour):
+        self.colour = colour
         self.screen = screen
         self.hp = 500
         self.enemy = 0
@@ -33,9 +34,9 @@ class Player(pygame.sprite.Sprite):
         self.attacking = False
         self.flag_ability = False
         if self.last:
-            self.image = pygame.image.load(path.join(img_dir, 'blue1_0.png')).convert()
+            self.image = pygame.image.load(path.join(img_dir, f'{self.colour}1_0.png')).convert()
         else:
-            self.image = pygame.image.load(path.join(img_dir, 'blue2_0.png')).convert()
+            self.image = pygame.image.load(path.join(img_dir, f'{self.colour}2_0.png')).convert()
         self.image.set_colorkey((255, 255, 255))
         self.rect = self.image.get_rect()
         self.rect.center = (33, HEIGHT - 100)
@@ -80,10 +81,10 @@ class Player(pygame.sprite.Sprite):
             self.blocking = False
             self.canmove = False
             if self.last:
-                self.image = pygame.image.load(path.join(img_dir, 'blue1_0.png')).convert()
+                self.image = pygame.image.load(path.join(img_dir, f'{self.colour}1_0.png')).convert()
                 self.rect.x -= 0.05
             else:
-                self.image = pygame.image.load(path.join(img_dir, 'blue2_0.png')).convert()
+                self.image = pygame.image.load(path.join(img_dir, f'{self.colour}2.png')).convert()
                 self.rect.x += 0.05
             self.block_cd += 1
             if self.block_cd >= 90:
@@ -116,21 +117,21 @@ class Player(pygame.sprite.Sprite):
                 self.rect.left = 0
             self.animcount += 1
             if self.left:
-                self.image = pygame.image.load(path.join(img_dir, f'blue2_{self.animcount // 9}.png')).convert()
+                self.image = pygame.image.load(path.join(img_dir, f'{self.colour}2_{self.animcount // 9}.png')).convert()
             elif self.right:
-                self.image = pygame.image.load(path.join(img_dir, f'blue1_{self.animcount // 9}.png')).convert()
+                self.image = pygame.image.load(path.join(img_dir, f'{self.colour}1_{self.animcount // 9}.png')).convert()
             else:
                 if self.last:
-                    self.image = pygame.image.load(path.join(img_dir, 'blue1_0.png')).convert()
+                    self.image = pygame.image.load(path.join(img_dir, f'{self.colour}1_0.png')).convert()
                 else:
-                    self.image = pygame.image.load(path.join(img_dir, 'blue2_0.png')).convert()
+                    self.image = pygame.image.load(path.join(img_dir, f'{self.colour}2_0.png')).convert()
         # else:
         else:
             if self.blocking:
                 if self.last:
-                    self.image = pygame.image.load(path.join(img_dir, 'blue1_block.png')).convert()
+                    self.image = pygame.image.load(path.join(img_dir, f'{self.colour}1_block.png')).convert()
                 else:
-                    self.image = pygame.image.load(path.join(img_dir, 'blue2_block.png')).convert()
+                    self.image = pygame.image.load(path.join(img_dir, f'{self.colour}2_block.png')).convert()
                 self.block()
             elif self.attacking:
                 self.attackacount += 1
@@ -140,9 +141,9 @@ class Player(pygame.sprite.Sprite):
                     else:
                         self.rect.x -= 10
                 if self.last:
-                    self.image = pygame.image.load(path.join(img_dir, f'blue1_a_{self.attackacount // 15}.png')).convert()
+                    self.image = pygame.image.load(path.join(img_dir, f'{self.colour}1_a_{self.attackacount // 15}.png')).convert()
                 else:
-                    self.image = pygame.image.load(path.join(img_dir, f'blue2_a_{self.attackacount // 15}.png')).convert()
+                    self.image = pygame.image.load(path.join(img_dir, f'{self.colour}2_a_{self.attackacount // 15}.png')).convert()
                 self.attack()
                 flag = True
                 hits = pygame.sprite.spritecollide(self.attack_r, self.enemygroup, False)
@@ -172,14 +173,14 @@ class Player(pygame.sprite.Sprite):
 
 
 class Nikita_Dev(Player, pygame.sprite.Sprite):
-    def __init__(self, screen):
+    def __init__(self, screen, colour):
         self.screen = screen
         pygame.sprite.Sprite.__init__(self)
-        Player.__init__(self, self.screen)
+        Player.__init__(self, self.screen, colour)
         img_dir = path.join(path.dirname(__file__), 'Assets')
 
 class Lesha(Player, pygame.sprite.Sprite):
-    def __init__(self, screen):
+    def __init__(self, screen, colour):
         self.bullet_sprite = []
         self.trajectory = []
         self.bullets = []
@@ -205,7 +206,7 @@ class Lesha(Player, pygame.sprite.Sprite):
 
         self.flag_ability2 = False
         pygame.sprite.Sprite.__init__(self)
-        Player.__init__(self, self.screen)
+        Player.__init__(self, self.screen, colour)
         img_dir = path.join(path.dirname(__file__), 'Assets')
     def update2(self):
         keystate = pygame.key.get_pressed()
