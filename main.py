@@ -117,6 +117,12 @@ while running:
                     player = chr.Nikita_Dev(screen, 'blue')
                     player.enemy = player2
                     player2.enemy = player
+                    player1_group = pygame.sprite.Group()
+                    player1_group.add(player)
+                    player1_group.add(player.block_r)
+                    player2_group = pygame.sprite.Group()
+                    player2_group.add(player2)
+                    player2_group.add(player2.block_r)
                     player.enemygroup = player2_group
                     player2.enemygroup = player1_group
                 else:
@@ -125,6 +131,12 @@ while running:
                     player2 = chr.Nikita_Dev(screen, 'red')
                     player.enemy = player2
                     player2.enemy = player
+                    player1_group = pygame.sprite.Group()
+                    player1_group.add(player)
+                    player1_group.add(player.block_r)
+                    player2_group = pygame.sprite.Group()
+                    player2_group.add(player2)
+                    player2_group.add(player2.block_r)
                     player.enemygroup = player2_group
                     player2.enemygroup = player1_group
             if event.key == pygame.K_2 and flag == 2:
@@ -134,6 +146,12 @@ while running:
                     player = chr.Lesha(screen, 'blue')
                     player.enemy = player2
                     player2.enemy = player
+                    player1_group = pygame.sprite.Group()
+                    player1_group.add(player)
+                    player1_group.add(player.block_r)
+                    player2_group = pygame.sprite.Group()
+                    player2_group.add(player2)
+                    player2_group.add(player2.block_r)
                     player.enemygroup = player2_group
                     player2.enemygroup = player1_group
                 else:
@@ -142,6 +160,12 @@ while running:
                     player2 = chr.Lesha(screen, 'red')
                     player.enemy = player2
                     player2.enemy = player
+                    player1_group = pygame.sprite.Group()
+                    player1_group.add(player)
+                    player1_group.add(player.block_r)
+                    player2_group = pygame.sprite.Group()
+                    player2_group.add(player2)
+                    player2_group.add(player2.block_r)
                     player.enemygroup = player2_group
                     player2.enemygroup = player1_group
             if event.key == pygame.K_SPACE and flag == 2:

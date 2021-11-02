@@ -155,7 +155,6 @@ class Player(pygame.sprite.Sprite):
                     self.image = pygame.image.load(path.join(img_dir, f'{self.colour}1_0.png')).convert()
                 else:
                     self.image = pygame.image.load(path.join(img_dir, f'{self.colour}2_0.png')).convert()
-        # else:
         else:
             if self.blocking:
                 if self.last:
@@ -177,14 +176,12 @@ class Player(pygame.sprite.Sprite):
                 self.attack()
                 flag = True
                 hits = pygame.sprite.spritecollide(self.attack_r, self.enemygroup, False)
+                print(hits)
                 for hit in hits:
                     try:
                         hit.hp -= 1
-                        # print(hit.hp)
-                        break
                     except:
                         hit.canblock = False
-                        break
                 if self.attackacount >= 44:
                     self.attackacount = 15
                     self.canmove = True
