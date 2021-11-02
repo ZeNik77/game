@@ -70,6 +70,9 @@ class Player(pygame.sprite.Sprite):
         self.screen.blit(self.block_r.image, self.block_r.rect, special_flags=pygame.BLEND_RGBA_MULT)
 
     def update(self):
+        if self.hp <= 0:
+            print(self.enemy.colour, 'WON!!!!')
+            exit(0)
         # print(self.hp)
         img_dir = path.join(path.dirname(__file__), 'Assets')
         self.speedx = 0
