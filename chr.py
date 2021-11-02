@@ -201,13 +201,17 @@ class Player(pygame.sprite.Sprite):
 
 class Nikita_Dev(Player, pygame.sprite.Sprite):
     def __init__(self, screen, colour):
+        self.chr = 'Nikita_Dev'
         self.screen = screen
         pygame.sprite.Sprite.__init__(self)
         Player.__init__(self, self.screen, colour)
         img_dir = path.join(path.dirname(__file__), 'Assets')
+    def update2(self):
+        pass
 
 class Lesha(Player, pygame.sprite.Sprite):
     def __init__(self, screen, colour):
+        self.chr = 'Lesha'
         self.bullet_sprite = []
         self.trajectory = []
         self.bullets = []
