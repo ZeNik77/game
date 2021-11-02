@@ -114,19 +114,35 @@ while running:
                     a = 'NikitaDev'
                     p = 'gaster.png'
                     player = chr.Nikita_Dev(screen, 'blue')
+                    player.enemy = player2
+                    player2.enemy = player
+                    player.enemygroup = player2_group
+                    player2.enemygroup = player1_group
                 else:
                     a2 = 'NikitaDev'
                     p2 = 'gaster.png'
                     player2 = chr.Nikita_Dev(screen, 'red')
+                    player.enemy = player2
+                    player2.enemy = player
+                    player.enemygroup = player2_group
+                    player2.enemygroup = player1_group
             if event.key == pygame.K_2 and flag == 2:
                 if not select_phase:
                     a = 'Lesha'
                     p = 'lesha.png'
                     player = chr.Lesha(screen, 'blue')
+                    player.enemy = player2
+                    player2.enemy = player
+                    player.enemygroup = player2_group
+                    player2.enemygroup = player1_group
                 else:
                     a2 = 'Lesha'
                     p2 = 'lesha.png'
                     player2 = chr.Lesha(screen, 'red')
+                    player.enemy = player2
+                    player2.enemy = player
+                    player.enemygroup = player2_group
+                    player2.enemygroup = player1_group
             if event.key == pygame.K_SPACE and flag == 2:
                 select_phase = not select_phase
     if flag == 2:
