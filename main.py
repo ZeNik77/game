@@ -198,11 +198,13 @@ while running:
         screen.blit(bg, bg_rect)
         screen.blit(t_chr1, t_chr1_rect)
         screen.blit(t_chr2, t_chr2_rect)
+
         pygame.draw.rect(screen, RED, (200, 75, 30, (500 - player.hp) // 3.3))
         pygame.draw.rect(screen, GREEN, (200, (75 + (500 - player.hp) // 3.3), 30, player.hp // 3.3))
         pygame.draw.rect(screen, RED, (770, 75, 30, (500 - player2.hp) // 3.3))
         pygame.draw.rect(screen, GREEN, (770, (75 + (500 - player2.hp) // 3.3), 30, player2.hp // 3.3))
         # all_sprites.draw(screen)
+
         player.update2()
         player2.update2()
         player.update()
@@ -210,6 +212,7 @@ while running:
         # bullet1.update()
         screen.blit(chr_1, chr1_rect)
         screen.blit(chr_2, chr2_rect)
+
     elif flag == 1:
         screen.blit(main_menu, main_menu_rect)
         screen.blit(t, t_rect)
@@ -223,6 +226,7 @@ while running:
         t_choice_rect = t.get_rect()
         t_choice_rect.centerx, t_rect.centery = 450, 30
         screen.blit(t_choice, t_choice_rect)
+
     pygame.display.flip()
 
 pygame.quit()

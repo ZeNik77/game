@@ -5,7 +5,6 @@ import math
 WIDTH = 1000
 HEIGHT = 650
 
-
 class Player(pygame.sprite.Sprite):
     def __init__(self, screen, colour):
         self.permspeed = 1
@@ -217,12 +216,19 @@ class Nikita_Dev(Player, pygame.sprite.Sprite):
         self.a2flag1 = True
         self.a2flag2 = True
         self.a2flag3 = True
+        self.flag_ability3 = False
+        self.ability3 = 0
+        self.ability3_cd = 0
+        self.IT = False
+        self.IT_user = self.colour
     def update2(self):
         keystate = pygame.key.get_pressed()
         if (keystate[self.abkeys[0]] or self.flag_ability1) and self.ability1_cd == 0:
             self.ow5()
         if (keystate[self.abkeys[1]] or self.flag_ability2) and self.ability2_cd == 0:
             self.knifes()
+        if (keystate[self.abkeys[2]] or self.flag_ability3) and self.ability3_cd == 0:
+            self.ult()
         if self.ability1_cd != 0:
             self.ability1_cd += 1
             if self.ability1_cd >= 600:
@@ -231,6 +237,10 @@ class Nikita_Dev(Player, pygame.sprite.Sprite):
             self.ability2_cd += 1
             if self.ability2_cd >= 300:
                 self.ability2_cd = 0
+        if self.ability3_cd != 0:
+            self.ability3_cd += 1
+            if self.ability3_cd >= 300:
+                self.ability3_cd = 0
     def ow5(self):
         img_dir = path.join(path.dirname(__file__), 'Assets')
         self.flag_ability = True
@@ -600,6 +610,30 @@ class Nikita_Dev(Player, pygame.sprite.Sprite):
                 self.ability2 = 0
                 self.ability2_cd = 1
 
+    def ult(self):
+        img_dir = path.join(path.dirname(__file__), 'Assets')
+        self.flag_ability3 = True
+        self.enemy.canmove = False
+        self.enemy.flag_ability = True
+        self.ability3 += 1
+        self.it = pygame.sprite.Sprite()
+        self.it.image = pygame.image.load(path.join(img_dir, 'it.png')).convert()
+        self.it.rect = self.it.image.get_rect()
+        self.it.rect.x = 0
+        self.it.rect.y = 0
+        self.screen.blit(self.it.image, self.it.rect)
+        hits = pygame.sprite.spritecollide(self.it, self.enemygroup, False)
+        for hit in hits:
+            try:
+                hit.hp -= 1.3
+            except:
+                pass
+        if self.ability3 == 240:
+            self.flag_ability3 = False
+            self.enemy.canmove = True
+            self.enemy.flag_ability = False
+            self.ability3 = 0
+            self.ability3_cd = 1
 class Lesha(Player, pygame.sprite.Sprite):
     def __init__(self, screen, colour):
         self.chr = 'Lesha'
