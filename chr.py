@@ -89,7 +89,7 @@ class Player(pygame.sprite.Sprite):
                 self.blocking = False
                 self.canmove = True
         if self.block_r.canblock == False and self.flag_ability == False:
-            self.block_r.rect.x, self.block_r.rect.y = 800, 500
+            self.block_r.rect.x, self.block_r.rect.y = 800, 0
             self.blocking = False
             self.canmove = False
             if self.last:
@@ -206,8 +206,399 @@ class Nikita_Dev(Player, pygame.sprite.Sprite):
         pygame.sprite.Sprite.__init__(self)
         Player.__init__(self, self.screen, colour)
         img_dir = path.join(path.dirname(__file__), 'Assets')
+        self.flag_ability1 = False
+        self.ability1_phase = 1
+        self.ability1 = 0
+        self.ability1_cd = 0
+        self.flag_ability2 = False
+        self.ability2 = 0
+        self.ability2_cd = 0
+        self.ability2_phase = 1
+        self.a2flag1 = True
+        self.a2flag2 = True
+        self.a2flag3 = True
     def update2(self):
-        pass
+        keystate = pygame.key.get_pressed()
+        if (keystate[self.abkeys[0]] or self.flag_ability1) and self.ability1_cd == 0:
+            self.ow5()
+        if (keystate[self.abkeys[1]] or self.flag_ability2) and self.ability2_cd == 0:
+            self.knifes()
+        if self.ability1_cd != 0:
+            self.ability1_cd += 1
+            if self.ability1_cd >= 600:
+                self.ability1_cd = 0
+        if self.ability2_cd != 0:
+            self.ability2_cd += 1
+            if self.ability2_cd >= 300:
+                self.ability2_cd = 0
+    def ow5(self):
+        img_dir = path.join(path.dirname(__file__), 'Assets')
+        self.flag_ability = True
+        self.flag_ability1 = True
+        self.canmove = False
+        if self.ability1_phase == 1:
+            self.ability1 += 1
+            if self.last:
+                a = 95
+                xd = 1
+            else:
+                a = -95
+                xd = 2
+            if self.ability1 == 90:
+                self.ability1 = 0
+                self.ability1_phase = 2
+            self.friend1 = pygame.sprite.Sprite()
+            self.friend1.image = pygame.image.load(path.join(img_dir, f'{self.colour}{xd}_0.png')).convert()
+            self.friend1.rect = self.friend1.image.get_rect()
+            if self.last:
+                self.friend1.rect.x = self.rect.x - a - a
+            else:
+                self.friend1.rect.x = self.rect.x + a + a
+            self.friend1.rect.y = self.rect.y
+            self.friend2 = pygame.sprite.Sprite()
+            self.friend2.image = pygame.image.load(path.join(img_dir, f'{self.colour}{xd}_0.png')).convert()
+            self.friend2.rect = self.friend2.image.get_rect()
+            if self.last:
+                self.friend2.rect.x = self.rect.x - a
+            else:
+                self.friend2.rect.x = self.rect.x + a
+            self.friend2.rect.y = self.rect.y + 50
+            self.friend3 = pygame.sprite.Sprite()
+            self.friend3.image = pygame.image.load(path.join(img_dir, f'{self.colour}{xd}_0.png')).convert()
+            self.friend3.rect = self.friend3.image.get_rect()
+            if self.last:
+                self.friend3.rect.x = self.rect.x - a
+            else:
+                self.friend3.rect.x = self.rect.x + a
+            self.friend3.rect.y = self.rect.y - 50
+            self.friend1.image.set_colorkey((255, 255, 255))
+            self.friend2.image.set_colorkey((255, 255, 255))
+            self.friend3.image.set_colorkey((255, 255, 255))
+            self.screen.blit(self.friend3.image, self.friend3.rect)
+            self.screen.blit(self.friend1.image, self.friend1.rect)
+            self.screen.blit(self.friend2.image, self.friend2.rect)
+        if self.ability1_phase == 2:
+            if self.last:
+                if self.enemy.rect.x < self.rect.x:
+                    self.ability1_phase = 5
+                else:
+                    self.friend3.image = pygame.image.load(path.join(img_dir, f'{self.colour}2_0.png')).convert()
+                    self.friend3.image.set_colorkey((255, 255, 255))
+                    self.enemy.canmove = False
+                    self.enemy.flag_ability = True
+                    self.friend3.rect.x = self.enemy.rect.x + 85 + 10
+                    self.ability1 += 1
+                    if self.ability1 == 30:
+                        self.ability1_phase = 3
+                        self.ability1 = 0
+                    self.screen.blit(self.friend3.image, self.friend3.rect)
+                    self.screen.blit(self.friend1.image, self.friend1.rect)
+                    self.screen.blit(self.friend2.image, self.friend2.rect)
+            else:
+                if self.enemy.rect.x > self.rect.x:
+                    self.ability1_phase = 5
+                else:
+                    self.friend3.image = pygame.image.load(path.join(img_dir, f'{self.colour}1_0.png')).convert()
+                    self.friend3.image.set_colorkey((255, 255, 255))
+                    self.enemy.canmove = False
+                    self.enemy.flag_ability = True
+                    self.friend3.rect.x = self.enemy.rect.x - 85 - 10
+                    self.ability1 += 1
+                    if self.ability1 == 30:
+                        self.ability1_phase = 3
+                        self.ability1 = 0
+                    self.screen.blit(self.friend3.image, self.friend3.rect)
+                    self.screen.blit(self.friend1.image, self.friend1.rect)
+                    self.screen.blit(self.friend2.image, self.friend2.rect)
+        if self.ability1_phase == 3:
+            self.rhand = pygame.sprite.Sprite()
+            self.lhand = pygame.sprite.Sprite()
+            if self.last:
+                self.rhand.image = pygame.image.load(path.join(img_dir, 'right_hand.png')).convert()
+                self.lhand.image = pygame.image.load(path.join(img_dir, 'left_hand.png')).convert()
+            else:
+                self.rhand.image = pygame.image.load(path.join(img_dir, 'right_hand2.png')).convert()
+                self.lhand.image = pygame.image.load(path.join(img_dir, 'left_hand2.png')).convert()
+            self.rhand.rect = self.rhand.image.get_rect()
+            self.lhand.rect = self.lhand.image.get_rect()
+            self.rhand.image.set_colorkey((255, 255, 255))
+            self.lhand.image.set_colorkey((255, 255, 255))
+            if self.last:
+                self.rhand.rect.x = self.friend1.rect.x - 10
+                self.rhand.rect.y = self.friend1.rect.y - 42.5 - 15
+                self.lhand.rect.x = self.friend1.rect.x - 40 - 10 - 30
+                self.lhand.rect.y = self.friend1.rect.y - 15 + 30
+            else:
+                self.rhand.rect.x = self.friend1.rect.x + 42.5 - 10
+                self.rhand.rect.y = self.friend1.rect.y - 35 - 10
+                self.lhand.rect.x = self.friend1.rect.x + 85 + 10 + 10
+                self.lhand.rect.y = self.friend1.rect.y - 10
+            self.blaster1 = pygame.sprite.Sprite()
+            self.blaster2 = pygame.sprite.Sprite()
+            self.blaster3 = pygame.sprite.Sprite()
+            self.blaster1.image = pygame.image.load(path.join(img_dir, 'blaster.png')).convert()
+            self.blaster2.image = pygame.image.load(path.join(img_dir, 'blaster.png')).convert()
+            self.blaster3.image = pygame.image.load(path.join(img_dir, 'blaster.png')).convert()
+            self.blaster1.image.set_colorkey((246, 246, 246))
+            self.blaster2.image.set_colorkey((246, 246, 246))
+            self.blaster3.image.set_colorkey((246, 246, 246))
+            self.blaster1.rect = self.blaster1.image.get_rect()
+            self.blaster2.rect = self.blaster1.image.get_rect()
+            self.blaster3.rect = self.blaster1.image.get_rect()
+            self.blaster2.rect.centerx = self.enemy.rect.centerx
+            self.blaster2.rect.y = self.enemy.rect.y - 41 - 10
+            self.blaster1.rect.x = self.blaster2.rect.x - 30 - 5
+            self.blaster1.rect.y = self.enemy.rect.y - 41 - 10
+            self.blaster3.rect.x = self.blaster2.rect.x + 30 + 5
+            self.blaster3.rect.y = self.enemy.rect.y - 41 - 10
+            self.bone1 = pygame.sprite.Sprite()
+            self.bone2 = pygame.sprite.Sprite()
+            self.bone3 = pygame.sprite.Sprite()
+            self.bone1.image = pygame.image.load(path.join(img_dir, 'bone.png')).convert()
+            self.bone2.image = self.bone1.image
+            self.bone3.image = self.bone1.image
+            self.bone1.image.set_colorkey((255, 255, 255))
+            self.bone2.image.set_colorkey((255, 255, 255))
+            self.bone3.image.set_colorkey((255, 255, 255))
+            self.bone1.rect = self.bone1.image.get_rect()
+            self.bone2.rect = self.bone2.image.get_rect()
+            self.bone3.rect = self.bone3.image.get_rect()
+            if self.last:
+                self.bone1.rect.x = self.enemy.rect.x + 85 + 5
+                self.bone2.rect.x = self.enemy.rect.x + 85 + 5
+                self.bone3.rect.x = self.enemy.rect.x + 85 + 5
+            else:
+                self.bone1.rect.x = self.enemy.rect.x - 30 - 5
+                self.bone2.rect.x = self.enemy.rect.x - 30 - 5
+                self.bone3.rect.x = self.enemy.rect.x - 30 - 5
+
+            self.bone1.rect.y = self.enemy.rect.y
+            self.bone2.rect.y = self.enemy.rect.y + 28
+            self.bone3.rect.y = self.bone2.rect.y + 28
+            self.screen.blit(self.rhand.image, self.rhand.rect)
+            self.screen.blit(self.lhand.image, self.lhand.rect)
+            self.screen.blit(self.blaster1.image, self.blaster1.rect)
+            self.screen.blit(self.blaster2.image, self.blaster2.rect)
+            self.screen.blit(self.blaster3.image, self.blaster3.rect)
+            self.screen.blit(self.bone3.image, self.bone3.rect)
+            self.screen.blit(self.bone2.image, self.bone2.rect)
+            self.screen.blit(self.bone1.image, self.bone1.rect)
+            self.screen.blit(self.friend1.image, self.friend1.rect)
+            self.screen.blit(self.friend2.image, self.friend2.rect)
+            self.screen.blit(self.friend3.image, self.friend3.rect)
+            self.ability1 += 1
+            if self.ability1 == 30:
+                self.ability1 = 0
+                self.ability1_phase = 4
+        if self.ability1_phase == 4:
+            self.screen.blit(self.rhand.image, self.rhand.rect)
+            self.screen.blit(self.lhand.image, self.lhand.rect)
+            self.screen.blit(self.blaster1.image, self.blaster1.rect)
+            self.screen.blit(self.blaster2.image, self.blaster2.rect)
+            self.screen.blit(self.blaster3.image, self.blaster3.rect)
+            self.screen.blit(self.bone3.image, self.bone3.rect)
+            self.screen.blit(self.bone2.image, self.bone2.rect)
+            self.screen.blit(self.bone1.image, self.bone1.rect)
+            self.screen.blit(self.friend1.image, self.friend1.rect)
+            self.screen.blit(self.friend2.image, self.friend2.rect)
+            self.screen.blit(self.friend3.image, self.friend3.rect)
+            self.lhand_blaster = pygame.sprite.Sprite()
+            self.rhand_blaster = pygame.sprite.Sprite()
+            self.b1_laser = pygame.sprite.Sprite()
+            self.b2_laser = pygame.sprite.Sprite()
+            self.b3_laser = pygame.sprite.Sprite()
+            self.lhand_blaster.image = pygame.Surface((1000, 90))
+            self.rhand_blaster.image = pygame.Surface((1000, 90))
+            self.lhand_blaster.image.fill((255, 0, 0))
+            self.rhand_blaster.image.fill((255, 0, 0))
+            self.lhand_blaster.rect = self.lhand_blaster.image.get_rect()
+            self.rhand_blaster.rect = self.rhand_blaster.image.get_rect()
+            if self.last:
+                self.lhand_blaster.rect.x = self.lhand.rect.x + 80 + 5
+                self.rhand_blaster.rect.x = self.rhand.rect.x + 80 + 5
+            else:
+                self.lhand_blaster.rect.x = self.lhand.rect.x - 1000 - 5
+                self.rhand_blaster.rect.x = self.rhand.rect.x - 1000 - 5
+            self.lhand_blaster.rect.centery = self.lhand.rect.y + 75
+            self.rhand_blaster.rect.centery = self.rhand.rect.y + 75
+            self.b1_laser.image = pygame.Surface((25, 1000))
+            self.b2_laser.image = pygame.Surface((25, 1000))
+            self.b3_laser.image = pygame.Surface((25, 1000))
+            self.b1_laser.image.fill((0, 220, 255))
+            self.b2_laser.image.fill((0, 220, 255))
+            self.b3_laser.image.fill((0, 220, 255))
+            self.b1_laser.rect = self.b1_laser.image.get_rect()
+            self.b2_laser.rect = self.b2_laser.image.get_rect()
+            self.b3_laser.rect = self.b3_laser.image.get_rect()
+            self.b1_laser.rect.centerx = self.blaster1.rect.centerx
+            self.b1_laser.rect.y = self.blaster1.rect.y + 40 + 5
+            self.b2_laser.rect.centerx = self.blaster2.rect.centerx
+            self.b2_laser.rect.y = self.blaster2.rect.y + 40 + 5
+            self.b3_laser.rect.centerx = self.blaster3.rect.centerx
+            self.b3_laser.rect.y = self.blaster3.rect.y + 40 + 5
+
+            self.ability1 += 1
+
+            self.screen.blit(self.rhand_blaster.image, self.rhand_blaster.rect)
+            self.screen.blit(self.lhand_blaster.image, self.lhand_blaster.rect)
+            self.screen.blit(self.b1_laser.image, self.b1_laser.rect)
+            self.screen.blit(self.b2_laser.image, self.b2_laser.rect)
+            self.screen.blit(self.b3_laser.image, self.b3_laser.rect)
+
+            if self.last:
+                self.bone1.rect.x -= 1
+                self.bone2.rect.x -= 1
+                self.bone3.rect.x -= 1
+            else:
+                self.bone1.rect.x += 1
+                self.bone2.rect.x += 1
+                self.bone3.rect.x += 1
+            self.screen.blit(self.rhand.image, self.rhand.rect)
+            self.screen.blit(self.lhand.image, self.lhand.rect)
+            self.screen.blit(self.blaster1.image, self.blaster1.rect)
+            self.screen.blit(self.blaster2.image, self.blaster2.rect)
+            self.screen.blit(self.blaster3.image, self.blaster3.rect)
+            self.screen.blit(self.bone3.image, self.bone3.rect)
+            self.screen.blit(self.bone2.image, self.bone2.rect)
+            self.screen.blit(self.bone1.image, self.bone1.rect)
+            self.screen.blit(self.friend1.image, self.friend1.rect)
+            self.screen.blit(self.friend2.image, self.friend2.rect)
+            self.screen.blit(self.friend3.image, self.friend3.rect)
+            hits = pygame.sprite.spritecollide(self.bone1, self.enemygroup, False)
+            for hit in hits:
+                try:
+                    hit.hp -= 0.25
+                except:
+                    pass
+            hits = pygame.sprite.spritecollide(self.bone2, self.enemygroup, False)
+            for hit in hits:
+                try:
+                    hit.hp -= 0.25
+                except:
+                    pass
+            hits = pygame.sprite.spritecollide(self.bone3, self.enemygroup, False)
+            for hit in hits:
+                try:
+                    hit.hp -= 0.25
+                except:
+                    pass
+            hits = pygame.sprite.spritecollide(self.b1_laser, self.enemygroup, False)
+            for hit in hits:
+                try:
+                    hit.hp -= 0.25
+                except:
+                    pass
+            hits = pygame.sprite.spritecollide(self.b2_laser, self.enemygroup, False)
+            for hit in hits:
+                try:
+                    hit.hp -= 0.25
+                except:
+                    pass
+            hits = pygame.sprite.spritecollide(self.b3_laser, self.enemygroup, False)
+            for hit in hits:
+                try:
+                    hit.hp -= 0.25
+                except:
+                    pass
+            hits = pygame.sprite.spritecollide(self.rhand_blaster, self.enemygroup, False)
+            for hit in hits:
+                try:
+                    hit.hp -= 0.25
+                except:
+                    pass
+            hits = pygame.sprite.spritecollide(self.lhand_blaster, self.enemygroup, False)
+            for hit in hits:
+                try:
+                    hit.hp -= 0.25
+                except:
+                    pass
+
+            if self.ability1 == 90:
+                self.ability1 = 0
+                self.ability1_phase = 5
+        if self.ability1_phase == 5:
+            self.enemy.canmove = True
+            self.enemy.flag_ability = False
+            self.flag_ability = False
+            self.flag_ability1 = False
+            self.ability1_cd = 1
+            self.canmove = True
+            self.ability1_phase = 1
+
+    def knifes(self):
+        self.canmove = False
+        self.flag_ability2 = True
+        img_dir = path.join(path.dirname(__file__), 'Assets')
+        if self.ability2_phase == 1:
+            self.knife1 = pygame.sprite.Sprite()
+            self.knife2 = pygame.sprite.Sprite()
+            self.knife3 = pygame.sprite.Sprite()
+            self.knife1.image = pygame.image.load(path.join(img_dir, 'knife1.png')).convert()
+            self.knife2.image = pygame.image.load(path.join(img_dir, 'knife2.png')).convert()
+            self.knife3.image = pygame.image.load(path.join(img_dir, 'knife3.png')).convert()
+            self.knife1.image.set_colorkey((0, 0, 0))
+            self.knife2.image.set_colorkey((0, 0, 0))
+            self.knife3.image.set_colorkey((0, 0, 0))
+
+            # 120x30, 30x120
+            self.knife1.rect = self.knife1.image.get_rect()
+            self.knife2.rect = self.knife2.image.get_rect()
+            self.knife3.rect = self.knife3.image.get_rect()
+            self.knife1.rect.x = self.enemy.rect.x - 120 - 20
+            self.knife1.rect.centery = self.enemy.rect.centery
+            self.knife2.rect.x = self.enemy.rect.x + 120 + 20
+            self.knife2.rect.centery = self.enemy.rect.centery
+            self.knife3.rect.centerx = self.enemy.rect.centerx
+            self.knife3.rect.y = self.enemy.rect.y - 120 - 60
+            self.ability2 += 1
+
+            if self.ability2 == 20:
+                self.ability2_phase = 2
+                self.ability2 = 0
+            self.screen.blit(self.knife1.image, self.knife1.rect)
+            self.screen.blit(self.knife2.image, self.knife2.rect)
+            self.screen.blit(self.knife3.image, self.knife3.rect)
+            self.a2flag1 = True
+            self.a2flag2 = True
+            self.a2flag3 = True
+        if self.ability2_phase == 2:
+            self.knife1.rect.x += 1
+            self.knife2.rect.x -= 1
+            self.knife3.rect.y += 7
+            if self.a2flag1:
+                self.screen.blit(self.knife1.image, self.knife1.rect)
+                hits = pygame.sprite.spritecollide(self.knife1, self.enemygroup, False)
+                for hit in hits:
+                    try:
+                        hit.hp -= 1
+                    except:
+                        hit.canblock = False
+                        flag1 = False
+            if self.a2flag2:
+                self.screen.blit(self.knife2.image, self.knife2.rect)
+                hits = pygame.sprite.spritecollide(self.knife2, self.enemygroup, False)
+                for hit in hits:
+                    try:
+                        hit.hp -= 1
+                    except:
+                        hit.canblock = False
+                        flag2 = False
+            if self.a2flag3:
+                self.screen.blit(self.knife3.image, self.knife3.rect)
+                hits = pygame.sprite.spritecollide(self.knife3, self.enemygroup, False)
+                for hit in hits:
+                    try:
+                        hit.hp -= 15
+                    except:
+                        hit.canblock = False
+                        flag3 = False
+            self.ability2 += 1
+            if self.ability2 == 120:
+                self.canmove = True
+                self.flag_ability2 = False
+                self.ability2_phase = 1
+                self.ability2 = 0
+                self.ability2_cd = 1
 
 class Lesha(Player, pygame.sprite.Sprite):
     def __init__(self, screen, colour):
@@ -249,15 +640,15 @@ class Lesha(Player, pygame.sprite.Sprite):
             self.laser()
         if self.ability1_cd != 0:
             self.ability1_cd += 1
-            if self.ability1_cd >= 300:
+            if self.ability1_cd >= 180:
                 self.ability1_cd = 0
         if self.ability2_cd != 0:
             self.ability2_cd += 1
-            if self.ability2_cd >= 900:
+            if self.ability2_cd >= 600:
                 self.ability2_cd = 0
         if self.ability3_cd != 0:
             self.ability3_cd += 1
-            if self.ability3_cd >= 1500:
+            if self.ability3_cd >= 900:
                 self.ability3_cd = 0
     def laser(self):
         flag = True
@@ -314,7 +705,6 @@ class Lesha(Player, pygame.sprite.Sprite):
             self.ability2 = 0
             self.ability2_cd = 1
             self.flag_ability2 = False
-            self.flag_ability = False
 
     def move_towards_player(self, bullet, i):
         if len(self.flag_vec) == 0 or self.flag_vec[i] == False:
@@ -364,6 +754,7 @@ class Lesha(Player, pygame.sprite.Sprite):
                     # print(self.bullets)
                     b = pygame.sprite.Sprite()
                     b.image = self.bullets[i][0]
+                    b.image.set_colorkey((255, 255, 255))
                     b.rect = b.image.get_rect()
                     b.rect.x = self.bullets[i][1][0]
                     b.rect.y = self.bullets[i][1][1]
