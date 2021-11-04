@@ -1,12 +1,14 @@
 import pygame
 from os import path
 import math
+import random
 
 WIDTH = 1000
 HEIGHT = 650
 
 class Player(pygame.sprite.Sprite):
     def __init__(self, screen, colour):
+        self.attack_damage = 1.5
         self.permspeed = 1
         self.colour = colour
         self.screen = screen
@@ -178,7 +180,7 @@ class Player(pygame.sprite.Sprite):
                 hits = pygame.sprite.spritecollide(self.attack_r, self.enemygroup, False)
                 for hit in hits:
                     try:
-                        hit.hp -= 1
+                        hit.hp -= self.attack_damage
                     except:
                         hit.canblock = False
                 if self.attackacount >= 44:
@@ -197,7 +199,56 @@ class Player(pygame.sprite.Sprite):
         # print(self.flag_ability)
         self.screen.blit(self.image, self.rect)
 
+class Bogdan(Player, pygame.sprite.Sprite):
+    def __init__(self, screen, colour):
+        self.chr = 'Bogdan'
+        self.screen = screen
+        pygame.sprite.Sprite.__init__(self)
+        Player.__init__(self, screen, colour)
+        self.attack_damage = 1.7
+        self.ability1_cd = 0
+        self.ability2_cd = 0
+        self.ability2 = 0
+        self.ab2_flag = False
+        self.flag_ability2 = False
 
+    def update2(self):
+        keystate = pygame.key.get_pressed()
+        if keystate[self.abkeys[0]] and self.ability1_cd == 0:
+            self.tp()
+        if (keystate[self.abkeys[1]] or self.flag_ability2) and self.ability2_cd == 0:
+            self.stun()
+
+        if self.ability1_cd != 0:
+            self.ability1_cd += 1
+            if self.ability1_cd >= 180:
+                self.ability1_cd = 0
+        if self.ability2_cd != 0:
+            self.ability2_cd += 1
+            if self.ability2_cd >= 180:
+                self.ability2_cd = 0
+
+    def tp(self):
+        self.rect.x = random.randint(1, 1000)
+        self.ability1_cd = 1
+    def stun(self):
+        self.enemy.canmove = False
+        self.enemy.flag_ability = True
+        self.flag_ability2 = True
+        self.enemy.rect.y = self.rect.y + 15
+        if self.ab2_flag:
+            self.enemy.rect.y += 2
+        else:
+            self.enemy.rect.y -= 2
+        self.ab2_flag = not self.ab2_flag
+        self.ability2 += 1
+        if self.ability2 == 180:
+            self.enemy.rect.y = self.rect.y
+            self.ability2 = 0
+            self.flag_ability2 = False
+            self.ability2_cd = 1
+            self.enemy.canmove = True
+            self.enemy.flag_ability = False
 class Grisha(Player, pygame.sprite.Sprite):
     def __init__(self, screen, colour):
         self.chr = 'Grisha'
@@ -774,7 +825,7 @@ class Lesha(Player, pygame.sprite.Sprite):
             self.laser()
         if self.ability1_cd != 0:
             self.ability1_cd += 1
-            if self.ability1_cd >= 150:
+            if self.ability1_cd >= 90:
                 self.ability1_cd = 0
         if self.ability2_cd != 0:
             self.ability2_cd += 1
