@@ -70,7 +70,8 @@ class Player(pygame.sprite.Sprite):
 
     def update(self):
         if self.hp <= 0:
-            print(self.enemy.colour, 'WON!!!!')
+            with open('whowon.txt', 'w') as f:
+                f.write(f'{self.enemy.colour} WON!!!!!!!')
             exit(0)
         # print(self.hp)
         img_dir = path.join(path.dirname(__file__), 'Assets')
@@ -175,7 +176,6 @@ class Player(pygame.sprite.Sprite):
                 self.attack()
                 flag = True
                 hits = pygame.sprite.spritecollide(self.attack_r, self.enemygroup, False)
-                print(hits)
                 for hit in hits:
                     try:
                         hit.hp -= 1
@@ -198,6 +198,108 @@ class Player(pygame.sprite.Sprite):
         self.screen.blit(self.image, self.rect)
 
 
+class Grisha(Player, pygame.sprite.Sprite):
+    def __init__(self, screen, colour):
+        self.chr = 'Grisha'
+        self.screen = screen
+        pygame.sprite.Sprite.__init__(self)
+        Player.__init__(self, screen, colour)
+        self.permhp = 0
+        self.ability1 = 0
+        self.ability1_cd = 0
+        self.flag_ability1 = False
+        self.flag_ability2 = False
+        self.ability2_cd = 0
+        self.ability3_cd = 0
+        self.flag_ability3 = False
+        self.ability3 = 0
+        self.ab3_permhp = 0
+        self.ab3_difference = 0
+    def update2(self):
+        keystate = pygame.key.get_pressed()
+        if (keystate[self.abkeys[0]] or self.flag_ability1) and self.ability1_cd == 0:
+            self.shield()
+        if (keystate[self.abkeys[1]] or self.flag_ability2) and self.ability2_cd == 0:
+            self.atk_2()
+        if (keystate[self.abkeys[2]] or self.flag_ability3) and self.ability3_cd == 0:
+            self.timestop()
+        if self.ability1_cd != 0:
+            self.ability1_cd += 1
+            if self.ability1_cd >= 480:
+                self.ability1_cd = 0
+        if self.ability2_cd != 0:
+            self.ability2_cd += 1
+            if self.ability2_cd >= 180:
+                self.ability2_cd = 0
+        if self.ability3_cd != 0:
+            self.ability3_cd += 1
+            if self.ability3_cd >= 1200:
+                self.ability3_cd = 0
+    def shield(self):
+        self.flag_ability = True
+        self.flag_ability1 = True
+        self.canmove = False
+        if self.ability1 == 0:
+            self.permhp = self.hp
+        self.hp = self.permhp
+        self.ability1 += 1
+        if self.ability1 == 240:
+            self.ability1 = 0
+            self.permhp = 0
+            self.flag_ability = False
+            self.flag_ability1 = False
+            self.canmove = True
+            self.ability1_cd = 1
+
+    def atk_2(self):
+        self.canmove = False
+        self.flag_ability = True
+        self.flag_ability2 = True
+        img_dir = path.join(path.dirname(__file__), 'Assets')
+        self.attackacount += 1
+        if self.attackacount >= 30:
+            if self.last:
+                self.rect.x += 20
+            else:
+                self.rect.x -= 20
+        if self.last:
+            self.image = pygame.image.load(
+                path.join(img_dir, f'{self.colour}1_a_{self.attackacount // 15}.png')).convert()
+        else:
+            self.image = pygame.image.load(
+                path.join(img_dir, f'{self.colour}2_a_{self.attackacount // 15}.png')).convert()
+        self.attack()
+        hits = pygame.sprite.spritecollide(self.attack_r, self.enemygroup, False)
+        for hit in hits:
+            try:
+                hit.hp -= 5
+            except:
+                hit.canblock = False
+        if self.attackacount >= 44:
+            self.attackacount = 15
+            self.canmove = True
+            self.flag_ability2 = False
+            self.ability2_cd = 1
+
+    def timestop(self):
+        self.enemy.canmove = False
+        self.enemy.flag_ability = True
+        self.flag_ability3 = True
+        if self.ability3 == 0:
+            self.ab3_permhp = self.enemy.hp
+        self.ability3 += 1
+        if self.enemy.hp < self.ab3_permhp:
+            self.ab3_difference += (self.ab3_permhp - self.enemy.hp)
+            self.enemy.hp = self.ab3_permhp
+        if self.ability3 == 300:
+            self.enemy.canmpve = True
+            self.enemy.flag_ability = False
+            self.flag_ability3 = False
+            self.ability3 = 0
+            self.enemy.hp -= self.ab3_difference
+            self.ab3_permhp = 0
+            self.ab3_difference = 0
+            self.ability3_cd = 1
 class Nikita_Dev(Player, pygame.sprite.Sprite):
     def __init__(self, screen, colour):
         self.chr = 'Nikita_Dev'
@@ -219,8 +321,6 @@ class Nikita_Dev(Player, pygame.sprite.Sprite):
         self.flag_ability3 = False
         self.ability3 = 0
         self.ability3_cd = 0
-        self.IT = False
-        self.IT_user = self.colour
     def update2(self):
         keystate = pygame.key.get_pressed()
         if (keystate[self.abkeys[0]] or self.flag_ability1) and self.ability1_cd == 0:
@@ -674,15 +774,15 @@ class Lesha(Player, pygame.sprite.Sprite):
             self.laser()
         if self.ability1_cd != 0:
             self.ability1_cd += 1
-            if self.ability1_cd >= 180:
+            if self.ability1_cd >= 150:
                 self.ability1_cd = 0
         if self.ability2_cd != 0:
             self.ability2_cd += 1
-            if self.ability2_cd >= 600:
+            if self.ability2_cd >= 300:
                 self.ability2_cd = 0
         if self.ability3_cd != 0:
             self.ability3_cd += 1
-            if self.ability3_cd >= 900:
+            if self.ability3_cd >= 420:
                 self.ability3_cd = 0
     def laser(self):
         flag = True
