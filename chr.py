@@ -199,6 +199,67 @@ class Player(pygame.sprite.Sprite):
         # print(self.flag_ability)
         self.screen.blit(self.image, self.rect)
 
+class Georg(Player, pygame.sprite.Sprite):
+    def __init__(self, screen, colour):
+        self.chr = 'Georg'
+        pygame.sprite.Sprite.__init__(self)
+        Player.__init__(self, screen, colour)
+        self.ability1_cd = 0
+        self.flag_ability1 = False
+        self.ability1 = 0
+    def update2(self):
+        keystate = pygame.key.get_pressed()
+        if (keystate[self.abkeys[0]] or self.flag_ability1) and self.ability1_cd == 0:
+            self.fire()
+        if self.ability1_cd != 0:
+            self.ability1_cd += 1
+            if self.ability1_cd >= 480:
+                self.ability1_cd = 0
+    def fire(self):
+        self.flag_ability = True
+        self.flag_ability1 = True
+        self.canmove = False
+        self.ability1 += 1
+        img_dir = path.join(path.dirname(__file__), 'Assets')
+        if self.last:
+            img_dir = path.join(img_dir, 'fire-right')
+        else:
+            img_dir = path.join(img_dir, 'fire-left')
+        xd = str(self.ability1%60)
+        if int(xd) < 10:
+            xd = '0' + xd
+        if self.ability1 == 1:
+            self.fires = pygame.sprite.Sprite()
+            self.fires.image = pygame.image.load(path.join(img_dir, f'frame_{xd}_delay-0.02s.gif'))
+            self.fires.image.set_colorkey((0, 0, 0))
+            self.fires.rect = self.fires.image.get_rect()
+            if self.last:
+                self.fires.rect.x = self.rect.x + 85 + 3
+            else:
+                self.fires.rect.x = self.rect.x - 75 - 3
+        self.fires.image = pygame.image.load(path.join(img_dir, f'frame_{xd}_delay-0.02s.gif'))
+        self.fires.image.set_colorkey((0, 0, 0))
+        self.fires.rect.centery = self.rect.centery
+        if self.last:
+            self.fires.rect.x += 1
+        else:
+            self.fires.rect.x -= 1
+        self.screen.blit(self.fires.image, self.fires.rect)
+        hits = pygame.sprite.spritecollide(self.fires, self.enemygroup, False)
+        for hit in hits:
+            try:
+                hit.hp -= 10
+            except:
+                hit.canblock = False
+        if self.ability1 >= 90:
+            self.ability1 = 0
+            self.flag_ability1 = False
+            self.flag_ability = False
+            self.canmove = True
+            self.ability1_cd = 1
+
+    def chaos(self):
+        pass
 class Bogdan(Player, pygame.sprite.Sprite):
     def __init__(self, screen, colour):
         self.chr = 'Bogdan'

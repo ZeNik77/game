@@ -197,6 +197,35 @@ while running:
                     player2_group.add(player2.block_r)
                     player.enemygroup = player2_group
                     player2.enemygroup = player1_group
+            if event.key == pygame.K_5 and flag == 2:
+                if not select_phase:
+                    a = 'Georg'
+                    p = 'Georg.png'
+                    player = chr.Georg(screen, 'blue')
+                    player.enemy = player2
+                    player2.enemy = player
+                    player1_group = pygame.sprite.Group()
+                    player1_group.add(player)
+                    player1_group.add(player.block_r)
+                    player2_group = pygame.sprite.Group()
+                    player2_group.add(player2)
+                    player2_group.add(player2.block_r)
+                    player.enemygroup = player2_group
+                    player2.enemygroup = player1_group
+                else:
+                    a2 = 'Georg'
+                    p2 = 'Georg.png'
+                    player2 = chr.Georg(screen, 'red')
+                    player.enemy = player2
+                    player2.enemy = player
+                    player1_group = pygame.sprite.Group()
+                    player1_group.add(player)
+                    player1_group.add(player.block_r)
+                    player2_group = pygame.sprite.Group()
+                    player2_group.add(player2)
+                    player2_group.add(player2.block_r)
+                    player.enemygroup = player2_group
+                    player2.enemygroup = player1_group
             if event.key == pygame.K_2 and flag == 2:
                 if not select_phase:
                     a = 'Lesha'
@@ -280,7 +309,7 @@ while running:
             c = 'first'
         else:
             c = 'second'
-        t_choice = font3.render("space for changing player, 1 - NikitaDev, 2 - Lesha, 3 - Grisha, 4 - Bogdan, current: " + c + ' z to start', True, font2_color)
+        t_choice = font3.render("space to change player, 1 - NikitaDev, 2 - Lesha, 3 - Grisha, 4 - Bogdan, 5 - Georg, current: " + c + ' z to start', True, font2_color)
         t_choice_rect = t.get_rect()
         t_choice_rect.centerx, t_rect.centery = 450, 30
         screen.blit(t_choice, t_choice_rect)
