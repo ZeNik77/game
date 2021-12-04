@@ -207,14 +207,43 @@ class Georg(Player, pygame.sprite.Sprite):
         self.ability1_cd = 0
         self.flag_ability1 = False
         self.ability1 = 0
+        self.ability2 = 0
+        self.flag_ability2 = False
+        self.ability2_cd = 0
+        self.ability2_phase = 0
+        self.main_bullet = pygame.sprite.Sprite()
+        self.main_bullet.image = pygame.Surface((30, 30))
+        self.main_bullet.rect = self.main_bullet.image.get_rect()
+        self.big_bullet = pygame.sprite.Sprite()
+        self.big_bullet.image = pygame.Surface((250, 166))
+        self.big_bullet.rect = self.big_bullet.image.get_rect()
+        self.big_bullet.rect.x = 1350
+        self.big_bullet.rect.y = 950
+        self.bcolour = 0
+        self.flag_ability3 = False
+        self.ability3_cd = 0
+        self.ability3 = 0
     def update2(self):
         keystate = pygame.key.get_pressed()
         if (keystate[self.abkeys[0]] or self.flag_ability1) and self.ability1_cd == 0:
             self.fire()
+        if(keystate[self.abkeys[1]] or self.flag_ability2) and self.ability2_cd == 0:
+            self.chaos()
+        if(keystate[self.abkeys[2]] or self.flag_ability3) and self.ability3_cd == 0:
+            self.train()
+
         if self.ability1_cd != 0:
             self.ability1_cd += 1
             if self.ability1_cd >= 480:
                 self.ability1_cd = 0
+        if self.ability2_cd != 0:
+            self.ability2_cd += 1
+            if self.ability2_cd >= 480:
+                self.ability2_cd = 0
+        if self.ability3_cd != 0:
+            self.ability3_cd += 1
+            if self.ability3_cd >= 600:
+                self.ability3_cd = 0
     def fire(self):
         self.flag_ability = True
         self.flag_ability1 = True
@@ -257,9 +286,95 @@ class Georg(Player, pygame.sprite.Sprite):
             self.flag_ability = False
             self.canmove = True
             self.ability1_cd = 1
-
     def chaos(self):
-        pass
+        self.flag_ability = True
+        self.flag_ability2 = True
+        if self.ability2_phase == 0:
+            self.big_bullet.rect.centerx = self.rect.centerx
+            self.big_bullet.rect.y = self.rect.y - 205
+            self.ability2_phase = 1
+        if self.ability2_phase == 1:
+            self.canmove = False
+            self.big_bullet.rect.y -= 3
+            self.big_bullet.image.fill((self.bcolour, self.bcolour, self.bcolour))
+            self.bcolour = 255 - self.bcolour
+            self.screen.blit(self.big_bullet.image, self.big_bullet.rect)
+            if self.big_bullet.rect.centery - 100 <= 10:
+                self.ability2_phase = 2
+                self.canmove = True
+        if self.ability2_phase == 2:
+            if self.ability2 >= 990:
+                self.ability2_phase = 3
+            elif self.ability2 % 66 == 0:
+                self.main_bullet.rect.x = random.randint(1, 1000)
+                self.main_bullet.rect.y = 10
+            else:
+                self.main_bullet.rect.y += 15
+            self.ability2 += 1
+            print(self.main_bullet.rect.center)
+            self.main_bullet.image.fill((self.bcolour, self.bcolour, self.bcolour))
+            self.bcolour = 255 - self.bcolour
+            self.screen.blit(self.main_bullet.image, self.main_bullet.rect)
+            hits = pygame.sprite.spritecollide(self.main_bullet, self.enemygroup, False)
+            for hit in hits:
+                try:
+                    hit.hp -= 25
+                except:
+                    hit.canblock = False
+        if self.ability2_phase == 3:
+            self.flag_ability = False
+            self.flag_ability2 = False
+            self.ability2 = 0
+            self.ability2_phase = 0
+            self.ability2_cd = 1
+    def train(self):
+        self.flag_ability3 = True
+        self.flag_ability = True
+        self.attacking = False
+        self.ability3 += 1
+        if self.last:
+            img_dir = img_dir = path.join(path.dirname(__file__), 'Assets')
+            self.image = pygame.image.load(path.join(img_dir, f'{self.colour}1_a_2.png')).convert()
+            if self.ability3 <= 61 and self.enemy.rect.x + 85 < 1000:
+                self.rect.x += 10
+                hits = pygame.sprite.spritecollide(self, self.enemygroup, False)
+                for hit in hits:
+                    hit.rect.x += 10
+                    try:
+                        hit.hp -= 0.5
+                    except:
+                        pass
+
+            elif self.enemy.rect.x + 85 >= 1000:
+                self.ability3 = 0
+                self.flag_ability3 = False
+                self.flag_ability = False
+                self.ability3_cd = 1
+                self.enemy.hp -= 150
+        else:
+            img_dir = img_dir = path.join(path.dirname(__file__), 'Assets')
+            self.image = pygame.image.load(path.join(img_dir, f'{self.colour}2_a_2.png')).convert()
+            if self.ability3 <= 61 and self.enemy.rect.x > 0:
+                self.rect.x -= 10
+                hits = pygame.sprite.spritecollide(self, self.enemygroup, False)
+                for hit in hits:
+                    hit.rect.x -= 10
+                    try:
+                        hit.hp -= 0.5
+                    except:
+                        pass
+
+            elif self.enemy.rect.x <= 0:
+                self.ability3 = 0
+                self.flag_ability3 = False
+                self.flag_ability = False
+                self.ability3_cd = 1
+                self.enemy.hp -= 150
+        if self.ability3 > 61:
+            self.ability3 = 0
+            self.flag_ability3 = False
+            self.flag_ability = False
+            self.ability3_cd = 1
 class Bogdan(Player, pygame.sprite.Sprite):
     def __init__(self, screen, colour):
         self.chr = 'Bogdan'

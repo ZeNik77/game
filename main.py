@@ -299,7 +299,6 @@ while running:
         # bullet1.update()
         screen.blit(chr_1, chr1_rect)
         screen.blit(chr_2, chr2_rect)
-
     elif flag == 1:
         screen.blit(main_menu, main_menu_rect)
         screen.blit(t, t_rect)
