@@ -234,15 +234,15 @@ class Georg(Player, pygame.sprite.Sprite):
 
         if self.ability1_cd != 0:
             self.ability1_cd += 1
-            if self.ability1_cd >= 480:
+            if self.ability1_cd >= 720:
                 self.ability1_cd = 0
         if self.ability2_cd != 0:
             self.ability2_cd += 1
-            if self.ability2_cd >= 480:
+            if self.ability2_cd >= 900:
                 self.ability2_cd = 0
         if self.ability3_cd != 0:
             self.ability3_cd += 1
-            if self.ability3_cd >= 600:
+            if self.ability3_cd >= 1200:
                 self.ability3_cd = 0
     def fire(self):
         self.flag_ability = True
@@ -318,7 +318,7 @@ class Georg(Player, pygame.sprite.Sprite):
             hits = pygame.sprite.spritecollide(self.main_bullet, self.enemygroup, False)
             for hit in hits:
                 try:
-                    hit.hp -= 25
+                    hit.hp -= 12.5
                 except:
                     hit.canblock = False
         if self.ability2_phase == 3:
@@ -333,15 +333,15 @@ class Georg(Player, pygame.sprite.Sprite):
         self.attacking = False
         self.ability3 += 1
         if self.last:
-            img_dir = img_dir = path.join(path.dirname(__file__), 'Assets')
-            self.image = pygame.image.load(path.join(img_dir, f'{self.colour}1_a_2.png')).convert()
             if self.ability3 <= 61 and self.enemy.rect.x + 85 < 1000:
                 self.rect.x += 10
                 hits = pygame.sprite.spritecollide(self, self.enemygroup, False)
                 for hit in hits:
                     hit.rect.x += 10
                     try:
-                        hit.hp -= 0.5
+                        hit.canmove = False
+                        hit.flag_ability = True
+                        hit.hp -= 2
                     except:
                         pass
 
@@ -350,17 +350,20 @@ class Georg(Player, pygame.sprite.Sprite):
                 self.flag_ability3 = False
                 self.flag_ability = False
                 self.ability3_cd = 1
-                self.enemy.hp -= 150
+                self.enemy.hp -= 250
+                self.enemy.canmove = True
+                self.enemy.flag_ability = False
         else:
-            img_dir = img_dir = path.join(path.dirname(__file__), 'Assets')
-            self.image = pygame.image.load(path.join(img_dir, f'{self.colour}2_a_2.png')).convert()
             if self.ability3 <= 61 and self.enemy.rect.x > 0:
                 self.rect.x -= 10
                 hits = pygame.sprite.spritecollide(self, self.enemygroup, False)
                 for hit in hits:
                     hit.rect.x -= 10
                     try:
-                        hit.hp -= 0.5
+                        hit.canmove = False
+                        hit.flag_ability = True
+                        hit.hp -= 2
+
                     except:
                         pass
 
@@ -369,12 +372,16 @@ class Georg(Player, pygame.sprite.Sprite):
                 self.flag_ability3 = False
                 self.flag_ability = False
                 self.ability3_cd = 1
-                self.enemy.hp -= 150
+                self.enemy.hp -= 250
+                self.enemy.canmove = True
+                self.enemy.flag_ability = False
         if self.ability3 > 61:
             self.ability3 = 0
             self.flag_ability3 = False
             self.flag_ability = False
             self.ability3_cd = 1
+            self.enemy.canmove = True
+            self.enemy.flag_ability = False
 class Bogdan(Player, pygame.sprite.Sprite):
     def __init__(self, screen, colour):
         self.chr = 'Bogdan'
@@ -1028,7 +1035,7 @@ class Lesha(Player, pygame.sprite.Sprite):
         for h in hit:
             if flag:
                 try:
-                    h.hp -= 1.5
+                    h.hp -= 3
                     # print(h.hp)
                 except:
                     h.canblock = False
@@ -1054,7 +1061,7 @@ class Lesha(Player, pygame.sprite.Sprite):
             hits = pygame.sprite.spritecollide(self.circle, self.enemygroup, False)
             for hit in hits:
                 try:
-                    hit.permspeed = 0.6
+                    hit.permspeed = 0.3
                 except:
                     pass
                     # print('xd')
@@ -1106,7 +1113,7 @@ class Lesha(Player, pygame.sprite.Sprite):
                     hits = pygame.sprite.spritecollide(b, self.enemygroup, False)
                     for hit in hits:
                         try:
-                            hit.hp -= 0.5
+                            hit.hp -= 0.75
                         except:
                             hit.canblock = False
                     self.screen.blit(b.image, b.rect)
