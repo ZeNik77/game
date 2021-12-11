@@ -290,6 +290,7 @@ while running:
         player2.update2()
         player.update()
         player2.update()
+        print(player.blockdur, player2.blockdur)
         # bullet1.update()
         screen.blit(chr_1, chr1_rect)
         screen.blit(chr_2, chr2_rect)

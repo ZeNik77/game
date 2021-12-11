@@ -182,7 +182,7 @@ class Player(pygame.sprite.Sprite):
                 flag = True
                 hits = pygame.sprite.spritecollide(self.attack_r, self.enemygroup, False)
                 for hit in hits:
-                    if not hit.blocking:
+                    if not hit.blocking or hit.blockdur <= 0:
                         hit.hp -= self.attack_damage
                     else:
                         hit.blockdur -= 1
@@ -317,7 +317,7 @@ class Georg(Player, pygame.sprite.Sprite):
             self.screen.blit(self.main_bullet.image, self.main_bullet.rect)
             hits = pygame.sprite.spritecollide(self.main_bullet, self.enemygroup, False)
             for hit in hits:
-                if not hit.blocking:
+                if not hit.blocking or hit.blockdur <= 0:
                     hit.hp -= 12.5
                 else:
                     hit.blockdur -= 1
@@ -499,7 +499,7 @@ class Grisha(Player, pygame.sprite.Sprite):
         self.attack()
         hits = pygame.sprite.spritecollide(self.attack_r, self.enemygroup, False)
         for hit in hits:
-            if not hit.blocking:
+            if not hit.blocking or hit.blockdur <= 0:
                 hit.hp -= 5
             else:
                 hit.blockdur -= 1
@@ -512,6 +512,7 @@ class Grisha(Player, pygame.sprite.Sprite):
     def timestop(self):
         self.enemy.canmove = False
         self.enemy.flag_ability = True
+        self.enemy.blockdur = -1
         self.flag_ability3 = True
         if self.ability3 == 0:
             self.ab3_permhp = self.enemy.hp
@@ -520,7 +521,7 @@ class Grisha(Player, pygame.sprite.Sprite):
             self.ab3_difference += (self.ab3_permhp - self.enemy.hp)
             self.enemy.hp = self.ab3_permhp
         if self.ability3 == 300:
-            self.enemy.canmpve = True
+            self.enemy.canmove = True
             self.enemy.flag_ability = False
             self.flag_ability3 = False
             self.ability3 = 0
@@ -804,49 +805,49 @@ class Nikita_Dev(Player, pygame.sprite.Sprite):
             self.screen.blit(self.friend3.image, self.friend3.rect)
             hits = pygame.sprite.spritecollide(self.bone1, self.enemygroup, False)
             for hit in hits:
-                if not hit.blocking:
+                if not hit.blocking or hit.blockdur <= 0:
                     hit.hp -= 0.25
                 else:
                     hit.blockdur -= 1
             hits = pygame.sprite.spritecollide(self.bone2, self.enemygroup, False)
             for hit in hits:
-                if not hit.blocking:
+                if not hit.blocking or hit.blockdur <= 0:
                     hit.hp -= 0.25
                 else:
                     hit.blockdur -= 1
             hits = pygame.sprite.spritecollide(self.bone3, self.enemygroup, False)
             for hit in hits:
-                if not hit.blocking:
+                if not hit.blocking or hit.blockdur <= 0:
                     hit.hp -= 0.25
                 else:
                     hit.blockdur -= 1
             hits = pygame.sprite.spritecollide(self.b1_laser, self.enemygroup, False)
             for hit in hits:
-                if not hit.blocking:
+                if not hit.blocking or hit.blockdur <= 0:
                     hit.hp -= 0.25
                 else:
                     hit.blockdur -= 1
             hits = pygame.sprite.spritecollide(self.b2_laser, self.enemygroup, False)
             for hit in hits:
-                if not hit.blocking:
+                if not hit.blocking or hit.blockdur <= 0:
                     hit.hp -= 0.25
                 else:
                     hit.blockdur -= 1
             hits = pygame.sprite.spritecollide(self.b3_laser, self.enemygroup, False)
             for hit in hits:
-                if not hit.blocking:
+                if not hit.blocking or hit.blockdur <= 0:
                     hit.hp -= 0.25
                 else:
                     hit.blockdur -= 1
             hits = pygame.sprite.spritecollide(self.rhand_blaster, self.enemygroup, False)
             for hit in hits:
-                if not hit.blocking:
+                if not hit.blocking or hit.blockdur <= 0:
                     hit.hp -= 0.25
                 else:
                     hit.blockdur -= 1
             hits = pygame.sprite.spritecollide(self.lhand_blaster, self.enemygroup, False)
             for hit in hits:
-                if not hit.blocking:
+                if not hit.blocking or hit.blockdur <= 0:
                     hit.hp -= 0.25
                 else:
                     hit.blockdur -= 1
@@ -907,7 +908,7 @@ class Nikita_Dev(Player, pygame.sprite.Sprite):
                 self.screen.blit(self.knife1.image, self.knife1.rect)
                 hits = pygame.sprite.spritecollide(self.knife1, self.enemygroup, False)
                 for hit in hits:
-                    if not hit.blocking:
+                    if not hit.blocking or hit.blockdur <= 0:
                         hit.hp -= 1
                     else:
                         hit.blockdur -= 1
@@ -915,7 +916,7 @@ class Nikita_Dev(Player, pygame.sprite.Sprite):
                 self.screen.blit(self.knife2.image, self.knife2.rect)
                 hits = pygame.sprite.spritecollide(self.knife2, self.enemygroup, False)
                 for hit in hits:
-                    if not hit.blocking:
+                    if not hit.blocking or hit.blockdur <= 0:
                         hit.hp -= 1
                     else:
                         hit.blockdur -= 1
@@ -1097,7 +1098,7 @@ class Lesha(Player, pygame.sprite.Sprite):
                     self.move_towards_player(b, i)
                     hits = pygame.sprite.spritecollide(b, self.enemygroup, False)
                     for hit in hits:
-                        if not hit.blocking:
+                        if not hit.blocking or hit.blockdur <= 0:
                             hit.hp -= 0.75
                         else:
                             hit.blockdur -= 1
