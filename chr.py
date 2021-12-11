@@ -179,7 +179,6 @@ class Player(pygame.sprite.Sprite):
                 else:
                     self.image = pygame.image.load(path.join(img_dir, f'{self.colour}2_a_{self.attackacount // 15}.png')).convert()
                 self.attack()
-                flag = True
                 hits = pygame.sprite.spritecollide(self.attack_r, self.enemygroup, False)
                 for hit in hits:
                     if not hit.blocking or hit.blockdur <= 0:
@@ -202,6 +201,120 @@ class Player(pygame.sprite.Sprite):
         # print(self.flag_ability)
         self.screen.blit(self.image, self.rect)
 
+
+class Nikita(Player, pygame.sprite.Sprite):
+    def __init__(self, screen, colour):
+        self.chr = 'Nikita'
+        pygame.sprite.Sprite.__init__(self)
+        Player.__init__(self, screen, colour)
+        self.ability1_cd = 0
+        self.flag_ability1 = False
+        self.ability1 = 0
+        self.ability1_phase = 0
+        self.ability2 = 0
+        self.flag_ability2 = False
+        self.ability2_cd = 0
+        self.ability2_phase = 1
+
+
+        self.awakening = 0
+        self.awakening_phase = 0
+
+    def update2(self):
+        keystate = pygame.key.get_pressed()
+        if self.awakening == 0:
+            if (keystate[self.abkeys[0]] or self.flag_ability1) and self.ability1_cd == 0:
+                self.rat()
+            if (keystate[self.abkeys[1]] or self.flag_ability2) and self.ability2_cd == 0:
+                self.trick()
+            print(f'keystate {keystate[self.abkeys[1]]} flag_ability2 {self.flag_ability2} cd {self.ability2_cd} phase {self.ability2_phase}')
+        if self.ability1_cd != 0:
+            self.ability1_cd += 1
+            if self.ability1_cd >= 360:
+                self.ability1_cd = 0
+        if self.ability2_cd != 0:
+            self.ability2_cd += 1
+            if self.ability2_cd >= 360:
+                self.ability2_cd = 0
+    def rat(self):
+        self.flag_ability = True
+        self.flag_ability1 = True
+        if self.ability1_phase == 0:
+            self.last = not self.last
+            if self.last:
+                self.rect.x = self.enemy.rect.x - 90
+            else:
+                self.rect.x = self.enemy.rect.x + 90
+            self.ability1_phase = 1
+        elif self.ability1_phase == 1:
+            img_dir = path.join(path.dirname(__file__), 'Assets')
+            self.attackacount += 1
+            if self.attackacount >= 30:
+                if self.last:
+                    self.rect.x += 10
+                else:
+                    self.rect.x -= 10
+            if self.last:
+                self.image = pygame.image.load(path.join(img_dir, f'{self.colour}1_a_{self.attackacount // 15}.png')).convert()
+            else:
+                self.image = pygame.image.load(path.join(img_dir, f'{self.colour}2_a_{self.attackacount // 15}.png')).convert()
+            self.attack()
+            hits = pygame.sprite.spritecollide(self.attack_r, self.enemygroup, False)
+            for hit in hits:
+                # 6
+                if not self.enemy.blocking:
+                    hit.hp -= 6
+                else:
+                    hit.blockdur -= 1
+            if self.attackacount >= 44:
+                self.ability1_phase = 2
+        else:
+            self.enemy.blockdur = 45
+            self.attackacount = 15
+            self.canmove = True
+            self.flag_ability1 = False
+            self.ability1_cd = 1
+            self.flag_ability = False
+            self.ability1_phase = 0
+            self.enemy.flag_ability = False
+            self.enemy.canmove = True
+
+    def trick(self):
+        self.flag_ability = True
+        self.flag_ability2 = True
+        if self.ability2_phase == 1:
+            if abs(self.rect.x - self.enemy.rect.x) < 250 and self.enemy.blocking == True:
+                self.enemy.canmove = False
+                self.enemy.flag_ability = True
+                img_dir = path.join(path.dirname(__file__), 'Assets')
+                self.attackacount += 1
+                if self.attackacount >= 30:
+                    if self.last:
+                        self.rect.x += 15
+                    else:
+                        self.rect.x -= 15
+                if self.last:
+                    self.image = pygame.image.load(
+                        path.join(img_dir, f'{self.colour}1_a_{self.attackacount // 15}.png')).convert()
+                else:
+                    self.image = pygame.image.load(
+                        path.join(img_dir, f'{self.colour}2_a_{self.attackacount // 15}.png')).convert()
+                self.attack()
+                hits = pygame.sprite.spritecollide(self.attack_r, self.enemygroup, False)
+                for hit in hits:
+                    hit.hp -= 10
+                if self.attackacount >= 44:
+                    self.ability2_phase = 2
+            else:
+                self.ability2_phase = 2
+        elif self.ability2_phase == 2:
+            self.flag_ability = False
+            self.flag_ability2 = False
+            self.enemy.canmove = True
+            self.enemy.flag_ability = False
+            self.attackacount = 15
+            self.ability2_cd = 1
+            self.ability2_phase = 1
 class Georg(Player, pygame.sprite.Sprite):
     def __init__(self, screen, colour):
         self.chr = 'Georg'
