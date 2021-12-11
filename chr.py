@@ -410,6 +410,7 @@ class Bogdan(Player, pygame.sprite.Sprite):
         self.ability1_cd = 1
     def stun(self):
         self.enemy.canmove = False
+        self.enemy.blockdur = -1
         self.enemy.flag_ability = True
         self.flag_ability2 = True
         self.enemy.rect.y = self.rect.y + 15
@@ -424,6 +425,9 @@ class Bogdan(Player, pygame.sprite.Sprite):
             self.ability2 = 0
             self.flag_ability2 = False
             self.ability2_cd = 1
+            self.enemy.blockdur = 45
+            self.enemy.canblock = True
+            self.enemy.dur = 0
             self.enemy.canmove = True
             self.enemy.flag_ability = False
 class Grisha(Player, pygame.sprite.Sprite):
