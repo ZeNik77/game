@@ -11,8 +11,7 @@ BLACK = (0, 0, 0)
 RED = (255, 0, 0)
 GREEN = (0, 255, 0)
 BLUE = (0, 0, 255)
-
-# Создаем игру и окно
+# Создаем игру и окноa
 pygame.init()
 pygame.mixer.init()
 screen = pygame.display.set_mode((WIDTH, HEIGHT))
@@ -87,10 +86,8 @@ t_choice_rect.centerx, t_rect.centery = 450, 30
 
 player1_group = pygame.sprite.Group()
 player1_group.add(player)
-player1_group.add(player.block_r)
 player2_group = pygame.sprite.Group()
 player2_group.add(player2)
-player2_group.add(player2.block_r)
 player.enemy = player2
 player2.enemy = player
 player.enemygroup = player2_group
@@ -119,10 +116,10 @@ while running:
                     player2.enemy = player
                     player1_group = pygame.sprite.Group()
                     player1_group.add(player)
-                    player1_group.add(player.block_r)
+                    
                     player2_group = pygame.sprite.Group()
                     player2_group.add(player2)
-                    player2_group.add(player2.block_r)
+                    
                     player.enemygroup = player2_group
                     player2.enemygroup = player1_group
                 else:
@@ -133,10 +130,10 @@ while running:
                     player2.enemy = player
                     player1_group = pygame.sprite.Group()
                     player1_group.add(player)
-                    player1_group.add(player.block_r)
+                    
                     player2_group = pygame.sprite.Group()
                     player2_group.add(player2)
-                    player2_group.add(player2.block_r)
+                    
                     player.enemygroup = player2_group
                     player2.enemygroup = player1_group
             if event.key == pygame.K_4 and flag == 2:
@@ -148,10 +145,10 @@ while running:
                     player2.enemy = player
                     player1_group = pygame.sprite.Group()
                     player1_group.add(player)
-                    player1_group.add(player.block_r)
+                    
                     player2_group = pygame.sprite.Group()
                     player2_group.add(player2)
-                    player2_group.add(player2.block_r)
+                    
                     player.enemygroup = player2_group
                     player2.enemygroup = player1_group
                 else:
@@ -162,10 +159,10 @@ while running:
                     player2.enemy = player
                     player1_group = pygame.sprite.Group()
                     player1_group.add(player)
-                    player1_group.add(player.block_r)
+                    
                     player2_group = pygame.sprite.Group()
                     player2_group.add(player2)
-                    player2_group.add(player2.block_r)
+                    
                     player.enemygroup = player2_group
                     player2.enemygroup = player1_group
             if event.key == pygame.K_1 and flag == 2:
@@ -177,10 +174,10 @@ while running:
                     player2.enemy = player
                     player1_group = pygame.sprite.Group()
                     player1_group.add(player)
-                    player1_group.add(player.block_r)
+                    
                     player2_group = pygame.sprite.Group()
                     player2_group.add(player2)
-                    player2_group.add(player2.block_r)
+                    
                     player.enemygroup = player2_group
                     player2.enemygroup = player1_group
                 else:
@@ -191,10 +188,10 @@ while running:
                     player2.enemy = player
                     player1_group = pygame.sprite.Group()
                     player1_group.add(player)
-                    player1_group.add(player.block_r)
+                    
                     player2_group = pygame.sprite.Group()
                     player2_group.add(player2)
-                    player2_group.add(player2.block_r)
+                    
                     player.enemygroup = player2_group
                     player2.enemygroup = player1_group
             if event.key == pygame.K_5 and flag == 2:
@@ -206,10 +203,10 @@ while running:
                     player2.enemy = player
                     player1_group = pygame.sprite.Group()
                     player1_group.add(player)
-                    player1_group.add(player.block_r)
+                    
                     player2_group = pygame.sprite.Group()
                     player2_group.add(player2)
-                    player2_group.add(player2.block_r)
+                    
                     player.enemygroup = player2_group
                     player2.enemygroup = player1_group
                 else:
@@ -220,10 +217,10 @@ while running:
                     player2.enemy = player
                     player1_group = pygame.sprite.Group()
                     player1_group.add(player)
-                    player1_group.add(player.block_r)
+                    
                     player2_group = pygame.sprite.Group()
                     player2_group.add(player2)
-                    player2_group.add(player2.block_r)
+                    
                     player.enemygroup = player2_group
                     player2.enemygroup = player1_group
             if event.key == pygame.K_2 and flag == 2:
@@ -235,10 +232,10 @@ while running:
                     player2.enemy = player
                     player1_group = pygame.sprite.Group()
                     player1_group.add(player)
-                    player1_group.add(player.block_r)
+                    
                     player2_group = pygame.sprite.Group()
                     player2_group.add(player2)
-                    player2_group.add(player2.block_r)
+                    
                     player.enemygroup = player2_group
                     player2.enemygroup = player1_group
                 else:
@@ -249,10 +246,10 @@ while running:
                     player2.enemy = player
                     player1_group = pygame.sprite.Group()
                     player1_group.add(player)
-                    player1_group.add(player.block_r)
+                    
                     player2_group = pygame.sprite.Group()
                     player2_group.add(player2)
-                    player2_group.add(player2.block_r)
+                    
                     player.enemygroup = player2_group
                     player2.enemygroup = player1_group
             if event.key == pygame.K_SPACE and flag == 2:
@@ -277,7 +274,6 @@ while running:
         t_chr2_rect = t_chr1.get_rect()
         t_chr2_rect.right = WIDTH - 20
         t_chr2_rect.centery = 30
-
     # all_sprites.update()
     screen.fill(BLACK)
     if not flag:
@@ -290,8 +286,6 @@ while running:
         pygame.draw.rect(screen, GREEN, (200, (75 + (500 - player.hp) // 3.3), 30, player.hp // 3.3))
         pygame.draw.rect(screen, RED, (770, 75, 30, (500 - player2.hp) // 3.3))
         pygame.draw.rect(screen, GREEN, (770, (75 + (500 - player2.hp) // 3.3), 30, player2.hp // 3.3))
-        # all_sprites.draw(screen)
-
         player.update2()
         player2.update2()
         player.update()

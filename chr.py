@@ -8,6 +8,8 @@ HEIGHT = 650
 
 class Player(pygame.sprite.Sprite):
     def __init__(self, screen, colour):
+        self.dur = 0
+        self.blockdur = 45
         self.attack_damage = 1.5
         self.permspeed = 1
         self.colour = colour
@@ -15,6 +17,7 @@ class Player(pygame.sprite.Sprite):
         self.hp = 500
         self.enemy = 0
         self.enemygroup = 0
+        self.canblock = True
         pygame.sprite.Sprite.__init__(self)
         img_dir = path.join(path.dirname(__file__), 'Assets')
         if self.colour == 'blue':
@@ -30,13 +33,15 @@ class Player(pygame.sprite.Sprite):
         self.attack_r.rect = self.attack_r.image.get_rect()
         self.attack_r.image.fill((255, 255, 255))
 
+
         self.block_cd = 0
+        '''
         self.block_r = pygame.sprite.Sprite()
         self.block_r.image = pygame.Surface((50, 100))
         self.block_r.rect = self.attack_r.image.get_rect()
         self.block_r.image.fill((255, 255, 255))
         self.block_r.canblock = True
-
+        '''
         self.blocking = False
         self.attacking = False
         self.flag_ability = False
@@ -63,24 +68,17 @@ class Player(pygame.sprite.Sprite):
             self.attack_r.rect.x, self.attack_r.rect.y = self.rect.x+55, self.rect.y
         self.screen.blit(self.attack_r.image, self.attack_r.rect, special_flags=pygame.BLEND_RGBA_MULT)
 
-    def block(self):
-        if not self.last:
-            self.block_r.rect.x, self.block_r.rect.y = self.rect.x-12.5, self.rect.y
-        else:
-            self.block_r.rect.x, self.block_r.rect.y = self.rect.x+55, self.rect.y
-        self.screen.blit(self.block_r.image, self.block_r.rect, special_flags=pygame.BLEND_RGBA_MULT)
-
     def update(self):
         if self.hp <= 0:
             with open('whowon.txt', 'w') as f:
                 f.write(f'{self.enemy.colour} WON!!!!!!!')
             exit(0)
-        # print(self.hp)
         img_dir = path.join(path.dirname(__file__), 'Assets')
+        if self.blockdur <= 0:
+            self.canblock = False
         self.speedx = 0
-        # print(f'canblock {self.block_r.canblock}   blocking {self.blocking}    cooldown {self.block_cd}')
         keystate = pygame.key.get_pressed()
-        if keystate[self.abkeys[3]] and self.block_r.canblock:
+        if keystate[self.abkeys[3]] and self.canblock:
             self.blocking = True
             self.canmove = False
         elif keystate[self.abkeys[4]] or self.attacking == True:
@@ -90,8 +88,13 @@ class Player(pygame.sprite.Sprite):
             if not self.flag_ability:
                 self.blocking = False
                 self.canmove = True
-        if self.block_r.canblock == False and self.flag_ability == False:
-            self.block_r.rect.x, self.block_r.rect.y = 800, 0
+                if self.blockdur != 45:
+                    self.dur += 1
+                    if self.dur >= 60:
+                        self.dur = 0
+                        self.blockdur = 45
+
+        if self.canblock == False and self.flag_ability == False:
             self.blocking = False
             self.canmove = False
             if self.last:
@@ -103,7 +106,7 @@ class Player(pygame.sprite.Sprite):
             self.block_cd += 1
             if self.block_cd >= 90:
                 self.block_cd = 0
-                self.block_r.canblock = True
+                self.canblock = True
         if self.animcount + 1 >= 60:
             self.animcount = 1
         if self.canmove:
@@ -163,7 +166,7 @@ class Player(pygame.sprite.Sprite):
                     self.image = pygame.image.load(path.join(img_dir, f'{self.colour}1_block.png')).convert()
                 else:
                     self.image = pygame.image.load(path.join(img_dir, f'{self.colour}2_block.png')).convert()
-                self.block()
+                # self.block()
             elif self.attacking:
                 self.attackacount += 1
                 if self.attackacount >= 30:
@@ -179,10 +182,10 @@ class Player(pygame.sprite.Sprite):
                 flag = True
                 hits = pygame.sprite.spritecollide(self.attack_r, self.enemygroup, False)
                 for hit in hits:
-                    try:
+                    if not hit.blocking:
                         hit.hp -= self.attack_damage
-                    except:
-                        hit.canblock = False
+                    else:
+                        hit.blockdur -= 1
                 if self.attackacount >= 44:
                     self.attackacount = 15
                     self.canmove = True
@@ -270,16 +273,13 @@ class Georg(Player, pygame.sprite.Sprite):
         self.fires.image.set_colorkey((0, 0, 0))
         self.fires.rect.centery = self.rect.centery
         if self.last:
-            self.fires.rect.x += 1
+            self.fires.rect.x += 0.5
         else:
-            self.fires.rect.x -= 1
+            self.fires.rect.x -= 0.5
         self.screen.blit(self.fires.image, self.fires.rect)
         hits = pygame.sprite.spritecollide(self.fires, self.enemygroup, False)
         for hit in hits:
-            try:
-                hit.hp -= 10
-            except:
-                hit.canblock = False
+            hit.hp -= 10
         if self.ability1 >= 90:
             self.ability1 = 0
             self.flag_ability1 = False
@@ -317,10 +317,10 @@ class Georg(Player, pygame.sprite.Sprite):
             self.screen.blit(self.main_bullet.image, self.main_bullet.rect)
             hits = pygame.sprite.spritecollide(self.main_bullet, self.enemygroup, False)
             for hit in hits:
-                try:
+                if not hit.blocking:
                     hit.hp -= 12.5
-                except:
-                    hit.canblock = False
+                else:
+                    hit.blockdur -= 1
         if self.ability2_phase == 3:
             self.flag_ability = False
             self.flag_ability2 = False
@@ -338,19 +338,16 @@ class Georg(Player, pygame.sprite.Sprite):
                 hits = pygame.sprite.spritecollide(self, self.enemygroup, False)
                 for hit in hits:
                     hit.rect.x += 10
-                    try:
-                        hit.canmove = False
-                        hit.flag_ability = True
-                        hit.hp -= 2
-                    except:
-                        pass
+                    hit.canmove = False
+                    hit.flag_ability = True
+                    hit.hp -= 2
 
             elif self.enemy.rect.x + 85 >= 1000:
                 self.ability3 = 0
                 self.flag_ability3 = False
                 self.flag_ability = False
                 self.ability3_cd = 1
-                self.enemy.hp -= 250
+                self.enemy.hp -= min(350 - 4 * self.ability3, 250)
                 self.enemy.canmove = True
                 self.enemy.flag_ability = False
         else:
@@ -359,20 +356,17 @@ class Georg(Player, pygame.sprite.Sprite):
                 hits = pygame.sprite.spritecollide(self, self.enemygroup, False)
                 for hit in hits:
                     hit.rect.x -= 10
-                    try:
-                        hit.canmove = False
-                        hit.flag_ability = True
-                        hit.hp -= 2
+                    hit.canmove = False
+                    hit.flag_ability = True
+                    hit.hp -= 2
 
-                    except:
-                        pass
 
             elif self.enemy.rect.x <= 0:
                 self.ability3 = 0
                 self.flag_ability3 = False
                 self.flag_ability = False
                 self.ability3_cd = 1
-                self.enemy.hp -= 250
+                self.enemy.hp -= min(350 - 4 * self.ability3, 250)
                 self.enemy.canmove = True
                 self.enemy.flag_ability = False
         if self.ability3 > 61:
@@ -388,7 +382,7 @@ class Bogdan(Player, pygame.sprite.Sprite):
         self.screen = screen
         pygame.sprite.Sprite.__init__(self)
         Player.__init__(self, screen, colour)
-        self.attack_damage = 1.7
+        self.attack_damage = 2
         self.ability1_cd = 0
         self.ability2_cd = 0
         self.ability2 = 0
@@ -505,10 +499,10 @@ class Grisha(Player, pygame.sprite.Sprite):
         self.attack()
         hits = pygame.sprite.spritecollide(self.attack_r, self.enemygroup, False)
         for hit in hits:
-            try:
+            if not hit.blocking:
                 hit.hp -= 5
-            except:
-                hit.canblock = False
+            else:
+                hit.blockdur -= 1
         if self.attackacount >= 44:
             self.attackacount = 15
             self.canmove = True
@@ -810,52 +804,52 @@ class Nikita_Dev(Player, pygame.sprite.Sprite):
             self.screen.blit(self.friend3.image, self.friend3.rect)
             hits = pygame.sprite.spritecollide(self.bone1, self.enemygroup, False)
             for hit in hits:
-                try:
+                if not hit.blocking:
                     hit.hp -= 0.25
-                except:
-                    pass
+                else:
+                    hit.blockdur -= 1
             hits = pygame.sprite.spritecollide(self.bone2, self.enemygroup, False)
             for hit in hits:
-                try:
+                if not hit.blocking:
                     hit.hp -= 0.25
-                except:
-                    pass
+                else:
+                    hit.blockdur -= 1
             hits = pygame.sprite.spritecollide(self.bone3, self.enemygroup, False)
             for hit in hits:
-                try:
+                if not hit.blocking:
                     hit.hp -= 0.25
-                except:
-                    pass
+                else:
+                    hit.blockdur -= 1
             hits = pygame.sprite.spritecollide(self.b1_laser, self.enemygroup, False)
             for hit in hits:
-                try:
+                if not hit.blocking:
                     hit.hp -= 0.25
-                except:
-                    pass
+                else:
+                    hit.blockdur -= 1
             hits = pygame.sprite.spritecollide(self.b2_laser, self.enemygroup, False)
             for hit in hits:
-                try:
+                if not hit.blocking:
                     hit.hp -= 0.25
-                except:
-                    pass
+                else:
+                    hit.blockdur -= 1
             hits = pygame.sprite.spritecollide(self.b3_laser, self.enemygroup, False)
             for hit in hits:
-                try:
+                if not hit.blocking:
                     hit.hp -= 0.25
-                except:
-                    pass
+                else:
+                    hit.blockdur -= 1
             hits = pygame.sprite.spritecollide(self.rhand_blaster, self.enemygroup, False)
             for hit in hits:
-                try:
+                if not hit.blocking:
                     hit.hp -= 0.25
-                except:
-                    pass
+                else:
+                    hit.blockdur -= 1
             hits = pygame.sprite.spritecollide(self.lhand_blaster, self.enemygroup, False)
             for hit in hits:
-                try:
+                if not hit.blocking:
                     hit.hp -= 0.25
-                except:
-                    pass
+                else:
+                    hit.blockdur -= 1
 
             if self.ability1 == 90:
                 self.ability1 = 0
@@ -913,29 +907,23 @@ class Nikita_Dev(Player, pygame.sprite.Sprite):
                 self.screen.blit(self.knife1.image, self.knife1.rect)
                 hits = pygame.sprite.spritecollide(self.knife1, self.enemygroup, False)
                 for hit in hits:
-                    try:
+                    if not hit.blocking:
                         hit.hp -= 1
-                    except:
-                        hit.canblock = False
-                        flag1 = False
+                    else:
+                        hit.blockdur -= 1
             if self.a2flag2:
                 self.screen.blit(self.knife2.image, self.knife2.rect)
                 hits = pygame.sprite.spritecollide(self.knife2, self.enemygroup, False)
                 for hit in hits:
-                    try:
+                    if not hit.blocking:
                         hit.hp -= 1
-                    except:
-                        hit.canblock = False
-                        flag2 = False
+                    else:
+                        hit.blockdur -= 1
             if self.a2flag3:
                 self.screen.blit(self.knife3.image, self.knife3.rect)
                 hits = pygame.sprite.spritecollide(self.knife3, self.enemygroup, False)
                 for hit in hits:
-                    try:
-                        hit.hp -= 15
-                    except:
-                        hit.canblock = False
-                        flag3 = False
+                    hit.hp -= 15
             self.ability2 += 1
             if self.ability2 == 120:
                 self.canmove = True
@@ -958,10 +946,7 @@ class Nikita_Dev(Player, pygame.sprite.Sprite):
         self.screen.blit(self.it.image, self.it.rect)
         hits = pygame.sprite.spritecollide(self.it, self.enemygroup, False)
         for hit in hits:
-            try:
-                hit.hp -= 1.3
-            except:
-                pass
+            hit.hp -= 1.3
         if self.ability3 == 240:
             self.flag_ability3 = False
             self.enemy.canmove = True
@@ -1112,10 +1097,10 @@ class Lesha(Player, pygame.sprite.Sprite):
                     self.move_towards_player(b, i)
                     hits = pygame.sprite.spritecollide(b, self.enemygroup, False)
                     for hit in hits:
-                        try:
+                        if not hit.blocking:
                             hit.hp -= 0.75
-                        except:
-                            hit.canblock = False
+                        else:
+                            hit.blockdur -= 1
                     self.screen.blit(b.image, b.rect)
             except:
                 for i in range(len(self.bullets)):
