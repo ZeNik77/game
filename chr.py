@@ -311,7 +311,7 @@ class Georg(Player, pygame.sprite.Sprite):
             else:
                 self.main_bullet.rect.y += 15
             self.ability2 += 1
-            print(self.main_bullet.rect.center)
+            # print(self.main_bullet.rect.center)
             self.main_bullet.image.fill((self.bcolour, self.bcolour, self.bcolour))
             self.bcolour = 255 - self.bcolour
             self.screen.blit(self.main_bullet.image, self.main_bullet.rect)
@@ -512,6 +512,7 @@ class Grisha(Player, pygame.sprite.Sprite):
             self.canmove = True
             self.flag_ability2 = False
             self.ability2_cd = 1
+            self.flag_ability = False
 
     def timestop(self):
         self.enemy.canmove = False
