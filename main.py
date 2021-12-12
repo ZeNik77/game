@@ -35,7 +35,7 @@ font_color = (0,0,0)
 
 if player.chr == 'Nikita_Dev':
     a = 'NikitaDev'
-    p = 'gaster.png'
+    p = 'a.png'
 elif player.chr == 'Lesha':
     a = 'Lesha'
     p = 'lesha.png'
@@ -83,7 +83,6 @@ else:
 t_choice = font3.render("space for changing player, 1 - NikitaDev, 2 - Lesha, current: " + c + ' z to start', True, font2_color)
 t_choice_rect = t.get_rect()
 t_choice_rect.centerx, t_rect.centery = 450, 30
-
 player1_group = pygame.sprite.Group()
 player1_group.add(player)
 player2_group = pygame.sprite.Group()
@@ -230,7 +229,7 @@ while running:
             if event.key == pygame.K_6 and flag == 2:
                 if not select_phase:
                     a = 'Nikita'
-                    p = 'gaster.png'
+                    p = 'Nikita.png'
                     player = chr.Nikita(screen, 'blue')
                     player.enemy = player2
                     player2.enemy = player
@@ -244,7 +243,7 @@ while running:
                     player2.enemygroup = player1_group
                 else:
                     a2 = 'Nikita'
-                    p2 = 'gaster.png'
+                    p2 = 'Nikita.png'
                     player2 = chr.Nikita(screen, 'red')
                     player.enemy = player2
                     player2.enemy = player
