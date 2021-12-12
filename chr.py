@@ -228,7 +228,7 @@ class Nikita(Player, pygame.sprite.Sprite):
         self.invinc_cnt = 0
 
         self.awakening = 0
-        self.awakening_phase = 3
+        self.awakening_phase = 1
         self.awakening_cnt = 0
         self.awakening_cd = 0
 
