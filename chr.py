@@ -218,10 +218,15 @@ class Nikita(Player, pygame.sprite.Sprite):
         self.awakening_cd = 0
         self.punch_flag = 0
         self.punch_cnt = 0
+        self.movement = []
+        self.epitaph_phase = 1
+        self.epitaph_cnt = 0
+        self.permhp = 0
 
         self.awakening = 0
         self.awakening_phase = 1
         self.awakening_cnt = 0
+        self.awakening_cd = 0
 
     def update2(self):
         keystate = pygame.key.get_pressed()
@@ -231,51 +236,105 @@ class Nikita(Player, pygame.sprite.Sprite):
                 font_color = (0, 255, 240)
             else:
                 font_color = (255, 10, 100)
-            t = font.render("Base", True, font_color)
-            t_rect = t.get_rect()
+            self.t = font.render("Base", True, font_color)
+            self.t_rect = self.t.get_rect()
             if self.colour == 'blue':
-                t_rect.left = 5
+                self.t_rect.left = 5
             else:
-                t_rect.right = 995
-            t_rect.centery = 425
+                self.t_rect.right = 995
+            self.t_rect.centery = 425
+
+            if self.awakening_cd != 0:
+                self.awakening_cd += 1
+                if self.awakening_cd >= 480:
+                    self.awakening_cd = 0
 
             if (keystate[self.abkeys[0]] or self.flag_ability1) and self.ability1_cd == 0:
                 self.rat()
             if (keystate[self.abkeys[1]] or self.flag_ability2) and self.ability2_cd == 0:
                 self.trick()
-            if keystate[self.abkeys[2]]:
+            if keystate[self.abkeys[2]] and self.awakening_cd == 0:
                 self.awakening = True
                 self.ability1_cd = 0
                 self.ability2_cd = 0
                 self.awakening_cd = 1
-        elif self.awakening == True and self.awakening_phase == 1:
+        elif self.awakening_phase == 1:
             font = pygame.font.Font(None, 40)
             if self.colour == 'blue':
                 font_color = (0, 255, 240)
             else:
                 font_color = (255, 10, 100)
-            t = font.render("RAGE", True, font_color)
-            t_rect = t.get_rect()
+            self.t = font.render("RAGE", True, font_color)
+            self.t_rect = self.t.get_rect()
             if self.colour == 'blue':
-                t_rect.left = 5
+                self.t_rect.left = 5
             else:
-                t_rect.right = 995
-            t_rect.centery = 425
+                self.t_rect.right = 995
+            self.t_rect.centery = 425
 
             self.awakening_cnt += 1
             self.attack_damage = 2
             if (keystate[self.abkeys[0]] or self.flag_ability1) and self.ability1_cd == 0:
                 self.speed()
+            if keystate[self.abkeys[1]] and self.ability2_cd == 0 and self.flag_ability2 == 0:
+                self.attackacount = 15
             if (keystate[self.abkeys[1]] or self.flag_ability2) and self.ability2_cd == 0:
                 self.punch()
+
             if self.awakening_cnt >= 720:
                 self.awakening = False
+                self.awakening_cnt = 0
+                self.awakening_cd = 1
                 self.awakening_phase = 2
+                self.attack_damage = 1.5
                 self.ability1_cd = 0
                 self.ability2_cd = 0
                 self.permspeed = 1
+                self.flag_ability1 = False
+                self.flag_ability2 = False
+        elif self.awakening_phase == 2:
+            font = pygame.font.Font(None, 40)
+            if self.colour == 'blue':
+                font_color = (0, 255, 240)
+            else:
+                font_color = (255, 10, 100)
+            self.t = font.render("Concentration", True, font_color)
+            self.t_rect = self.t.get_rect()
+            if self.colour == 'blue':
+                self.t_rect.left = 5
+            else:
+                self.t_rect.right = 995
+            self.t_rect.centery = 425
 
-            # print(f'keystate {keystate[self.abkeys[1]]} flag_ability2 {self.flag_ability2} cd {self.ability2_cd} phase {self.ability2_phase}')
+            self.awakening_cd += 1
+            if keystate[self.abkeys[0]] and self.ability1_cd == 0 and self.flag_ability1 == 0:
+                self.movement = []
+                self.permhp = self.hp
+            if keystate[self.abkeys[1]] and self.ability2_cd == 0 and self.flag_ability2 == 0:
+                self.permhp = self.hp
+            if (keystate[self.abkeys[0]] or self.flag_ability1) and self.ability1_cd == 0:
+                self.epitaph()
+            if (keystate[self.abkeys[1]] or self.flag_ability2) and self.ability2_cd == 0:
+                self.dash()
+            if keystate[self.abkeys[2]] and self.awakening_cd >= 420:
+                self.awakening_phase = 3
+                self.awakening_cd = 1
+                self.awakening_cnt = 0
+        elif self.awakening_phase == 3:
+            font = pygame.font.Font(None, 40)
+            if self.colour == 'blue':
+                font_color = (0, 255, 240)
+            else:
+                font_color = (255, 10, 100)
+            self.t = font.render("Full Concentration", True, font_color)
+            self.t_rect = self.t.get_rect()
+            if self.colour == 'blue':
+                self.t_rect.left = 5
+            else:
+                self.t_rect.right = 995
+            self.t_rect.centery = 425
+
+            self.awakening_cnt += 1
         if self.awakening == False:
             if self.ability1_cd != 0:
                 self.ability1_cd += 1
@@ -298,7 +357,16 @@ class Nikita(Player, pygame.sprite.Sprite):
                 self.ability2_cd += 1
                 if self.ability2_cd >= 240:
                     self.ability2_cd = 0
-        self.screen.blit(t, t_rect)
+        elif self.awakening_phase == 2:
+            if self.ability1_cd != 0:
+                self.ability1_cd += 1
+                if self.ability1_cd >= 240:
+                    self.ability1_cd = 0
+            if self.ability2_cd != 0:
+                self.ability2_cd += 1
+                if self.ability2_cd >= 180:
+                    self.ability2_cd = 0
+        self.screen.blit(self.t, self.t_rect)
     def rat(self):
         self.flag_ability = True
         self.flag_ability1 = True
@@ -446,8 +514,56 @@ class Nikita(Player, pygame.sprite.Sprite):
             self.flag_ability2 = False
             self.ability2_cd = 1
             self.attackacount = 15
-
-
+    def epitaph(self):
+        self.flag_ability1 = True
+        if self.epitaph_phase == 1:
+            self.movement.append(self.enemy.rect.x)
+            self.epitaph_cnt += 1
+            self.hp = self.permhp
+            if self.epitaph_cnt >= 180:
+                self.epitaph_phase = 2
+                self.epitaph_cnt = 0
+        elif self.epitaph_phase == 2:
+            self.enemy.canmove = False
+            self.enemy.flag_ability = True
+            self.enemy.rect.x = self.movement[self.epitaph_cnt]
+            self.epitaph_cnt += 1
+            if self.epitaph_cnt >= 180:
+                self.epitaph_phase = 3
+        else:
+            self.epitaph_cnt = 0
+            self.epitaph_phase = 1
+            self.enemy.canmove = True
+            self.flag_ability = False
+            self.movement = []
+            self.flag_ability1 = False
+    def dash(self):
+        self.canmove = False
+        self.flag_ability = True
+        self.flag_ability2 = True
+        self.hp = self.permhp
+        img_dir = path.join(path.dirname(__file__), 'Assets')
+        self.animcount += 1
+        if not self.last:
+            self.image = pygame.image.load(path.join(img_dir, f'{self.colour}2_{self.animcount // 9}.png')).convert()
+        else:
+            self.image = pygame.image.load(path.join(img_dir, f'{self.colour}1_{self.animcount // 9}.png')).convert()
+        if self.last:
+            self.right = True
+            self.left = False
+            self.rect.x += 12
+            self.image.set_colorkey((255, 255, 255))
+        else:
+            self.right = False
+            self.left = True
+            self.rect.x -= 12
+            self.image.set_colorkey((255, 255, 255))
+        self.animcount += 1
+        if self.animcount + 1 >= 60:
+            self.animcount = 1
+            self.flag_ability2 = False
+            self.ability2_cd = 1
+            self.flag_ability = False
 class Georg(Player, pygame.sprite.Sprite):
     def __init__(self, screen, colour):
         self.chr = 'Georg'
@@ -622,8 +738,6 @@ class Georg(Player, pygame.sprite.Sprite):
             self.ability3_cd = 1
             self.enemy.canmove = True
             self.enemy.flag_ability = False
-
-
 class Bogdan(Player, pygame.sprite.Sprite):
     def __init__(self, screen, colour):
         self.chr = 'Bogdan'
@@ -678,8 +792,6 @@ class Bogdan(Player, pygame.sprite.Sprite):
             self.enemy.dur = 0
             self.enemy.canmove = True
             self.enemy.flag_ability = False
-
-
 class Grisha(Player, pygame.sprite.Sprite):
     def __init__(self, screen, colour):
         self.chr = 'Grisha'
@@ -784,8 +896,6 @@ class Grisha(Player, pygame.sprite.Sprite):
             self.ab3_permhp = 0
             self.ab3_difference = 0
             self.ability3_cd = 1
-
-
 class Nikita_Dev(Player, pygame.sprite.Sprite):
     def __init__(self, screen, colour):
         self.chr = 'Nikita_Dev'
