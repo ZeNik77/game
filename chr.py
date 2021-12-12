@@ -222,9 +222,13 @@ class Nikita(Player, pygame.sprite.Sprite):
         self.epitaph_phase = 1
         self.epitaph_cnt = 0
         self.permhp = 0
+        self.te_phase = 0
+        self.te = 0
+        self.dash_hp = self.hp
+        self.invinc_cnt = 0
 
         self.awakening = 0
-        self.awakening_phase = 1
+        self.awakening_phase = 3
         self.awakening_cnt = 0
         self.awakening_cd = 0
 
@@ -316,11 +320,13 @@ class Nikita(Player, pygame.sprite.Sprite):
                 self.epitaph()
             if (keystate[self.abkeys[1]] or self.flag_ability2) and self.ability2_cd == 0:
                 self.dash()
-            if keystate[self.abkeys[2]] and self.awakening_cd >= 420:
+            if keystate[self.abkeys[2]] and self.awakening_cd >= 600:
+                self.dash_hp = self.hp
                 self.awakening_phase = 3
                 self.awakening_cd = 1
                 self.awakening_cnt = 0
         elif self.awakening_phase == 3:
+            self.attack_damage = 1
             font = pygame.font.Font(None, 40)
             if self.colour == 'blue':
                 font_color = (0, 255, 240)
@@ -335,6 +341,35 @@ class Nikita(Player, pygame.sprite.Sprite):
             self.t_rect.centery = 425
 
             self.awakening_cnt += 1
+            if self.awakening_cnt >= 900:
+                self.enemy.flag_ability = False
+                self.awakening_cnt = 0
+                self.flag_ability1 = False
+                self.flag_ability2 = False
+                self.flag_ability3 = False
+                self.awakening_phase = 2
+                self.attack_damage = 1.5
+            if keystate[self.abkeys[0]] and not self.flag_ability1 and self.ability1_cd == 0:
+                self.permhp = self.hp
+                self.x = self.enemy.rect.x
+            if keystate[self.abkeys[1]] and not self.flag_ability2 and self.ability2_cd == 0:
+                self.permhp = self.hp
+            if (keystate[self.abkeys[0]] or self.flag_ability1) and self.ability1_cd == 0:
+                self.time_erase()
+            if (keystate[self.abkeys[1]] or self.flag_ability2) and self.ability2_cd == 0:
+                self.invinc()
+            if self.dash_hp - self.hp > 70:
+                self.hp = self.dash_hp
+                r = random.randint(1, 1000)
+                while abs(r - self.rect.x) <= 200:
+                    r = random.randint(1, 1000)
+                self.rect.x = r
+            if self.hp < self.dash_hp:
+                a = random.randint(1, 3)
+                if a == 1:
+                    self.hp = self.dash_hp
+                else:
+                    self.dash_hp = self.hp
         if self.awakening == False:
             if self.ability1_cd != 0:
                 self.ability1_cd += 1
@@ -361,6 +396,15 @@ class Nikita(Player, pygame.sprite.Sprite):
             if self.ability1_cd != 0:
                 self.ability1_cd += 1
                 if self.ability1_cd >= 240:
+                    self.ability1_cd = 0
+            if self.ability2_cd != 0:
+                self.ability2_cd += 1
+                if self.ability2_cd >= 180:
+                    self.ability2_cd = 0
+        elif self.awakening_phase == 3:
+            if self.ability1_cd != 0:
+                self.ability1_cd += 1
+                if self.ability1_cd >= 300:
                     self.ability1_cd = 0
             if self.ability2_cd != 0:
                 self.ability2_cd += 1
@@ -528,7 +572,7 @@ class Nikita(Player, pygame.sprite.Sprite):
             self.enemy.flag_ability = True
             self.enemy.rect.x = self.movement[self.epitaph_cnt]
             self.epitaph_cnt += 1
-            if self.epitaph_cnt >= 180:
+            if self.epitaph_cnt >= 120:
                 self.epitaph_phase = 3
         else:
             self.epitaph_cnt = 0
@@ -564,6 +608,39 @@ class Nikita(Player, pygame.sprite.Sprite):
             self.flag_ability2 = False
             self.ability2_cd = 1
             self.flag_ability = False
+    def time_erase(self):
+        self.flag_ability1 = True
+        if self.te_phase == 0:
+            if 1000 - self.enemy.rect.centerx > 500:
+                self.enemy.last = True
+            else:
+                self.enemy.last = False
+            self.te_phase = 1
+        elif self.te_phase == 1:
+            self.enemy.canmove = False
+            self.enemy.flag_ability = True
+            self.enemy.blockdur = -1
+            if self.enemy.last == True:
+                self.x += 1
+            else:
+                self.x -= 1
+            self.hp = self.permhp
+            self.enemy.rect.x = self.x
+            self.te += 1
+            if self.te >= 360:
+                self.te = 0
+                self.te_phase = 0
+                self.flag_ability1 = False
+                self.enemy.flag_ability = False
+                self.enemy.blockdur = 45
+    def invinc(self):
+        self.flag_ability2 = True
+        self.invinc_cnt += 1
+        self.hp = self.permhp
+        if self.invinc_cnt == 240:
+            self.invinc_cnt = 0
+            self.flag_ability2 = False
+            self.ability2_cd = 1
 class Georg(Player, pygame.sprite.Sprite):
     def __init__(self, screen, colour):
         self.chr = 'Georg'
@@ -1321,8 +1398,6 @@ class Nikita_Dev(Player, pygame.sprite.Sprite):
             self.enemy.flag_ability = False
             self.ability3 = 0
             self.ability3_cd = 1
-
-
 class Lesha(Player, pygame.sprite.Sprite):
     def __init__(self, screen, colour):
         self.chr = 'Lesha'
@@ -1513,8 +1588,6 @@ class Dummy(pygame.sprite.Sprite):
     def update(self):
         self.screen.blit(self.image, self.rect)
         print(self.hp)
-
-
 class TestingBullet(pygame.sprite.Sprite):
     def __init__(self, screen, enemygroup, speed, x):
         self.screen = screen
