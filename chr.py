@@ -226,6 +226,17 @@ class Nikita(Player, pygame.sprite.Sprite):
         self.te = 0
         self.dash_hp = self.hp
         self.invinc_cnt = 0
+        self.flag_ability3 = False
+        self.ability3_phase = 0
+        self.nebo = pygame.sprite.Sprite()
+        self.knifes_left = []
+        self.knifes_right = []
+        self.moving_right = []
+        self.moving_left = []
+        self.ult_cnt = 0
+        self.ability3_cd = 0
+        self.knifes_cnt = 0
+        self.knifes_amount = 0
 
         self.awakening = 0
         self.awakening_phase = 1
@@ -296,6 +307,7 @@ class Nikita(Player, pygame.sprite.Sprite):
                 self.permspeed = 1
                 self.flag_ability1 = False
                 self.flag_ability2 = False
+                self.flag_ability = False
         elif self.awakening_phase == 2:
             font = pygame.font.Font(None, 40)
             if self.colour == 'blue':
@@ -320,11 +332,12 @@ class Nikita(Player, pygame.sprite.Sprite):
                 self.epitaph()
             if (keystate[self.abkeys[1]] or self.flag_ability2) and self.ability2_cd == 0:
                 self.dash()
-            if keystate[self.abkeys[2]] and self.awakening_cd >= 600:
+            if keystate[self.abkeys[2]] and self.awakening_cd >= 900:
                 self.dash_hp = self.hp
                 self.awakening_phase = 3
                 self.awakening_cd = 1
                 self.awakening_cnt = 0
+                self.ability3_cd = 240
         elif self.awakening_phase == 3:
             self.attack_damage = 1
             font = pygame.font.Font(None, 40)
@@ -341,9 +354,10 @@ class Nikita(Player, pygame.sprite.Sprite):
             self.t_rect.centery = 425
 
             self.awakening_cnt += 1
-            if self.awakening_cnt >= 900:
+            if self.awakening_cnt >= 900 and self.flag_ability3 == False:
                 self.enemy.flag_ability = False
                 self.awakening_cnt = 0
+                self.flag_ability = False
                 self.flag_ability1 = False
                 self.flag_ability2 = False
                 self.flag_ability3 = False
@@ -358,6 +372,9 @@ class Nikita(Player, pygame.sprite.Sprite):
                 self.time_erase()
             if (keystate[self.abkeys[1]] or self.flag_ability2) and self.ability2_cd == 0:
                 self.invinc()
+            if (keystate[self.abkeys[2]] or self.flag_ability3) and self.ability3_cd == 0:
+                self.ow7()
+
             if self.dash_hp - self.hp > 70:
                 self.hp = self.dash_hp
                 r = random.randint(1, 1000)
@@ -410,6 +427,11 @@ class Nikita(Player, pygame.sprite.Sprite):
                 self.ability2_cd += 1
                 if self.ability2_cd >= 180:
                     self.ability2_cd = 0
+            if self.ability3_cd != 0:
+                self.ability3_cd += 1
+                if self.ability3_cd >= 480:
+                    self.ability3_cd = 0
+
         self.screen.blit(self.t, self.t_rect)
     def rat(self):
         self.flag_ability = True
@@ -564,7 +586,7 @@ class Nikita(Player, pygame.sprite.Sprite):
             self.movement.append(self.enemy.rect.x)
             self.epitaph_cnt += 1
             self.hp = self.permhp
-            if self.epitaph_cnt >= 180:
+            if self.epitaph_cnt >= 120:
                 self.epitaph_phase = 2
                 self.epitaph_cnt = 0
         elif self.epitaph_phase == 2:
@@ -641,6 +663,196 @@ class Nikita(Player, pygame.sprite.Sprite):
             self.invinc_cnt = 0
             self.flag_ability2 = False
             self.ability2_cd = 1
+    def ow7(self):
+        img_dir = path.join(path.dirname(__file__), 'Assets')
+        self.flag_ability3 = True
+        if self.ability3_phase == 0:
+            if abs(self.rect.centerx - self.enemy.rect.centerx) < 300:
+                self.rect.x = 100
+                self.enemy.rect.x = 500
+                self.rect.centery = 400
+                self.enemy.rect.centery = 400
+                for i in range(10):
+                    image = pygame.image.load(path.join(img_dir, 'knife1.png')).convert()
+                    image.set_colorkey((0, 0, 0))
+                    s = pygame.sprite.Sprite()
+                    s.image = image
+                    s.rect = s.image.get_rect()
+                    s.rect.y = self.rect.bottomleft[1] - 5 - i * 10
+                    s.rect.x = self.rect.x + 100 + 30
+                    self.knifes_left.append(s)
+                for i in range(10):
+                    image = pygame.image.load(path.join(img_dir, 'knife2.png')).convert()
+                    image.set_colorkey((0, 0, 0))
+                    s = pygame.sprite.Sprite()
+                    s.image = image
+                    s.rect = s.image.get_rect()
+                    s.rect.x = 500 + 85 + 200
+                    s.rect.y = self.rect.bottomleft[1] - 5 - i * 10
+                    self.knifes_right.append(s)
+                self.canmove = False
+                self.enemy.canmove = False
+                self.flag_ability = True
+                self.enemy.flag_ability = True
+                self.ability3_phase = 1
+            else:
+                self.ability3_phase = 200
+        elif self.ability3_phase == 1:
+            pygame.transform.flip(self.image, False, True)
+            pygame.transform.flip(self.enemy.image, False, True)
+            self.image.set_colorkey((255, 255, 255))
+            self.enemy.image.set_colorkey((255, 255 ,255))
+            self.nebo.image = pygame.image.load(path.join(img_dir, 'nebo.png')).convert()
+            self.nebo.rect = self.nebo.image.get_rect()
+            self.nebo.rect.x, self.nebo.rect.y = 0, 0
+            self.screen.blit(self.nebo.image, self.nebo.rect)
+            self.screen.blit(self.image, self.rect)
+            self.screen.blit(self.enemy.image, self.enemy.rect)
+            self.ult_cnt += 1
+            if self.ult_cnt >= 90:
+                self.ability3_phase = 2
+                self.ult_cnt = 0
+        elif self.ability3_phase == 2:
+            pygame.transform.flip(self.image, False, True)
+            pygame.transform.flip(self.enemy.image, False, True)
+            self.image.set_colorkey((255, 255, 255))
+            self.enemy.image.set_colorkey((255, 255, 255))
+            self.nebo.image = pygame.image.load(path.join(img_dir, 'nebo.png')).convert()
+            self.nebo.rect = self.nebo.image.get_rect()
+            self.nebo.rect.x, self.nebo.rect.y = 0, 0
+            self.screen.blit(self.nebo.image, self.nebo.rect)
+            self.screen.blit(self.image, self.rect)
+            self.screen.blit(self.enemy.image, self.enemy.rect)
+            for s in self.knifes_left:
+                self.screen.blit(s.image, s.rect)
+            self.ult_cnt += 1
+            if self.ult_cnt >= 90:
+                self.ability3_phase = 3
+        elif self.ability3_phase == 3:
+            global HEIGHT
+            self.enemy.rect.centery = HEIGHT - 100
+            self.rect.centery = HEIGHT - 100
+            i = 0
+            for s in self.knifes_right:
+                s.rect.y = self.rect.bottomleft[1] - 5 - i * 10
+                i += 1
+            i = 0
+            for s in self.knifes_left:
+                s.rect.y = self.rect.bottomleft[1] - 5 - i * 10
+                i += 1
+            pygame.transform.flip(self.image, False, True)
+            pygame.transform.flip(self.enemy.image, False, True)
+            self.image.set_colorkey((255, 255, 255))
+            self.enemy.image.set_colorkey((255, 255, 255))
+            self.nebo.image = pygame.image.load(path.join(img_dir, 'nebo.png')).convert()
+            self.nebo.rect = self.nebo.image.get_rect()
+            self.nebo.rect.x, self.nebo.rect.y = 0, 0
+            self.screen.blit(self.nebo.image, self.nebo.rect)
+            self.screen.blit(self.image, self.rect)
+            self.screen.blit(self.enemy.image, self.enemy.rect)
+            for s in self.knifes_left:
+                self.screen.blit(s.image, s.rect)
+            for s in self.knifes_right:
+                self.screen.blit(s.image, s.rect)
+            self.rect.x = 100
+            self.enemy.rect.x = 500
+            self.ability3_phase = 4
+            self.ult_cnt = 0
+        elif self.ability3_phase == 4:
+            self.rect.x = 100
+            self.enemy.rect.x = 500
+            self.ult_cnt += 1
+            if self.ult_cnt % 15 == 0:
+                self.knifes_amount += 1
+                a = random.randint(1, 2)
+                if a == 1:
+                    for i in range(3):
+                        a = random.randint(0, 9)
+                        self.moving_right.append(self.knifes_left[a])
+                        self.knifes_left.pop(a)
+                        image = pygame.image.load(path.join(img_dir, 'knife1.png')).convert()
+                        image.set_colorkey((0, 0, 0))
+                        s = pygame.sprite.Sprite()
+                        s.image = image
+                        s.rect = s.image.get_rect()
+                        s.rect.y = self.moving_right[-1].rect.y
+                        s.rect.x = self.moving_right[-1].rect.x
+                        self.knifes_left.append(s)
+                else:
+                    for i in range(3):
+                        a = random.randint(0, 9)
+                        self.moving_left.append(self.knifes_right[a])
+                        self.knifes_right.pop(a)
+                        image = pygame.image.load(path.join(img_dir, 'knife2.png')).convert()
+                        image.set_colorkey((0, 0, 0))
+                        s = pygame.sprite.Sprite()
+                        s.image = image
+                        s.rect = s.image.get_rect()
+                        s.rect.x = self.moving_left[-1].rect.x
+                        s.rect.y = self.moving_left[-1].rect.y
+                        self.knifes_right.append(s)
+            i = 0
+            while i < len(self.moving_right):
+                self.moving_right[i].rect.x += 20
+                self.screen.blit(self.moving_right[i].image, self.moving_right[i].rect)
+                hits = pygame.sprite.spritecollide(self.moving_right[i], self.enemygroup, False)
+                for hit in hits:
+                    hit.hp -= 0.25
+                if self.moving_right[i].rect.x >= 800:
+                    del self.moving_right[i]
+                i += 1
+
+            i = 0
+            while i < len(self.moving_left):
+                self.moving_left[i].rect.x -= 20
+                self.screen.blit(self.moving_left[i].image, self.moving_left[i].rect)
+                hits = pygame.sprite.spritecollide(self.moving_left[i], self.enemygroup, False)
+                for hit in hits:
+                    hit.hp -= 0.25
+                if self.moving_left[i].rect.x >= 800:
+                    del self.moving_left[i]
+                i += 1
+            for knife in self.knifes_right:
+                self.screen.blit(knife.image, knife.rect)
+            for knife in self.knifes_left:
+                self.screen.blit(knife.image, knife.rect)
+            if self.ult_cnt >= 420:
+                self.ability3_phase = 5
+        elif self.ability3_phase == 5:
+            for knife in self.knifes_left:
+                knife.rect.x += 20
+                if knife.rect.x >= 800:
+                    self.ability3_phase = 200
+                hits = pygame.sprite.spritecollide(knife, self.enemygroup, False)
+                for hit in hits:
+                    hit.hp -= 0.1
+                self.screen.blit(knife.image, knife.rect)
+
+            for knife in self.knifes_right:
+                knife.rect.x -= 20
+                if knife.rect.x <= 20:
+                    self.ability3_phase = 200
+                hits = pygame.sprite.spritecollide(knife, self.enemygroup, False)
+                for hit in hits:
+                    hit.hp -= 0.1
+                self.screen.blit(knife.image, knife.rect)
+            for knife in self.knifes_left:
+                knife.rect.x += 20
+                if knife.rect.x >= 800:
+                    self.ability3_phase = 200
+                hits = pygame.sprite.spritecollide(knife, self.enemygroup, False)
+                for hit in hits:
+                    hit.hp -= 0.5
+                self.screen.blit(knife.image, knife.rect)
+        else:
+            self.canmove = True
+            self.enemy.canmove = True
+            self.flag_ability = False
+            self.enemy.flag_ability = False
+            self.flag_ability3 = False
+            self.ability3_cd = 1
+            self.ult_cnt = 0
+            self.ability3_phase = 0
 class Georg(Player, pygame.sprite.Sprite):
     def __init__(self, screen, colour):
         self.chr = 'Georg'
