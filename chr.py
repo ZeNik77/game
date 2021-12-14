@@ -295,7 +295,9 @@ class Nikita(Player, pygame.sprite.Sprite):
                 self.attackacount = 15
             if (keystate[self.abkeys[1]] or self.flag_ability2) and self.ability2_cd == 0:
                 self.punch()
-
+            hits = pygame.sprite.spritecollide(self, self.enemygroup, False)
+            for hit in hits:
+                hit.hp -= 0.3
             if self.awakening_cnt >= 720:
                 self.awakening = False
                 self.awakening_cnt = 0
@@ -338,6 +340,7 @@ class Nikita(Player, pygame.sprite.Sprite):
                 self.awakening_cd = 1
                 self.awakening_cnt = 0
                 self.ability3_cd = 240
+                self.flag_ability1 = False
         elif self.awakening_phase == 3:
             self.attack_damage = 1
             font = pygame.font.Font(None, 40)
@@ -762,7 +765,7 @@ class Nikita(Player, pygame.sprite.Sprite):
             self.rect.x = 100
             self.enemy.rect.x = 500
             self.ult_cnt += 1
-            if self.ult_cnt % 15 == 0:
+            if self.ult_cnt % 7 == 0:
                 self.knifes_amount += 1
                 a = random.randint(1, 2)
                 if a == 1:
@@ -797,7 +800,7 @@ class Nikita(Player, pygame.sprite.Sprite):
                 self.screen.blit(self.moving_right[i].image, self.moving_right[i].rect)
                 hits = pygame.sprite.spritecollide(self.moving_right[i], self.enemygroup, False)
                 for hit in hits:
-                    hit.hp -= 0.25
+                    hit.hp -= 0.1
                 if self.moving_right[i].rect.x >= 800:
                     del self.moving_right[i]
                 i += 1
@@ -808,7 +811,7 @@ class Nikita(Player, pygame.sprite.Sprite):
                 self.screen.blit(self.moving_left[i].image, self.moving_left[i].rect)
                 hits = pygame.sprite.spritecollide(self.moving_left[i], self.enemygroup, False)
                 for hit in hits:
-                    hit.hp -= 0.25
+                    hit.hp -= 0.1
                 if self.moving_left[i].rect.x >= 800:
                     del self.moving_left[i]
                 i += 1
@@ -825,7 +828,7 @@ class Nikita(Player, pygame.sprite.Sprite):
                     self.ability3_phase = 200
                 hits = pygame.sprite.spritecollide(knife, self.enemygroup, False)
                 for hit in hits:
-                    hit.hp -= 0.1
+                    hit.hp -= 0.2
                 self.screen.blit(knife.image, knife.rect)
 
             for knife in self.knifes_right:
@@ -834,7 +837,7 @@ class Nikita(Player, pygame.sprite.Sprite):
                     self.ability3_phase = 200
                 hits = pygame.sprite.spritecollide(knife, self.enemygroup, False)
                 for hit in hits:
-                    hit.hp -= 0.1
+                    hit.hp -= 0.2
                 self.screen.blit(knife.image, knife.rect)
             for knife in self.knifes_left:
                 knife.rect.x += 20
@@ -853,6 +856,10 @@ class Nikita(Player, pygame.sprite.Sprite):
             self.ability3_cd = 1
             self.ult_cnt = 0
             self.ability3_phase = 0
+            self.knifes_left = []
+            self.knifes_right = []
+            self.moving_left = []
+            self.moving_right = []
 class Georg(Player, pygame.sprite.Sprite):
     def __init__(self, screen, colour):
         self.chr = 'Georg'
