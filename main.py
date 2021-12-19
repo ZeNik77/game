@@ -11,7 +11,7 @@ BLACK = (0, 0, 0)
 RED = (255, 0, 0)
 GREEN = (0, 255, 0)
 BLUE = (0, 0, 255)
-# Создаем игру и окноa
+
 pygame.init()
 pygame.mixer.init()
 screen = pygame.display.set_mode((WIDTH, HEIGHT))
@@ -255,6 +255,37 @@ while running:
                     
                     player.enemygroup = player2_group
                     player2.enemygroup = player1_group
+
+            if event.key == pygame.K_7 and flag == 2:
+                if not select_phase:
+                    a = 'Senia'
+                    p = 'Senia.png'
+                    player = chr.Senia(screen, 'blue')
+                    player.enemy = player2
+                    player2.enemy = player
+                    player1_group = pygame.sprite.Group()
+                    player1_group.add(player)
+
+                    player2_group = pygame.sprite.Group()
+                    player2_group.add(player2)
+
+                    player.enemygroup = player2_group
+                    player2.enemygroup = player1_group
+                else:
+                    a2 = 'Senia'
+                    p2 = 'Senia.png'
+                    player2 = chr.Senia(screen, 'red')
+                    player.enemy = player2
+                    player2.enemy = player
+                    player1_group = pygame.sprite.Group()
+                    player1_group.add(player)
+
+                    player2_group = pygame.sprite.Group()
+                    player2_group.add(player2)
+
+                    player.enemygroup = player2_group
+                    player2.enemygroup = player1_group
+
             if event.key == pygame.K_2 and flag == 2:
                 if not select_phase:
                     a = 'Lesha'

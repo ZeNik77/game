@@ -202,6 +202,103 @@ class Player(pygame.sprite.Sprite):
         self.screen.blit(self.image, self.rect)
 
 
+class Senia(Player, pygame.sprite.Sprite):
+    def __init__(self, screen, colour):
+        self.chr = 'Senia'
+        self.colour = colour
+        Player.__init__(self, screen, colour)
+        pygame.sprite.Sprite.__init__(self)
+        self.permattack = 1.5
+        self.permpermspeed = 1
+        self.ability1_cd = 0
+        img_dir = path.join(path.dirname(__file__), 'Assets')
+
+        self.blaster_left = pygame.sprite.Sprite()
+        self.blaster_left.image = pygame.image.load(path.join(img_dir, 'blaster_left.png')).convert()
+        self.blaster_left.image.set_colorkey((246, 246, 246))
+        self.blaster_left.rect = self.blaster_left.image.get_rect()
+
+        self.blaster_right = pygame.sprite.Sprite()
+        self.blaster_right.image = pygame.image.load(path.join(img_dir, 'blaster_right.png')).convert()
+        self.blaster_right.image.set_colorkey((246, 246, 246))
+        self.blaster_right.rect = self.blaster_right.image.get_rect()
+
+        self.ability2_phase = 0
+        self.flag_ability2 = False
+        self.ability2 = 0
+        self.ability2_cd = 0
+        self.blaster = ''
+        self.blaster_rect = pygame.sprite.Sprite()
+        self.blaster_rect.image = pygame.Surface((1500, 36))
+        self.blaster_rect.rect = self.blaster_rect.image.get_rect()
+
+
+    def update2(self):
+        self.permspeed = self.permpermspeed
+        self.attack_damage = self.permattack
+
+        keystate = pygame.key.get_pressed()
+        if keystate[self.abkeys[0]] and self.ability1_cd == 0:
+            self.improve()
+        if (keystate[self.abkeys[1]] or self.flag_ability2) and self.ability2_cd == 0:
+            self.gblaster()
+        if self.ability1_cd != 0:
+            self.ability1_cd += 1
+            if self.ability1_cd >= 300:
+                self.ability1_cd = 0
+        if self.ability2_cd != 0:
+            self.ability2_cd += 1
+            if self.ability2_cd >= 240:
+                self.ability2_cd = 0
+    def improve(self):
+        self.permpermspeed += 0.4
+        self.permattack += 0.7
+        self.ability1_cd = 1
+    def gblaster(self):
+        self.flag_ability = True
+        self.flag_ability2 = True
+        self.canmove = False
+        if self.ability2_phase == 0:
+            if self.last:
+                self.blaster = self.blaster_right
+                self.blaster.rect.x = self.rect.x + 85 + 6
+            else:
+                self.blaster = self.blaster_left
+                self.blaster.rect.x = self.rect.x - 41 - 5
+            self.blaster.rect.centery = self.rect.centery
+            self.ability2_phase = 1
+        elif self.ability2_phase == 1:
+            self.ability2 += 1
+            self.screen.blit(self.blaster.image, self.blaster.rect)
+            if self.ability2 >= 30:
+                self.ability2_phase = 2
+                self.ability2 = 0
+        elif self.ability2_phase == 2:
+            self.screen.blit(self.blaster.image, self.blaster.rect)
+            if self.last:
+                self.blaster_rect.rect.x = self.rect.x + 85 + 41 + 5
+            else:
+                self.blaster_rect.rect.x = self.rect.x - 41 - 5 - 1500
+            self.blaster_rect.rect.centery = self.rect.centery
+            self.screen.blit(self.blaster_rect.image, self.blaster_rect.rect)
+            hits = pygame.sprite.spritecollide(self.blaster_rect, self.enemygroup, False)
+            for hit in hits:
+                if not hit.blocking:
+                    hit.hp -= 3
+                else:
+                    hit.blockdur -= 1
+            self.ability2 += 1
+            if self.ability2 >= 45:
+                self.ability2_phase = 0
+                self.ability2 = 0
+                self.flag_ability2 = False
+                self.flag_ability = False
+                self.ability2_cd = 1
+
+
+
+
+
 class Nikita(Player, pygame.sprite.Sprite):
     def __init__(self, screen, colour):
         self.chr = 'Nikita'
