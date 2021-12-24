@@ -294,11 +294,6 @@ class Senia(Player, pygame.sprite.Sprite):
                 self.flag_ability2 = False
                 self.flag_ability = False
                 self.ability2_cd = 1
-
-
-
-
-
 class Nikita(Player, pygame.sprite.Sprite):
     def __init__(self, screen, colour):
         self.chr = 'Nikita'
@@ -1096,7 +1091,6 @@ class Georg(Player, pygame.sprite.Sprite):
                     hit.canmove = False
                     hit.flag_ability = True
                     hit.hp -= 2
-
             elif self.enemy.rect.x + 85 >= 1000:
                 self.ability3 = 0
                 self.flag_ability3 = False
@@ -1310,6 +1304,12 @@ class Nikita_Dev(Player, pygame.sprite.Sprite):
         self.flag_ability3 = False
         self.ability3 = 0
         self.ability3_cd = 0
+
+        self.it = pygame.sprite.Sprite()
+        self.it.image = pygame.image.load(path.join(img_dir, 'it.png')).convert()
+        self.it.rect = self.it.image.get_rect()
+        self.it.rect.x = 0
+        self.it.rect.y = 0
     def update2(self):
         keystate = pygame.key.get_pressed()
         if (keystate[self.abkeys[0]] or self.flag_ability1) and self.ability1_cd == 0:
@@ -1699,11 +1699,6 @@ class Nikita_Dev(Player, pygame.sprite.Sprite):
         self.enemy.canmove = False
         self.enemy.flag_ability = True
         self.ability3 += 1
-        self.it = pygame.sprite.Sprite()
-        self.it.image = pygame.image.load(path.join(img_dir, 'it.png')).convert()
-        self.it.rect = self.it.image.get_rect()
-        self.it.rect.x = 0
-        self.it.rect.y = 0
         self.screen.blit(self.it.image, self.it.rect)
         hits = pygame.sprite.spritecollide(self.it, self.enemygroup, False)
         for hit in hits:
