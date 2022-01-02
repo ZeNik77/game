@@ -232,6 +232,10 @@ class Senia(Player, pygame.sprite.Sprite):
         self.blaster_rect.image = pygame.Surface((1500, 36))
         self.blaster_rect.rect = self.blaster_rect.image.get_rect()
 
+        self.flag_ability3 = False
+        self.ability3_cd = 0
+        self.ability3 = 0
+
 
     def update2(self):
         self.permspeed = self.permpermspeed
@@ -242,6 +246,8 @@ class Senia(Player, pygame.sprite.Sprite):
             self.improve()
         if (keystate[self.abkeys[1]] or self.flag_ability2) and self.ability2_cd == 0:
             self.gblaster()
+        if (keystate[self.abkeys[2]] or self.flag_ability3) and self.ability3_cd == 0:
+            self.ult()
         if self.ability1_cd != 0:
             self.ability1_cd += 1
             if self.ability1_cd >= 300:
@@ -250,9 +256,13 @@ class Senia(Player, pygame.sprite.Sprite):
             self.ability2_cd += 1
             if self.ability2_cd >= 240:
                 self.ability2_cd = 0
+        if self.ability3_cd != 0:
+            self.ability3_cd += 1
+            if self.ability3_cd >= 450:
+                self.ability3_cd = 0
     def improve(self):
-        self.permpermspeed += 0.4
-        self.permattack += 0.7
+        self.permpermspeed += 0.15
+        self.permattack += 0.5
         self.ability1_cd = 1
     def gblaster(self):
         self.flag_ability = True
@@ -294,6 +304,19 @@ class Senia(Player, pygame.sprite.Sprite):
                 self.flag_ability2 = False
                 self.flag_ability = False
                 self.ability2_cd = 1
+    def ult(self):
+        self.enemy.ability1_cd = 1
+        self.enemy.ability2_cd = 1
+        self.flag_ability3 = True
+        try:
+            self.enemy.ability3_cd = 1
+        except:
+            pass
+        self.ability3 += 1
+        if self.ability3 >= 390:
+            self.flag_ability3 = False
+            self.ability3 = 0
+            self.ability3_cd = 1
 class Nikita(Player, pygame.sprite.Sprite):
     def __init__(self, screen, colour):
         self.chr = 'Nikita'
@@ -458,6 +481,7 @@ class Nikita(Player, pygame.sprite.Sprite):
                 self.flag_ability3 = False
                 self.awakening_phase = 2
                 self.attack_damage = 1.5
+                self.epitaph_cnt = 0
             if keystate[self.abkeys[0]] and not self.flag_ability1 and self.ability1_cd == 0:
                 self.permhp = self.hp
                 self.x = self.enemy.rect.x
