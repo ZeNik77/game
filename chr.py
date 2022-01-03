@@ -5,6 +5,8 @@ import random
 
 WIDTH = 1000
 HEIGHT = 650
+pygame.init()
+pygame.mixer.init()
 
 class Player(pygame.sprite.Sprite):
     def __init__(self, screen, colour):
@@ -59,6 +61,8 @@ class Player(pygame.sprite.Sprite):
         self.right = 0
         self.animcount = 0
         self.attackacount = 15
+        self.atk_sound = pygame.mixer.Sound(file=path.join(img_dir, 'hitHurt.wav'))
+        self.atk_flag = False
 
     def attack(self):
         # , special_flags=pygame.BLEND_RGBA_MULT
@@ -170,6 +174,9 @@ class Player(pygame.sprite.Sprite):
             elif self.attacking:
                 self.attackacount += 1
                 if self.attackacount >= 30:
+                    if not self.atk_flag:
+                        self.atk_sound.play()
+                        self.atk_flag = True
                     if self.last:
                         self.rect.x += 10
                     else:
@@ -189,6 +196,7 @@ class Player(pygame.sprite.Sprite):
                     self.attackacount = 15
                     self.canmove = True
                     self.attacking = False
+                    self.atk_flag = False
             elif self.flag_ability:
                 pass
             else:
@@ -317,6 +325,7 @@ class Senia(Player, pygame.sprite.Sprite):
             self.flag_ability3 = False
             self.ability3 = 0
             self.ability3_cd = 1
+
 class Nikita(Player, pygame.sprite.Sprite):
     def __init__(self, screen, colour):
         self.chr = 'Nikita'
@@ -1000,6 +1009,8 @@ class Georg(Player, pygame.sprite.Sprite):
         self.flag_ability3 = False
         self.ability3_cd = 0
         self.ability3 = 0
+        img_dir = path.join(path.dirname(__file__), 'Assets')
+        self.fire_sound = pygame.mixer.Sound(file=path.join(img_dir, 'fire.wav'))
     def update2(self):
         keystate = pygame.key.get_pressed()
         if (keystate[self.abkeys[0]] or self.flag_ability1) and self.ability1_cd == 0:
@@ -1025,6 +1036,8 @@ class Georg(Player, pygame.sprite.Sprite):
         self.flag_ability = True
         self.flag_ability1 = True
         self.canmove = False
+        if self.ability1 == 0:
+            self.fire_sound.play()
         self.ability1 += 1
         img_dir = path.join(path.dirname(__file__), 'Assets')
         if self.last:
@@ -1161,6 +1174,8 @@ class Bogdan(Player, pygame.sprite.Sprite):
         self.ability2 = 0
         self.ab2_flag = False
         self.flag_ability2 = False
+        img_dir = path.join(path.dirname(__file__), 'Assets')
+        self.tp_sound = pygame.mixer.Sound(file=path.join(img_dir, 'teleport.wav'))
 
     def update2(self):
         keystate = pygame.key.get_pressed()
@@ -1181,6 +1196,7 @@ class Bogdan(Player, pygame.sprite.Sprite):
     def tp(self):
         self.rect.x = random.randint(1, 1000)
         self.ability1_cd = 1
+        self.tp_sound.play()
     def stun(self):
         self.enemy.canmove = False
         self.enemy.blockdur = -1
@@ -1220,6 +1236,12 @@ class Grisha(Player, pygame.sprite.Sprite):
         self.ability3 = 0
         self.ab3_permhp = 0
         self.ab3_difference = 0
+        img_dir = path.join(path.dirname(__file__), 'Assets')
+        # self.shield_flag = False
+        self.shield_sound = pygame.mixer.Sound(file=path.join(img_dir, 'shield.wav'))
+        self.atk_2_flag = False
+        self.atk_2_sound = pygame.mixer.Sound(file=path.join(img_dir, 'hitHurt.wav'))
+        self.timestop_sound = pygame.mixer.Sound(file=path.join(img_dir, 'timestop.wav'))
     def update2(self):
         keystate = pygame.key.get_pressed()
         if (keystate[self.abkeys[0]] or self.flag_ability1) and self.ability1_cd == 0:
@@ -1246,6 +1268,7 @@ class Grisha(Player, pygame.sprite.Sprite):
         self.canmove = False
         if self.ability1 == 0:
             self.permhp = self.hp
+            self.shield_sound.play()
         self.hp = self.permhp
         self.ability1 += 1
         if self.ability1 == 240:
@@ -1263,6 +1286,9 @@ class Grisha(Player, pygame.sprite.Sprite):
         img_dir = path.join(path.dirname(__file__), 'Assets')
         self.attackacount += 1
         if self.attackacount >= 30:
+            if not self.atk_2_flag:
+                self.atk_2_sound.play()
+                self.atk_2_flag = True
             if self.last:
                 self.rect.x += 20
             else:
@@ -1281,6 +1307,7 @@ class Grisha(Player, pygame.sprite.Sprite):
             else:
                 hit.blockdur -= 1
         if self.attackacount >= 44:
+            self.atk_2_flag = False
             self.attackacount = 15
             self.canmove = True
             self.flag_ability2 = False
@@ -1294,6 +1321,8 @@ class Grisha(Player, pygame.sprite.Sprite):
         self.flag_ability3 = True
         if self.ability3 == 0:
             self.ab3_permhp = self.enemy.hp
+            self.timestop_sound.play()
+
         self.ability3 += 1
         if self.enemy.hp < self.ab3_permhp:
             self.ab3_difference += (self.ab3_permhp - self.enemy.hp)
@@ -1759,10 +1788,17 @@ class Lesha(Player, pygame.sprite.Sprite):
         self.bullet.rect = self.bullet.image.get_rect()
         self.bullet.speed = 15
 
+
         self.flag_ability2 = False
         pygame.sprite.Sprite.__init__(self)
         Player.__init__(self, self.screen, colour)
         img_dir = path.join(path.dirname(__file__), 'Assets')
+        self.laser_flag = False
+        self.laser_sound = pygame.mixer.Sound(file=path.join(img_dir, 'laserShoot.wav'))
+        self.slowness_flag = False
+        self.slowness_sound = pygame.mixer.Sound(file=path.join(img_dir, 'slowness.wav'))
+        self.ult_flag = False
+        self.ult_sound = pygame.mixer.Sound(file=path.join(img_dir, 'leshaShoot.wav'))
     def update2(self):
         keystate = pygame.key.get_pressed()
         if (keystate[self.abkeys[2]] or self.flag_ability3) and self.ability3_cd == 0:
@@ -1804,13 +1840,17 @@ class Lesha(Player, pygame.sprite.Sprite):
                     # print(h.hp)
                 except:
                     h.canblock = False
+        if not self.laser_flag:
+            self.laser_sound.play()
+            self.laser_flag = True
         self.screen.blit(self.las.image, self.las.rect)
         self.ability1 += 1
-        if self.ability1 >= 25:
+        if self.ability1 >= 45:
             self.ability1_cd = 1
             self.flag_ability = False
             self.flag_ability1 = False
             self.ability1 = 0
+            self.laser_flag = False
     def slowness(self):
         # print('xd')
         self.flag_ability2 = True
@@ -1819,6 +1859,9 @@ class Lesha(Player, pygame.sprite.Sprite):
         self.circle.image = pygame.Surface((500, 500))
         self.circle.image.fill((0, 100, 255))
         self.circle.rect = self.circle.image.get_rect()
+        if not self.slowness_flag:
+            self.slowness_sound.play()
+            self.slowness_flag = True
         if self.ability2 <= 300:
             self.circle.rect.x = self.rect.x - 210
             self.circle.rect.y = self.rect.y - 210
@@ -1834,6 +1877,7 @@ class Lesha(Player, pygame.sprite.Sprite):
                 self.enemy.permspeed = 1
             self.screen.blit(self.circle.image, self.circle.rect)
         else:
+            self.slowness_flag = False
             self.enemy.permspeed = 1
             self.ability2 = 0
             self.ability2_cd = 1
@@ -1867,7 +1911,8 @@ class Lesha(Player, pygame.sprite.Sprite):
                 self.ability3_phase = 1
         elif self.ability3_phase == 1:
             self.bullet_animcount += 1
-            if self.bullet_animcount % 30 == 0:
+            if self.bullet_animcount % 31 == 0:
+                self.ult_sound.play()
                 # print('BULLET!')
                 self.flag_vec.append(False)
                 self.bullets.append([pygame.image.load(path.join(img_dir, 'fire.png')).convert(), (self.rect.x + 42.5, self.rect.y + 50)])
