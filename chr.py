@@ -243,6 +243,10 @@ class Senia(Player, pygame.sprite.Sprite):
         self.flag_ability3 = False
         self.ability3_cd = 0
         self.ability3 = 0
+        img_dir = path.join(path.dirname(__file__), 'Assets')
+        self.improve_sound = pygame.mixer.Sound(path.join(img_dir, 'improve.wav'))
+        self.gblaster_sound = pygame.mixer.Sound(path.join(img_dir, 'blaster2.wav'))
+        self.ult_sound = pygame.mixer.Sound(path.join(img_dir, 'senia.wav'))
 
 
     def update2(self):
@@ -264,14 +268,16 @@ class Senia(Player, pygame.sprite.Sprite):
             self.ability2_cd += 1
             if self.ability2_cd >= 240:
                 self.ability2_cd = 0
+        # print(self.ability3_cd)
         if self.ability3_cd != 0:
             self.ability3_cd += 1
-            if self.ability3_cd >= 450:
+            if self.ability3_cd >= 540:
                 self.ability3_cd = 0
     def improve(self):
         self.permpermspeed += 0.15
         self.permattack += 0.5
         self.ability1_cd = 1
+        self.improve_sound.play()
     def gblaster(self):
         self.flag_ability = True
         self.flag_ability2 = True
@@ -284,11 +290,12 @@ class Senia(Player, pygame.sprite.Sprite):
                 self.blaster = self.blaster_left
                 self.blaster.rect.x = self.rect.x - 41 - 5
             self.blaster.rect.centery = self.rect.centery
+            self.gblaster_sound.play()
             self.ability2_phase = 1
         elif self.ability2_phase == 1:
             self.ability2 += 1
             self.screen.blit(self.blaster.image, self.blaster.rect)
-            if self.ability2 >= 30:
+            if self.ability2 >= int(45 / 1.5):
                 self.ability2_phase = 2
                 self.ability2 = 0
         elif self.ability2_phase == 2:
@@ -302,11 +309,11 @@ class Senia(Player, pygame.sprite.Sprite):
             hits = pygame.sprite.spritecollide(self.blaster_rect, self.enemygroup, False)
             for hit in hits:
                 if not hit.blocking:
-                    hit.hp -= 3
+                    hit.hp -= 4
                 else:
                     hit.blockdur -= 1
             self.ability2 += 1
-            if self.ability2 >= 45:
+            if self.ability2 >= int(60 / 1.5):
                 self.ability2_phase = 0
                 self.ability2 = 0
                 self.flag_ability2 = False
@@ -316,6 +323,8 @@ class Senia(Player, pygame.sprite.Sprite):
         self.enemy.ability1_cd = 1
         self.enemy.ability2_cd = 1
         self.flag_ability3 = True
+        if self.ability3 == 0:
+            self.ult_sound.play()
         try:
             self.enemy.ability3_cd = 1
         except:
