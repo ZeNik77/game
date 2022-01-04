@@ -325,7 +325,6 @@ class Senia(Player, pygame.sprite.Sprite):
             self.flag_ability3 = False
             self.ability3 = 0
             self.ability3_cd = 1
-
 class Nikita(Player, pygame.sprite.Sprite):
     def __init__(self, screen, colour):
         self.chr = 'Nikita'
@@ -366,6 +365,18 @@ class Nikita(Player, pygame.sprite.Sprite):
         self.awakening_phase = 1
         self.awakening_cnt = 0
         self.awakening_cd = 0
+        img_dir = path.join(path.dirname(__file__), 'Assets')
+        self.awakening_sound = pygame.mixer.Sound(path.join(img_dir, 'awakening.wav'))
+        self.speed_sound = pygame.mixer.Sound(path.join(img_dir, 'accel.wav'))
+        self.epitaph_flag1 = False
+        self.epitaph_flag2 = False
+        self.epitaph_sound1 = pygame.mixer.Sound(path.join(img_dir, 'epitaph-1.wav'))
+        self.epitaph_sound2 = pygame.mixer.Sound(path.join(img_dir, 'epitaph-2.wav'))
+        self.dash_sound = pygame.mixer.Sound(path.join(img_dir, 'dash.wav'))
+        self.te_sound1 = pygame.mixer.Sound(path.join(img_dir, 'te-1.wav'))
+        self.te_sound2 = pygame.mixer.Sound(path.join(img_dir, 'te-2.wav'))
+        self.invinc_sound = pygame.mixer.Sound(path.join(img_dir, 'invinc.wav'))
+        self.ow7_sound = pygame.mixer.Sound(path.join(img_dir, 'knife.wav'))
 
     def update2(self):
         keystate = pygame.key.get_pressed()
@@ -393,6 +404,7 @@ class Nikita(Player, pygame.sprite.Sprite):
             if (keystate[self.abkeys[1]] or self.flag_ability2) and self.ability2_cd == 0:
                 self.trick()
             if keystate[self.abkeys[2]] and self.awakening_cd == 0:
+                self.awakening_sound.play()
                 self.awakening = True
                 self.ability1_cd = 0
                 self.ability2_cd = 0
@@ -415,13 +427,14 @@ class Nikita(Player, pygame.sprite.Sprite):
             self.attack_damage = 2
             if (keystate[self.abkeys[0]] or self.flag_ability1) and self.ability1_cd == 0:
                 self.speed()
+                self.attack_damage = 3
             if keystate[self.abkeys[1]] and self.ability2_cd == 0 and self.flag_ability2 == 0:
                 self.attackacount = 15
             if (keystate[self.abkeys[1]] or self.flag_ability2) and self.ability2_cd == 0:
                 self.punch()
             hits = pygame.sprite.spritecollide(self, self.enemygroup, False)
             for hit in hits:
-                hit.hp -= 0.3
+                hit.hp -= 0.9
             if self.awakening_cnt >= 720:
                 self.awakening = False
                 self.awakening_cnt = 0
@@ -459,6 +472,7 @@ class Nikita(Player, pygame.sprite.Sprite):
             if (keystate[self.abkeys[1]] or self.flag_ability2) and self.ability2_cd == 0:
                 self.dash()
             if keystate[self.abkeys[2]] and self.awakening_cd >= 900:
+                self.awakening_sound.play()
                 self.dash_hp = self.hp
                 self.awakening_phase = 3
                 self.awakening_cd = 1
@@ -578,6 +592,9 @@ class Nikita(Player, pygame.sprite.Sprite):
             img_dir = path.join(path.dirname(__file__), 'Assets')
             self.attackacount += 1
             if self.attackacount >= 30:
+                if not self.atk_flag:
+                    self.atk_sound.play()
+                    self.atk_flag = True
                 if self.last:
                     self.rect.x += 10
                 else:
@@ -596,6 +613,7 @@ class Nikita(Player, pygame.sprite.Sprite):
             if self.attackacount >= 44:
                 self.ability1_phase = 2
         else:
+            self.atk_flag = False
             self.enemy.blockdur = 45
             self.attackacount = 15
             self.canmove = True
@@ -615,6 +633,9 @@ class Nikita(Player, pygame.sprite.Sprite):
                 img_dir = path.join(path.dirname(__file__), 'Assets')
                 self.attackacount += 1
                 if self.attackacount >= 30:
+                    if not self.atk_flag:
+                        self.atk_sound.play()
+                        self.atk_flag = True
                     if self.last:
                         self.rect.x += 15
                     else:
@@ -641,14 +662,17 @@ class Nikita(Player, pygame.sprite.Sprite):
             self.attackacount = 15
             self.ability2_cd = 1
             self.ability2_phase = 1
+            self.atk_flag = False
     def speed(self):
+        self.speed_sound.play()
         self.flag_ability1 = True
-        self.permspeed = 1.5
+        self.permspeed = 2
         self.ability1 += 1
         if self.ability1 >= 420:
             self.permspeed = 1
             self.flag_ability1 = False
             self.ability1 = 0
+            self.attack_damage = 2
     def punch(self):
         self.flag_ability = True
         self.flag_ability2 = True
@@ -657,6 +681,9 @@ class Nikita(Player, pygame.sprite.Sprite):
             img_dir = path.join(path.dirname(__file__), 'Assets')
             self.attackacount += 1
             if self.attackacount >= 30:
+                if not self.atk_flag:
+                    self.atk_sound.play()
+                    self.atk_flag = True
                 if self.last:
                     self.rect.x += 10
                 else:
@@ -674,6 +701,7 @@ class Nikita(Player, pygame.sprite.Sprite):
                 if not hit.blocking:
                     hit.hp -= 70
                     self.punch_flag = 1
+                    self.atk_sound.play()
                 else:
                     hit.blockdur = 0
                     self.punch_flag = 2
@@ -700,6 +728,7 @@ class Nikita(Player, pygame.sprite.Sprite):
             if self.punch_cnt >= 45:
                 self.punch_flag = 3
         else:
+            self.atk_flag = False
             self.punch_cnt = 0
             self.punch_flag = 0
             self.enemy.flag_ability = False
@@ -711,6 +740,8 @@ class Nikita(Player, pygame.sprite.Sprite):
     def epitaph(self):
         self.flag_ability1 = True
         if self.epitaph_phase == 1:
+            if self.epitaph_cnt == 0:
+                self.epitaph_sound1.play()
             self.movement.append(self.enemy.rect.x)
             self.epitaph_cnt += 1
             self.hp = self.permhp
@@ -721,6 +752,8 @@ class Nikita(Player, pygame.sprite.Sprite):
             self.enemy.canmove = False
             self.enemy.flag_ability = True
             self.enemy.rect.x = self.movement[self.epitaph_cnt]
+            if self.epitaph_cnt == 0:
+                self.epitaph_sound2.play()
             self.epitaph_cnt += 1
             if self.epitaph_cnt >= 120:
                 self.epitaph_phase = 3
@@ -737,6 +770,8 @@ class Nikita(Player, pygame.sprite.Sprite):
         self.flag_ability2 = True
         self.hp = self.permhp
         img_dir = path.join(path.dirname(__file__), 'Assets')
+        if self.animcount == 1:
+            self.dash_sound.play()
         self.animcount += 1
         if not self.last:
             self.image = pygame.image.load(path.join(img_dir, f'{self.colour}2_{self.animcount // 9}.png')).convert()
@@ -761,6 +796,7 @@ class Nikita(Player, pygame.sprite.Sprite):
     def time_erase(self):
         self.flag_ability1 = True
         if self.te_phase == 0:
+            self.te_sound1.play()
             if 1000 - self.enemy.rect.centerx > 500:
                 self.enemy.last = True
             else:
@@ -778,6 +814,7 @@ class Nikita(Player, pygame.sprite.Sprite):
             self.enemy.rect.x = self.x
             self.te += 1
             if self.te >= 360:
+                self.te_sound2.play()
                 self.te = 0
                 self.te_phase = 0
                 self.flag_ability1 = False
@@ -785,6 +822,8 @@ class Nikita(Player, pygame.sprite.Sprite):
                 self.enemy.blockdur = 45
     def invinc(self):
         self.flag_ability2 = True
+        if self.invinc_cnt == 0:
+            self.invinc_sound.play()
         self.invinc_cnt += 1
         self.hp = self.permhp
         if self.invinc_cnt == 240:
@@ -891,6 +930,7 @@ class Nikita(Player, pygame.sprite.Sprite):
             self.enemy.rect.x = 500
             self.ult_cnt += 1
             if self.ult_cnt % 7 == 0:
+                self.ow7_sound.play()
                 self.knifes_amount += 1
                 a = random.randint(1, 2)
                 if a == 1:
@@ -1011,6 +1051,10 @@ class Georg(Player, pygame.sprite.Sprite):
         self.ability3 = 0
         img_dir = path.join(path.dirname(__file__), 'Assets')
         self.fire_sound = pygame.mixer.Sound(file=path.join(img_dir, 'fire.wav'))
+        self.chaos_sound1 = pygame.mixer.Sound(file=path.join(img_dir, 'chaos-1.wav'))
+        self.chaos_sound2 = pygame.mixer.Sound(file=path.join(img_dir, 'chaos-2.wav'))
+        self.train_sound1 = pygame.mixer.Sound(file=path.join(img_dir, 'train-1.wav'))
+        self.train_sound2 = pygame.mixer.Sound(file=path.join(img_dir, 'train-2.wav'))
     def update2(self):
         keystate = pygame.key.get_pressed()
         if (keystate[self.abkeys[0]] or self.flag_ability1) and self.ability1_cd == 0:
@@ -1079,6 +1123,7 @@ class Georg(Player, pygame.sprite.Sprite):
         if self.ability2_phase == 0:
             self.big_bullet.rect.centerx = self.rect.centerx
             self.big_bullet.rect.y = self.rect.y - 205
+            self.chaos_sound1.play()
             self.ability2_phase = 1
         if self.ability2_phase == 1:
             self.canmove = False
@@ -1095,6 +1140,7 @@ class Georg(Player, pygame.sprite.Sprite):
             elif self.ability2 % 66 == 0:
                 self.main_bullet.rect.x = random.randint(1, 1000)
                 self.main_bullet.rect.y = 10
+                self.chaos_sound2.play()
             else:
                 self.main_bullet.rect.y += 15
             self.ability2 += 1
@@ -1118,6 +1164,9 @@ class Georg(Player, pygame.sprite.Sprite):
         self.flag_ability3 = True
         self.flag_ability = True
         self.attacking = False
+        if self.ability3 == 0:
+            print('xd')
+            self.train_sound1.play()
         self.ability3 += 1
         if self.last:
             if self.ability3 <= 61 and self.enemy.rect.x + 85 < 1000:
@@ -1136,6 +1185,8 @@ class Georg(Player, pygame.sprite.Sprite):
                 self.enemy.hp -= min(350 - 4 * self.ability3, 250)
                 self.enemy.canmove = True
                 self.enemy.flag_ability = False
+                self.train_sound2.play()
+                print('xd2')
         else:
             if self.ability3 <= 61 and self.enemy.rect.x > 0:
                 self.rect.x -= 10
@@ -1155,6 +1206,7 @@ class Georg(Player, pygame.sprite.Sprite):
                 self.enemy.hp -= min(350 - 4 * self.ability3, 250)
                 self.enemy.canmove = True
                 self.enemy.flag_ability = False
+                self.train_sound2.play()
         if self.ability3 > 61:
             self.ability3 = 0
             self.flag_ability3 = False
@@ -1162,6 +1214,7 @@ class Georg(Player, pygame.sprite.Sprite):
             self.ability3_cd = 1
             self.enemy.canmove = True
             self.enemy.flag_ability = False
+
 class Bogdan(Player, pygame.sprite.Sprite):
     def __init__(self, screen, colour):
         self.chr = 'Bogdan'
@@ -1176,6 +1229,7 @@ class Bogdan(Player, pygame.sprite.Sprite):
         self.flag_ability2 = False
         img_dir = path.join(path.dirname(__file__), 'Assets')
         self.tp_sound = pygame.mixer.Sound(file=path.join(img_dir, 'teleport.wav'))
+        self.gravity_sound = pygame.mixer.Sound(file=path.join(img_dir, 'gravity.wav'))
 
     def update2(self):
         keystate = pygame.key.get_pressed()
@@ -1208,6 +1262,8 @@ class Bogdan(Player, pygame.sprite.Sprite):
         else:
             self.enemy.rect.y -= 2
         self.ab2_flag = not self.ab2_flag
+        if self.ability2 == 0:
+            self.gravity_sound.play()
         self.ability2 += 1
         if self.ability2 == 180:
             self.enemy.rect.y = self.rect.y
@@ -1954,8 +2010,6 @@ class Lesha(Player, pygame.sprite.Sprite):
                 self.bullets = []
                 self.ability3_cd += 1
                 self.bullet_animcount = 0
-
-
 class Dummy(pygame.sprite.Sprite):
     def __init__(self, screen):
         self.hp = 500
