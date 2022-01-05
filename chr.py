@@ -63,6 +63,9 @@ class Player(pygame.sprite.Sprite):
         self.attackacount = 15
         self.atk_sound = pygame.mixer.Sound(file=path.join(img_dir, 'hitHurt.wav'))
         self.atk_flag = False
+        self.block_sound = pygame.mixer.Sound(path.join(img_dir, 'block.wav'))
+        self.block_flag = False
+        self.blockBroken_sound = pygame.mixer.Sound(path.join(img_dir, 'blockBroken.wav'))
 
     def attack(self):
         # , special_flags=pygame.BLEND_RGBA_MULT
@@ -80,11 +83,19 @@ class Player(pygame.sprite.Sprite):
         img_dir = path.join(path.dirname(__file__), 'Assets')
         if self.blockdur <= 0:
             self.canblock = False
+            self.blockdur = 0
         self.speedx = 0
         keystate = pygame.key.get_pressed()
         if keystate[self.abkeys[3]] and self.canblock:
             self.blocking = True
             self.canmove = False
+            if self.blockdur == 31:
+                self.block_flag = True
+            elif self.block_flag and self.blockdur == 30:
+                self.block_flag = False
+                self.block_sound.play()
+            else:
+                self.block_flag = False
         elif keystate[self.abkeys[4]] or self.attacking == True:
             self.canmove = False
             self.attacking = True
@@ -108,6 +119,8 @@ class Player(pygame.sprite.Sprite):
                 self.image = pygame.image.load(path.join(img_dir, f'{self.colour}2_0.png')).convert()
                 self.rect.x += 0.05
             self.block_cd += 1
+            if self.block_cd == 1:
+                self.blockBroken_sound.play()
             if self.block_cd >= 90:
                 self.block_cd = 0
                 self.canblock = True
@@ -209,7 +222,6 @@ class Player(pygame.sprite.Sprite):
         # print(self.flag_ability)
         self.screen.blit(self.image, self.rect)
 
-
 class Senia(Player, pygame.sprite.Sprite):
     def __init__(self, screen, colour):
         self.chr = 'Senia'
@@ -247,8 +259,6 @@ class Senia(Player, pygame.sprite.Sprite):
         self.improve_sound = pygame.mixer.Sound(path.join(img_dir, 'improve.wav'))
         self.gblaster_sound = pygame.mixer.Sound(path.join(img_dir, 'blaster2.wav'))
         self.ult_sound = pygame.mixer.Sound(path.join(img_dir, 'senia.wav'))
-
-
     def update2(self):
         self.permspeed = self.permpermspeed
         self.attack_damage = self.permattack
@@ -1191,11 +1201,11 @@ class Georg(Player, pygame.sprite.Sprite):
                 self.flag_ability3 = False
                 self.flag_ability = False
                 self.ability3_cd = 1
+                self.ability1_cd = 420
                 self.enemy.hp -= min(350 - 4 * self.ability3, 250)
                 self.enemy.canmove = True
                 self.enemy.flag_ability = False
                 self.train_sound2.play()
-                print('xd2')
         else:
             if self.ability3 <= 61 and self.enemy.rect.x > 0:
                 self.rect.x -= 10
@@ -1212,6 +1222,7 @@ class Georg(Player, pygame.sprite.Sprite):
                 self.flag_ability3 = False
                 self.flag_ability = False
                 self.ability3_cd = 1
+                self.ability1_cd = 420
                 self.enemy.hp -= min(350 - 4 * self.ability3, 250)
                 self.enemy.canmove = True
                 self.enemy.flag_ability = False
@@ -1221,9 +1232,9 @@ class Georg(Player, pygame.sprite.Sprite):
             self.flag_ability3 = False
             self.flag_ability = False
             self.ability3_cd = 1
+            self.ability1_cd = 420
             self.enemy.canmove = True
             self.enemy.flag_ability = False
-
 class Bogdan(Player, pygame.sprite.Sprite):
     def __init__(self, screen, colour):
         self.chr = 'Bogdan'
@@ -2019,6 +2030,7 @@ class Lesha(Player, pygame.sprite.Sprite):
                 self.bullets = []
                 self.ability3_cd += 1
                 self.bullet_animcount = 0
+
 class Dummy(pygame.sprite.Sprite):
     def __init__(self, screen):
         self.hp = 500
