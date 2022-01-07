@@ -16,7 +16,7 @@ class Player(pygame.sprite.Sprite):
         self.permspeed = 1
         self.colour = colour
         self.screen = screen
-        self.hp = 500
+        self.hp = 1000
         self.enemy = 0
         self.enemygroup = 0
         self.canblock = True
@@ -145,7 +145,7 @@ class Player(pygame.sprite.Sprite):
             self.blockdur = 0
         self.speedx = 0
         keystate = pygame.key.get_pressed()
-        if keystate[self.abkeys[3]] and self.canblock:
+        if keystate[self.abkeys[3]] and self.canblock and not self.flag_ability:
             self.blocking = True
             self.canmove = False
             if self.blockdur == 31:
@@ -155,7 +155,7 @@ class Player(pygame.sprite.Sprite):
                 self.block_sound.play()
             else:
                 self.block_flag = False
-        elif keystate[self.abkeys[4]] or self.attacking == True:
+        elif keystate[self.abkeys[4]] and not self.flag_ability or self.attacking == True:
             self.canmove = False
             self.attacking = True
         else:
@@ -239,13 +239,13 @@ class Player(pygame.sprite.Sprite):
                 else:
                     self.image = pygame.image.load(path.join(img_dir, f'{self.colour}2_0.png')).convert()
         else:
-            if self.blocking:
+            if self.blocking and not self.flag_ability:
                 if self.last:
                     self.image = pygame.image.load(path.join(img_dir, f'{self.colour}1_block.png')).convert()
                 else:
                     self.image = pygame.image.load(path.join(img_dir, f'{self.colour}2_block.png')).convert()
                 # self.block()
-            elif self.attacking:
+            elif self.attacking and not self.flag_ability:
                 self.attackacount += 1
                 if self.attackacount >= 30:
                     if not self.atk_flag:
@@ -337,11 +337,11 @@ class Senia(Player, pygame.sprite.Sprite):
         self.attack_damage = self.permattack
 
         keystate = pygame.key.get_pressed()
-        if keystate[self.abkeys[0]] and self.ability1_cd == 0:
+        if keystate[self.abkeys[0]] and not self.flag_ability and self.ability1_cd == 0:
             self.improve()
-        if (keystate[self.abkeys[1]] or self.flag_ability2) and self.ability2_cd == 0:
+        if (keystate[self.abkeys[1]] and not self.flag_ability or self.flag_ability2) and self.ability2_cd == 0:
             self.gblaster()
-        if (keystate[self.abkeys[2]] or self.flag_ability3) and self.ability3_cd == 0:
+        if (keystate[self.abkeys[2]] and not self.flag_ability or self.flag_ability3) and self.ability3_cd == 0:
             self.ult()
         if self.ability1_cd != 0:
             self.ability1_cd += 1
@@ -509,11 +509,11 @@ class Nikita(Player, pygame.sprite.Sprite):
                 if self.awakening_cd >= 450 and self.awakening_phase == 2:
                     self.awakening_cd = 0
 
-            if (keystate[self.abkeys[0]] or self.flag_ability1) and self.ability1_cd == 0:
+            if (keystate[self.abkeys[0]] and not self.flag_ability or self.flag_ability1) and self.ability1_cd == 0:
                 self.rat()
-            if (keystate[self.abkeys[1]] or self.flag_ability2) and self.ability2_cd == 0:
+            if (keystate[self.abkeys[1]] and not self.flag_ability or self.flag_ability2) and self.ability2_cd == 0:
                 self.trick()
-            if keystate[self.abkeys[2]] and self.awakening_cd == 0:
+            if keystate[self.abkeys[2]] and not self.flag_ability and self.awakening_cd == 0:
                 self.awakening_sound.play()
                 self.awakening = True
                 self.ability1_cd = 0
@@ -540,12 +540,12 @@ class Nikita(Player, pygame.sprite.Sprite):
 
             self.awakening_cnt += 1
             self.attack_damage = 2
-            if (keystate[self.abkeys[0]] or self.flag_ability1) and self.ability1_cd == 0:
+            if (keystate[self.abkeys[0]] and not self.flag_ability or self.flag_ability1) and self.ability1_cd == 0:
                 self.attack_damage = 3
                 self.speed()
-            if keystate[self.abkeys[1]] and self.ability2_cd == 0 and self.flag_ability2 == 0:
+            if keystate[self.abkeys[1]] and not self.flag_ability and self.ability2_cd == 0 and self.flag_ability2 == 0:
                 self.attackacount = 15
-            if (keystate[self.abkeys[1]] or self.flag_ability2) and self.ability2_cd == 0:
+            if (keystate[self.abkeys[1]] and not self.flag_ability or self.flag_ability2) and self.ability2_cd == 0:
                 self.punch()
             hits = pygame.sprite.spritecollide(self, self.enemygroup, False)
             for hit in hits:
@@ -588,16 +588,16 @@ class Nikita(Player, pygame.sprite.Sprite):
             else:
                 self.t_rect.right = 995
             self.t_rect.centery = 425
-            if keystate[self.abkeys[0]] and self.ability1_cd == 0 and self.flag_ability1 == 0:
+            if keystate[self.abkeys[0]] and not self.flag_ability and self.ability1_cd == 0 and self.flag_ability1 == 0:
                 self.movement = []
                 self.permhp = self.hp
-            if keystate[self.abkeys[1]] and self.ability2_cd == 0 and self.flag_ability2 == 0:
+            if keystate[self.abkeys[1]] and not self.flag_ability and self.ability2_cd == 0 and self.flag_ability2 == 0:
                 self.permhp = self.hp
-            if (keystate[self.abkeys[0]] or self.flag_ability1) and self.ability1_cd == 0:
+            if (keystate[self.abkeys[0]] and not self.flag_ability or self.flag_ability1) and self.ability1_cd == 0:
                 self.epitaph()
-            if (keystate[self.abkeys[1]] or self.flag_ability2) and self.ability2_cd == 0:
+            if (keystate[self.abkeys[1]] and not self.flag_ability or self.flag_ability2) and self.ability2_cd == 0:
                 self.dash()
-            if keystate[self.abkeys[2]] and self.awakening_cd == 0:
+            if keystate[self.abkeys[2]] and not self.flag_ability and self.awakening_cd == 0:
                 self.awakening_sound.play()
                 self.dash_hp = self.hp
                 self.awakening_phase = 3
@@ -638,16 +638,16 @@ class Nikita(Player, pygame.sprite.Sprite):
                 self.attack_damage = 1.5
                 self.epitaph_cnt = 0
                 self.awakening_cd = 1
-            if keystate[self.abkeys[0]] and not self.flag_ability1 and self.ability1_cd == 0:
+            if keystate[self.abkeys[0]] and not self.flag_ability and not self.flag_ability1 and self.ability1_cd == 0:
                 self.permhp = self.hp
                 self.x = self.enemy.rect.x
-            if keystate[self.abkeys[1]] and not self.flag_ability2 and self.ability2_cd == 0:
+            if keystate[self.abkeys[1]] and not self.flag_ability and not self.flag_ability2 and self.ability2_cd == 0:
                 self.permhp = self.hp
-            if (keystate[self.abkeys[0]] or self.flag_ability1) and self.ability1_cd == 0:
+            if (keystate[self.abkeys[0]] and not self.flag_ability or self.flag_ability1) and self.ability1_cd == 0:
                 self.time_erase()
-            if (keystate[self.abkeys[1]] or self.flag_ability2) and self.ability2_cd == 0:
+            if (keystate[self.abkeys[1]] and not self.flag_ability or self.flag_ability2) and self.ability2_cd == 0:
                 self.invinc()
-            if (keystate[self.abkeys[2]] or self.flag_ability3) and self.ability3_cd == 0:
+            if (keystate[self.abkeys[2]] and not self.flag_ability or self.flag_ability3) and self.ability3_cd == 0:
                 self.ow7()
 
             if self.dash_hp - self.hp > 70:
@@ -1217,11 +1217,11 @@ class Georg(Player, pygame.sprite.Sprite):
         self.chr_desc = 'все способности Георга наносят огромный урон, но имеют большой откат'
     def update2(self):
         keystate = pygame.key.get_pressed()
-        if (keystate[self.abkeys[0]] or self.flag_ability1) and self.ability1_cd == 0:
+        if (keystate[self.abkeys[0]] and not self.flag_ability or self.flag_ability1) and self.ability1_cd == 0:
             self.fire()
-        if (keystate[self.abkeys[1]] or self.flag_ability2) and self.ability2_cd == 0:
+        if (keystate[self.abkeys[1]] and not self.flag_ability or self.flag_ability2) and self.ability2_cd == 0:
             self.chaos()
-        if (keystate[self.abkeys[2]] or self.flag_ability3) and self.ability3_cd == 0:
+        if (keystate[self.abkeys[2]] and not self.flag_ability or self.flag_ability3) and self.ability3_cd == 0:
             self.train()
 
         if self.ability1_cd != 0:
@@ -1411,9 +1411,9 @@ class Bogdan(Player, pygame.sprite.Sprite):
 
     def update2(self):
         keystate = pygame.key.get_pressed()
-        if keystate[self.abkeys[0]] and self.ability1_cd == 0:
+        if keystate[self.abkeys[0]] and not self.flag_ability and self.ability1_cd == 0:
             self.tp()
-        if (keystate[self.abkeys[1]] or self.flag_ability2) and self.ability2_cd == 0:
+        if (keystate[self.abkeys[1]] and not self.flag_ability or self.flag_ability2) and self.ability2_cd == 0:
             self.stun()
 
         if self.ability1_cd != 0:
@@ -1490,11 +1490,11 @@ class Grisha(Player, pygame.sprite.Sprite):
 
     def update2(self):
         keystate = pygame.key.get_pressed()
-        if (keystate[self.abkeys[0]] or self.flag_ability1) and self.ability1_cd == 0:
+        if (keystate[self.abkeys[0]] and not self.flag_ability or self.flag_ability1) and self.ability1_cd == 0:
             self.shield()
-        if (keystate[self.abkeys[1]] or self.flag_ability2) and self.ability2_cd == 0:
+        if (keystate[self.abkeys[1]] and not self.flag_ability or self.flag_ability2) and self.ability2_cd == 0:
             self.atk_2()
-        if (keystate[self.abkeys[2]] or self.flag_ability3) and self.ability3_cd == 0:
+        if (keystate[self.abkeys[2]] and not self.flag_ability or self.flag_ability3) and self.ability3_cd == 0:
             self.timestop()
         if self.ability1_cd != 0:
             self.ability1_cd += 1
@@ -1613,11 +1613,11 @@ class Nikita_Dev(Player, pygame.sprite.Sprite):
 
     def update2(self):
         keystate = pygame.key.get_pressed()
-        if (keystate[self.abkeys[0]] or self.flag_ability1) and self.ability1_cd == 0:
+        if (keystate[self.abkeys[0]] and not self.flag_ability or self.flag_ability1) and self.ability1_cd == 0:
             self.ow5()
-        if (keystate[self.abkeys[1]] or self.flag_ability2) and self.ability2_cd == 0:
+        if (keystate[self.abkeys[1]] and not self.flag_ability or self.flag_ability2) and self.ability2_cd == 0:
             self.knifes()
-        if (keystate[self.abkeys[2]] or self.flag_ability3) and self.ability3_cd == 0:
+        if (keystate[self.abkeys[2]] and not self.flag_ability or self.flag_ability3) and self.ability3_cd == 0:
             self.ult()
         if self.ability1_cd != 0:
             self.ability1_cd += 1
@@ -2060,11 +2060,11 @@ class Lesha(Player, pygame.sprite.Sprite):
 
     def update2(self):
         keystate = pygame.key.get_pressed()
-        if (keystate[self.abkeys[2]] or self.flag_ability3) and self.ability3_cd == 0:
+        if (keystate[self.abkeys[2]] and not self.flag_ability or self.flag_ability3) and self.ability3_cd == 0:
             self.ult()
-        if (keystate[self.abkeys[1]] or self.flag_ability2) and self.ability2_cd == 0:
+        if (keystate[self.abkeys[1]] and not self.flag_ability or self.flag_ability2) and self.ability2_cd == 0:
             self.slowness()
-        if (keystate[self.abkeys[0]] or self.flag_ability1) and self.ability1_cd == 0:
+        if (keystate[self.abkeys[0]] and not self.flag_ability or self.flag_ability1) and self.ability1_cd == 0:
             self.laser()
         if self.ability1_cd != 0:
             self.ability1_cd += 1
