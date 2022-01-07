@@ -327,6 +327,10 @@ class Senia(Player, pygame.sprite.Sprite):
         self.improve_sound = pygame.mixer.Sound(path.join(img_dir, 'improve.wav'))
         self.gblaster_sound = pygame.mixer.Sound(path.join(img_dir, 'blaster2.wav'))
         self.ult_sound = pygame.mixer.Sound(path.join(img_dir, 'senia.wav'))
+        self.ability1_desc = 'сеня учится чему-то новому, а статы взлетают вверх'
+        self.ability2_desc = 'гастер бластер.'
+        self.ability3_desc = 'блокирует использование способностей у врага. заодно ставит их на откат.'
+        self.chr_desc = 'у Сени есть сильная блокировка способностей. а бафф характеристик делает его непобедимым в конце'
 
     def update2(self):
         self.permspeed = self.permpermspeed
@@ -476,6 +480,10 @@ class Nikita(Player, pygame.sprite.Sprite):
         self.invinc_sound = pygame.mixer.Sound(path.join(img_dir, 'invinc.wav'))
         self.ow7_sound = pygame.mixer.Sound(path.join(img_dir, 'knife.wav'))
         self.ability3_cd = 1
+        self.ability1_desc = 'тп за спину с уроном, ускорение, эпитафия, вырезание времени. первое и последнее имба :)'
+        self.ability2_desc = 'фокус, У Д А Р, деш, неуязвимость. первое бесполезное, второе сильное, последнее имба :)'
+        self.ability3_desc = 'пробуждение. дает разные способности. во время полной концентрации создает много ножей'
+        self.chr_desc = 'сложный персонаж, пробуждения дают разные способности. в конце неубиваем.'
 
     def update2(self):
         keystate = pygame.key.get_pressed()
@@ -1203,7 +1211,10 @@ class Georg(Player, pygame.sprite.Sprite):
         self.chaos_sound2 = pygame.mixer.Sound(file=path.join(img_dir, 'chaos-2.wav'))
         self.train_sound1 = pygame.mixer.Sound(file=path.join(img_dir, 'train-1.wav'))
         self.train_sound2 = pygame.mixer.Sound(file=path.join(img_dir, 'train-2.wav'))
-
+        self.ability1_desc = 'огонь. фатальный ближний урон'
+        self.ability2_desc = 'запускает вверх огромный сгусток хаоса. потом с неба летят мелкие сгустки хаоса. большой урон'
+        self.ability3_desc = 'ЛЕТИТ И УБИВАЕТ ОГРОМНЫЙ ФАТАЛЬНЫЙ УЖАСНЫЙ УРОН. но только если вобьет врага в стенку'
+        self.chr_desc = 'все способности Георга наносят огромный урон, но имеют большой откат'
     def update2(self):
         keystate = pygame.key.get_pressed()
         if (keystate[self.abkeys[0]] or self.flag_ability1) and self.ability1_cd == 0:
@@ -1269,8 +1280,8 @@ class Georg(Player, pygame.sprite.Sprite):
             self.ability1_cd = 1
 
     def chaos(self):
-        self.flag_ability = True
         self.flag_ability2 = True
+        self.flag_ability = True
         if self.ability2_phase == 0:
             self.big_bullet.rect.centerx = self.rect.centerx
             self.big_bullet.rect.y = self.rect.y - 205
@@ -1286,6 +1297,8 @@ class Georg(Player, pygame.sprite.Sprite):
                 self.ability2_phase = 2
                 self.canmove = True
         if self.ability2_phase == 2:
+            self.canmove = True
+            self.flag_ability = False
             if self.ability2 >= 990:
                 self.ability2_phase = 3
             elif self.ability2 % 66 == 0:
@@ -1390,6 +1403,11 @@ class Bogdan(Player, pygame.sprite.Sprite):
         self.tp_sound = pygame.mixer.Sound(file=path.join(img_dir, 'teleport.wav'))
         self.gravity_sound = pygame.mixer.Sound(file=path.join(img_dir, 'gravity.wav'))
         self.ability3_maxcd = 0
+        self.ability1_desc = 'рандомная телепортация'
+        self.ability2_desc = 'гравитация искажается. надо было богдану лучше физику учить. не дает врагу ходить'
+        self.ability3_desc = ''
+        self.chr_desc = 'Богдан ничего не учит, но тут у него от этого большие преимущества'
+
 
     def update2(self):
         keystate = pygame.key.get_pressed()
@@ -1465,6 +1483,10 @@ class Grisha(Player, pygame.sprite.Sprite):
         self.atk_2_flag = False
         self.atk_2_sound = pygame.mixer.Sound(file=path.join(img_dir, 'hitHurt.wav'))
         self.timestop_sound = pygame.mixer.Sound(file=path.join(img_dir, 'timestop.wav'))
+        self.ability1_desc = 'щит. защищает от любого урона'
+        self.ability2_desc = 'сильный ближний удар. большой урон если начинать удар близко к врагу'
+        self.ability3_desc = 'остановка времени'
+        self.chr_desc = 'без таймстопа он почти ничего не сделает. а за 2 таймстопа убивает любого'
 
     def update2(self):
         keystate = pygame.key.get_pressed()
@@ -2031,6 +2053,10 @@ class Lesha(Player, pygame.sprite.Sprite):
         self.slowness_sound = pygame.mixer.Sound(file=path.join(img_dir, 'slowness.wav'))
         self.ult_flag = False
         self.ult_sound = pygame.mixer.Sound(file=path.join(img_dir, 'leshaShoot.wav'))
+        self.ability1_desc = 'лазер. хороший урон, маленький откат, игнорирует блок'
+        self.ability2_desc = 'аура замедления. ЗАМЕДЛЯЕТ'
+        self.ability3_desc = 'леша подлетает, выстреливает 3 снаряда, которые следуют за игроком'
+        self.chr_desc = 'Леша. Спам машина, маленькие откаты, средний урон'
 
     def update2(self):
         keystate = pygame.key.get_pressed()

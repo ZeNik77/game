@@ -92,6 +92,18 @@ player2.enemy = player
 player.enemygroup = player2_group
 player2.enemygroup = player1_group
 
+# 320 строка
+font_desc = pygame.font.Font(None, 25)
+font_desc_color = (0, 255, 240)
+t_chrDesc = font_desc.render('', True, font_desc_color)
+t_chrDesc_rect = t_chrDesc.get_rect()
+t_ab1Desc = font_desc.render('', True, font_desc_color)
+t_ab1Desc_rect = t_ab1Desc.get_rect()
+t_ab2Desc = font_desc.render('', True, font_desc_color)
+t_ab2Desc_rect = t_ab2Desc.get_rect()
+t_ab3Desc = font_desc.render('', True, font_desc_color)
+t_ab3Desc_rect = t_ab3Desc.get_rect()
+
 # bullet1 = chr.TestingBullet(enemygroup=player1_group, screen=screen, speed=10, x=540)
 
 # Цикл игры
@@ -164,6 +176,7 @@ while running:
                     
                     player.enemygroup = player2_group
                     player2.enemygroup = player1_group
+            '''
             if event.key == pygame.K_1 and flag == 2:
                 if not select_phase:
                     a = 'NikitaDev'
@@ -193,7 +206,7 @@ while running:
                     
                     player.enemygroup = player2_group
                     player2.enemygroup = player1_group
-
+            '''
             if event.key == pygame.K_5 and flag == 2:
                 if not select_phase:
                     a = 'Georg'
@@ -318,6 +331,28 @@ while running:
             if event.key == pygame.K_SPACE and flag == 2:
                 select_phase = not select_phase
     if flag == 2:
+        if not select_phase:
+            font_desc_color = (0, 255, 240)
+            t_chrDesc = font_desc.render(player.chr + '        ' + player.chr_desc, True, font_desc_color)
+            t_ab1Desc = font_desc.render(player.ability1_name + '        ' + player.ability1_desc, True, font_desc_color)
+            t_ab2Desc = font_desc.render(player.ability2_name + '        ' + player.ability2_desc, True, font_desc_color)
+            if player.ability3_name != '':
+                t_ab3Desc = font_desc.render(player.ability3_name + '        ' + player.ability3_desc, True, font_desc_color)
+            else:
+                t_ab3Desc = font_desc.render('', True, font_desc_color)
+        else:
+            font_desc_color = (255, 10, 100)
+            t_chrDesc = font_desc.render(player2.chr + '        ' + player2.chr_desc, True, font_desc_color)
+            t_ab1Desc = font_desc.render(player2.ability1_name + '        ' + player2.ability1_desc, True, font_desc_color)
+            t_ab2Desc = font_desc.render(player2.ability2_name + '        ' + player2.ability2_desc, True, font_desc_color)
+            if player2.ability3_name != '':
+                t_ab3Desc = font_desc.render(player2.ability3_name + '        ' + player2.ability3_desc, True, font_desc_color)
+            else:
+                t_ab3Desc = font_desc.render('', True, font_desc_color)
+        t_chrDesc_rect.x, t_chrDesc_rect.y = 10, 40
+        t_ab1Desc_rect.x, t_ab1Desc_rect.y = 10, 120
+        t_ab2Desc_rect.x, t_ab2Desc_rect.y = 10, 200
+        t_ab3Desc_rect.x, t_ab3Desc_rect.y = 10, 280
         chr_1 = pygame.image.load(path.join(img_dir, p)).convert()
         chr1_rect = chr_1.get_rect()
         chr1_rect.centerx = 120
@@ -362,7 +397,7 @@ while running:
         screen.blit(main_menu, main_menu_rect)
         screen.blit(t, t_rect)
     elif flag == 2:
-        screen.fill((255, 0, 200))
+        screen.fill((50, 50, 50))
         if not select_phase:
             c = 'first'
         else:
@@ -371,6 +406,10 @@ while running:
         t_choice_rect = t.get_rect()
         t_choice_rect.centerx, t_rect.centery = 450, 30
         screen.blit(t_choice, t_choice_rect)
+        screen.blit(t_chrDesc, t_chrDesc_rect)
+        screen.blit(t_ab1Desc, t_ab1Desc_rect)
+        screen.blit(t_ab2Desc, t_ab2Desc_rect)
+        screen.blit(t_ab3Desc, t_ab3Desc_rect)
 
     pygame.display.flip()
 
