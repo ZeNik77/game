@@ -2096,8 +2096,7 @@ class Lesha(Player, pygame.sprite.Sprite):
         for h in hit:
             if flag:
                 try:
-                    h.hp -= 3
-                    # print(h.hp)
+                    h.hp -= 2.3
                 except:
                     h.canblock = False
         if not self.laser_flag:
