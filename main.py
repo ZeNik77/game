@@ -31,7 +31,9 @@ main_menu_rect = main_menu.get_rect()
 bg = pygame.image.load(path.join(img_dir, 'image.png')).convert()
 bg_rect = bg.get_rect()
 font = pygame.font.Font(None, 40)
-font_color = (0,0,0)
+font_color = (0, 160, 145)
+font_2 = pygame.font.Font(None, 40)
+font_2_color = (255, 10, 100)
 
 if player.chr == 'Nikita_Dev':
     a = 'NikitaDev'
@@ -62,8 +64,8 @@ t_chr1_rect = t_chr1.get_rect()
 t_chr1_rect.x = 20
 t_chr1_rect.centery = 30
 
-t_chr2 = font.render('Player 2: '+ a2, True, font_color)
-t_chr2_rect = t_chr1.get_rect()
+t_chr2 = font_2.render('Player 2: '+ a2, True, font_2_color)
+t_chr2_rect = t_chr2.get_rect()
 t_chr2_rect.centerx = WIDTH - 170
 t_chr2_rect.centery = 30
 
@@ -368,8 +370,8 @@ while running:
         t_chr1_rect.x = 20
         t_chr1_rect.centery = 30
 
-        t_chr2 = font.render('Player 2: ' + a2, True, font_color)
-        t_chr2_rect = t_chr1.get_rect()
+        t_chr2 = font_2.render('Player 2: ' + a2, True, font_2_color)
+        t_chr2_rect = t_chr2.get_rect()
         t_chr2_rect.right = WIDTH - 20
         t_chr2_rect.centery = 30
     # all_sprites.update()
