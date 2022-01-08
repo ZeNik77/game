@@ -332,6 +332,7 @@ class Senia(Player, pygame.sprite.Sprite):
         self.ability2_phase = 0
         self.flag_ability2 = False
         self.ability2 = 0
+        self.blaster_multiplier = 1
         self.blaster = ''
         self.blaster_rect = pygame.sprite.Sprite()
         self.blaster_rect.image = pygame.Surface((1500, 36))
@@ -339,6 +340,7 @@ class Senia(Player, pygame.sprite.Sprite):
 
         self.flag_ability3 = False
         self.ability3 = 0
+        self.blockade_multiplier = 2
         img_dir = path.join(path.dirname(__file__), 'Assets')
         self.improve_sound = pygame.mixer.Sound(path.join(img_dir, 'improve.wav'))
         self.gblaster_sound = pygame.mixer.Sound(path.join(img_dir, 'blaster2.wav'))
@@ -374,8 +376,10 @@ class Senia(Player, pygame.sprite.Sprite):
                 self.ability3_cd = 0
 
     def improve(self):
-        self.permpermspeed += 0.15
-        self.permattack += 0.5
+        self.permpermspeed += 0.1
+        self.permattack += 0.3
+        self.blaster_multiplier += 0.3
+        self.blockade_multiplier += 0.1
         self.ability1_cd = 1
         self.improve_sound.play()
         self.called_phrases.append(['New knowledge will someday come in handy', self.rect.centerx, self.rect.y])
@@ -412,7 +416,7 @@ class Senia(Player, pygame.sprite.Sprite):
             hits = pygame.sprite.spritecollide(self.blaster_rect, self.enemygroup, False)
             for hit in hits:
                 if not hit.blocking:
-                    hit.hp -= 4
+                    hit.hp -= 4 * self.blaster_multiplier
                 else:
                     hit.blockdur -= 1
             self.ability2 += 1
@@ -424,14 +428,14 @@ class Senia(Player, pygame.sprite.Sprite):
                 self.ability2_cd = 1
 
     def ult(self):
-        self.enemy.ability1_cd = self.enemy.ability1_maxcd // 2
-        self.enemy.ability2_cd = self.enemy.ability2_maxcd // 2
+        self.enemy.ability1_cd = self.enemy.ability1_maxcd // self.blockade_multiplier
+        self.enemy.ability2_cd = self.enemy.ability2_maxcd // self.blockade_multiplier
         self.flag_ability3 = True
         if self.ability3 == 0:
             self.ult_sound.play()
             self.called_phrases.append(['Aaaaand you can\'t use your abilities now', self.rect.centerx, self.rect.y])
         try:
-            self.enemy.ability3_cd = self.enemy.ability3_maxcd // 2
+            self.enemy.ability3_cd = self.enemy.ability3_maxcd // self.blockade_multiplier
         except:
             pass
         self.ability3 += 1
@@ -618,7 +622,7 @@ class Nikita(Player, pygame.sprite.Sprite):
                 self.permhp = self.hp
             if (keystate[self.abkeys[0]] and not self.flag_ability or self.flag_ability1) and self.ability1_cd == 0:
                 self.epitaph()
-            if (keystate[self.abkeys[1]] and not self.flag_ability or self.flag_ability2) and self.ability2_cd == 0:
+            if (keystate[self.abkeys[1]] or self.flag_ability2) and self.ability2_cd == 0:
                 self.dash()
             if keystate[self.abkeys[2]] and not self.flag_ability and self.awakening_cd == 0:
                 self.called_phrases.append(['It\'s time to be the [[BIG SHOT]]', self.rect.centerx, self.rect.y])
@@ -669,7 +673,7 @@ class Nikita(Player, pygame.sprite.Sprite):
                 self.permhp = self.hp
             if (keystate[self.abkeys[0]] and not self.flag_ability or self.flag_ability1) and self.ability1_cd == 0:
                 self.time_erase()
-            if (keystate[self.abkeys[1]] and not self.flag_ability or self.flag_ability2) and self.ability2_cd == 0:
+            if (keystate[self.abkeys[1]] or self.flag_ability2) and self.ability2_cd == 0:
                 self.invinc()
             if (keystate[self.abkeys[2]] and not self.flag_ability or self.flag_ability3) and self.ability3_cd == 0:
                 self.ow7()
@@ -1533,7 +1537,7 @@ class Grisha(Player, pygame.sprite.Sprite):
 
     def update2(self):
         keystate = pygame.key.get_pressed()
-        if (keystate[self.abkeys[0]] and not self.flag_ability or self.flag_ability1) and self.ability1_cd == 0:
+        if (keystate[self.abkeys[0]] or self.flag_ability1) and self.ability1_cd == 0:
             self.shield()
         if (keystate[self.abkeys[1]] and not self.flag_ability or self.flag_ability2) and self.ability2_cd == 0:
             self.atk_2()
