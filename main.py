@@ -390,7 +390,6 @@ while running:
         player2.update2()
         player.update()
         player2.update()
-        print(player.hp, player2.hp)
         # print(f'canblock {player.canblock}, blockdur {player.blockdur}, dur {player.dur}')
         # print(f'canblock2 {player2.canblock}, blockdur2 {player2.blockdur}, dur2 {player2.dur}')
         # bullet1.update()
