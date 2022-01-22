@@ -18,7 +18,9 @@ def text(screen, phrase, coords):
     t_rect.y = coords[1] - 10
     screen.blit(t, t_rect)
 
+
 class Player(pygame.sprite.Sprite):
+
     def __init__(self, screen, colour):
         self.called_phrases = []
         self.dur = 0
@@ -238,10 +240,6 @@ class Player(pygame.sprite.Sprite):
                     self.left = False
                     self.right = False
                     self.animcount = 0
-            if self.rect.right > WIDTH:
-                self.rect.right = WIDTH
-            if self.rect.left < 0:
-                self.rect.left = 0
             self.animcount += 1
             if self.left:
                 self.image = pygame.image.load(
@@ -298,8 +296,85 @@ class Player(pygame.sprite.Sprite):
         # print(self.hp)
         self.image.set_colorkey((255, 255, 255))
         self.rect.x += self.speedx * self.permspeed
+        if self.rect.right > WIDTH:
+            self.rect.right = WIDTH
+        if self.rect.left < 0:
+            self.rect.left = 0
         # print(self.flag_ability)
         self.screen.blit(self.image, self.rect)
+class Kostya(Player, pygame.sprite.Sprite):
+    def __init__(self, screen, colour):
+        self.chr = 'Kostya'
+        self.colour = colour
+        self.ability1_cd = 0
+        self.ability2_cd = 0
+        self.ability3_cd = 0
+        Player.__init__(self, screen, colour)
+        pygame.sprite.Sprite.__init__(self)
+        self.ability1_name = 'dash'
+        self.ability1_maxcd = 90
+        self.ability2_name = 'dash-punch'
+        self.ability2_maxcd = 120
+        self.ability3_name = 'mini-knifes'
+        # blockdur -= 2
+        self.ability3_maxcd = 240
+        self.ability1_desc = 'телепортация в сторону в которую смотрит персонаж'
+        self.ability2_desc = 'телепортация, если враг окажется в промежутке, то урон врагу'
+        self.ability3_desc = 'последовательно пускает 3 маленьких ножа'
+        self.chr_desc = 'Костя мобильный и быстрый спам персонаж'
+
+        img_dir = path.join(path.dirname(__file__), 'Assets')
+        self.dash_sound = pygame.mixer.Sound(path.join(img_dir, 'dash.wav'))
+    def update2(self):
+        keystate = pygame.key.get_pressed()
+        if keystate[self.abkeys[0]] and not self.flag_ability and self.ability1_cd == 0:
+            self.dash()
+        if keystate[self.abkeys[1]] and not self.flag_ability and self.ability2_cd == 0:
+            self.dash_punch()
+
+
+
+        if self.ability1_cd != 0:
+            self.ability1_cd += 1
+            if self.ability1_cd >= self.ability1_maxcd:
+                self.ability1_cd = 0
+        if self.ability2_cd != 0:
+            self.ability2_cd += 1
+            if self.ability2_cd >= self.ability2_maxcd:
+                self.ability2_cd = 0
+    def dash(self):
+        self.called_phrases.append(['I\'m gone', self.rect.x, self.rect.y])
+        if self.last:
+            self.rect.x += 200
+        else:
+            self.rect.x -= 200
+        self.dash_sound.play()
+        self.ability1_cd = 1
+    def dash_punch(self):
+        flag = False
+        self.called_phrases.append(['Too slow', self.rect.x, self.rect.y])
+        if self.last:
+            if self.rect.x <= self.enemy.rect.x <= self.rect.x + 130:
+                if self.enemy.blocking:
+                    self.enemy.blockdur = 0
+                else:
+                    self.enemy.hp -= 50
+                flag = True
+            self.rect.x += 130
+
+        else:
+            if self.rect.x - 130 <= self.enemy.rect.x <= self.rect.x:
+                if self.enemy.blocking:
+                    self.enemy.blockdur = 0
+                else:
+                    self.enemy.hp -= 50
+                flag = True
+            self.rect.x -= 130
+        if flag:
+            self.atk_sound.play()
+        else:
+            self.dash_sound.play()
+        self.ability2_cd = 1
 class Senia(Player, pygame.sprite.Sprite):
     def __init__(self, screen, colour):
         self.chr = 'Senia'
