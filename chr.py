@@ -322,17 +322,25 @@ class Kostya(Player, pygame.sprite.Sprite):
         self.ability2_desc = 'телепортация, если враг окажется в промежутке, то урон врагу'
         self.ability3_desc = 'последовательно пускает 3 маленьких ножа'
         self.chr_desc = 'Костя мобильный и быстрый спам персонаж'
-
+        
+        self.knife_flag = False
+        self.flag_ability3 = False
+        self.knife_cnt = 0
+        self.ability3 = 0
         img_dir = path.join(path.dirname(__file__), 'Assets')
+        self.knifes = []
+
         self.dash_sound = pygame.mixer.Sound(path.join(img_dir, 'dash.wav'))
     def update2(self):
         keystate = pygame.key.get_pressed()
-        if keystate[self.abkeys[0]] and not self.flag_ability and self.ability1_cd == 0:
+        if keystate[self.abkeys[0]] and self.ability1_cd == 0:
             self.dash()
-        if keystate[self.abkeys[1]] and not self.flag_ability and self.ability2_cd == 0:
+        if keystate[self.abkeys[1]] and self.ability2_cd == 0:
             self.dash_punch()
-
-
+        if keystate[self.abkeys[2]] and self.ability3_cd == 0 and self.flag_ability3 == False:
+            self.knife_flag = self.last
+        if (keystate[self.abkeys[2]] and not self.flag_ability or self.flag_ability3) and self.ability3_cd == 0:
+            self.ult()
 
         if self.ability1_cd != 0:
             self.ability1_cd += 1
@@ -342,6 +350,10 @@ class Kostya(Player, pygame.sprite.Sprite):
             self.ability2_cd += 1
             if self.ability2_cd >= self.ability2_maxcd:
                 self.ability2_cd = 0
+        if self.ability3_cd != 0:
+            self.ability3_cd += 1
+            if self.ability3_cd >= self.ability3_maxcd:
+                self.ability3_cd = 0
     def dash(self):
         self.called_phrases.append(['I\'m gone', self.rect.x, self.rect.y])
         if self.last:
@@ -375,6 +387,51 @@ class Kostya(Player, pygame.sprite.Sprite):
         else:
             self.dash_sound.play()
         self.ability2_cd = 1
+    def ult(self):
+        self.flag_ability3 = True
+        if self.ability3 == 0:
+            self.called_phrases.append(['Hm', self.rect.x, self.rect.y])
+        self.ability3 += 1
+        if self.knife_cnt < 3 and (self.ability3 - 1) % 25 == 0:
+            if self.knife_flag:
+                self.knife_cnt += 1
+                x = pygame.sprite.Sprite()
+                img_dir = path.join(path.dirname(__file__), 'Assets')
+                x.image = pygame.image.load(path.join(img_dir, 'mini-knife1.png'))
+                x.image.set_colorkey((255, 255, 255))
+                x.rect = x.image.get_rect()
+                x.rect.x = self.rect.x + 85 + 3
+                x.rect.centery = self.rect.centery
+                self.knifes.append([x, 1])
+                #right?
+            else:
+                self.knife_cnt += 1
+                x = pygame.sprite.Sprite()
+                img_dir = path.join(path.dirname(__file__), 'Assets')
+                x.image = pygame.image.load(path.join(img_dir, 'mini-knife2.png'))
+                x.image.set_colorkey((255, 255, 255))
+                x.rect = x.image.get_rect()
+                x.rect.x = self.rect.x - 40 - 3
+                x.rect.centery = self.rect.centery
+                self.knifes.append([x, 0])
+        for knife in self.knifes:
+            if knife[1] == 1:
+                knife[0].rect.x += 20
+            else:
+                knife[0].rect.x -= 20
+            hits = pygame.sprite.spritecollide(knife[0], self.enemygroup, False)
+            for hit in hits:
+                if hit.blocking:
+                    hit.blockdur -= 2
+                else:
+                    hit.hp -= 10
+            self.screen.blit(knife[0].image, knife[0].rect)
+        if self.ability3 >= 140:
+            self.flag_ability3 = 0
+            self.ability3_cd = 1
+            self.knifes = []
+            self.knife_cnt = 0
+            self.ability3 = 0
 class Senia(Player, pygame.sprite.Sprite):
     def __init__(self, screen, colour):
         self.chr = 'Senia'
