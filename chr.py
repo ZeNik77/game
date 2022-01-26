@@ -331,6 +331,7 @@ class Kostya(Player, pygame.sprite.Sprite):
         self.knifes = []
 
         self.dash_sound = pygame.mixer.Sound(path.join(img_dir, 'dash.wav'))
+        self.knife_sound = pygame.mixer.Sound(path.join(img_dir, 'mini-knife.wav'))
     def update2(self):
         keystate = pygame.key.get_pressed()
         if keystate[self.abkeys[0]] and self.ability1_cd == 0:
@@ -393,6 +394,7 @@ class Kostya(Player, pygame.sprite.Sprite):
             self.called_phrases.append(['Hm', self.rect.x, self.rect.y])
         self.ability3 += 1
         if self.knife_cnt < 3 and (self.ability3 - 1) % 25 == 0:
+            self.knife_sound.play()
             if self.knife_flag:
                 self.knife_cnt += 1
                 x = pygame.sprite.Sprite()
