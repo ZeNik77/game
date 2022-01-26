@@ -2367,7 +2367,9 @@ class Lesha(Player, pygame.sprite.Sprite):
                 self.ult_sound.play()
                 # print('BULLET!')
                 self.flag_vec.append(False)
-                self.bullets.append([pygame.image.load(path.join(img_dir, 'fire.png')).convert(),
+                xd = pygame.image.load(path.join(img_dir, 'fire.png')).convert()
+                xd.set_colorkey((255, 255, 255))
+                self.bullets.append([xd,
                                      (self.rect.x + 42.5, self.rect.y + 50)])
             try:
                 for i in range(len(self.bullets)):
