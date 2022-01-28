@@ -531,7 +531,7 @@ class Senia(Player, pygame.sprite.Sprite):
                 self.blaster.rect.x = self.rect.x - 41 - 5
             self.blaster.rect.centery = self.rect.centery
             self.gblaster_sound.play()
-            self.called_phrases.append(['sans\'s legacy', self.rect.centerx, self.rect.y])
+            self.called_phrases.append(['sans\' legacy', self.rect.centerx, self.rect.y])
             self.ability2_phase = 1
         elif self.ability2_phase == 1:
             self.ability2 += 1
