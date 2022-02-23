@@ -1,6 +1,8 @@
 import pygame
 from os import path
+from PIL import Image as image
 import chr
+import io
 WIDTH = 1000
 HEIGHT = 650
 FPS = 60
@@ -105,6 +107,7 @@ t_ab2Desc = font_desc.render('', True, font_desc_color)
 t_ab2Desc_rect = t_ab2Desc.get_rect()
 t_ab3Desc = font_desc.render('', True, font_desc_color)
 t_ab3Desc_rect = t_ab3Desc.get_rect()
+
 
 # bullet1 = chr.TestingBullet(enemygroup=player1_group, screen=screen, speed=10, x=540)
 
@@ -445,6 +448,24 @@ while running:
         screen.blit(t_ab2Desc, t_ab2Desc_rect)
         screen.blit(t_ab3Desc, t_ab3Desc_rect)
 
+'''
+    pil_string_image = pygame.image.tostring(screen, "RGBA", False)
+    pil_image = image.frombytes('RGBA', (1000, 650), bytes(pil_string_image))
+    pixels = pil_image.load()
+    x, y = pil_image.size
+    for i in range(x):
+        for j in range(y):
+            pixels[i, j] = sum(pixels[i, j]) // 3, sum(pixels[i, j]) // 3, sum(pixels[i, j]) // 3
+    mode = pil_image.mode
+    size = pil_image.size
+    data = pil_image.tobytes()
+
+    # Convert PIL image to pygame surface image
+    py_image = pygame.image.fromstring(data, size, mode)
+    screen.blit(py_image, (0, 0))
+'''
+
     pygame.display.flip()
+
 
 pygame.quit()
