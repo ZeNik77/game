@@ -4,6 +4,7 @@ import math
 import random
 import asyncio
 
+time = 0
 WIDTH = 1000
 HEIGHT = 650
 pygame.init()
@@ -301,6 +302,7 @@ class Player(pygame.sprite.Sprite):
         if self.rect.left < 0:
             self.rect.left = 0
         # print(self.flag_ability)
+    def draw(self):
         self.screen.blit(self.image, self.rect)
 class Kostya(Player, pygame.sprite.Sprite):
     def __init__(self, screen, colour):
@@ -1746,6 +1748,11 @@ class Grisha(Player, pygame.sprite.Sprite):
             self.flag_ability = False
 
     def timestop(self):
+        global time
+        if self.colour == 'blue':
+            time = 2
+        else:
+            time = 1
         self.enemy.canmove = False
         self.enemy.flag_ability = True
         self.enemy.blockdur = -1
@@ -1771,6 +1778,7 @@ class Grisha(Player, pygame.sprite.Sprite):
             self.ab3_permhp = 0
             self.ab3_difference = 0
             self.ability3_cd = 1
+            time = 0
 class Nikita_Dev(Player, pygame.sprite.Sprite):
     def __init__(self, screen, colour):
         self.chr = 'Nikita_Dev'

@@ -2,7 +2,8 @@ import pygame
 from os import path
 from PIL import Image as image
 import chr
-import io
+from chr import time
+#import io
 WIDTH = 1000
 HEIGHT = 650
 FPS = 60
@@ -132,10 +133,10 @@ while running:
                     player2.enemy = player
                     player1_group = pygame.sprite.Group()
                     player1_group.add(player)
-                    
+
                     player2_group = pygame.sprite.Group()
                     player2_group.add(player2)
-                    
+
                     player.enemygroup = player2_group
                     player2.enemygroup = player1_group
                 else:
@@ -146,10 +147,10 @@ while running:
                     player2.enemy = player
                     player1_group = pygame.sprite.Group()
                     player1_group.add(player)
-                    
+
                     player2_group = pygame.sprite.Group()
                     player2_group.add(player2)
-                    
+
                     player.enemygroup = player2_group
                     player2.enemygroup = player1_group
             if event.key == pygame.K_4 and flag == 2:
@@ -161,10 +162,10 @@ while running:
                     player2.enemy = player
                     player1_group = pygame.sprite.Group()
                     player1_group.add(player)
-                    
+
                     player2_group = pygame.sprite.Group()
                     player2_group.add(player2)
-                    
+
                     player.enemygroup = player2_group
                     player2.enemygroup = player1_group
                 else:
@@ -175,10 +176,10 @@ while running:
                     player2.enemy = player
                     player1_group = pygame.sprite.Group()
                     player1_group.add(player)
-                    
+
                     player2_group = pygame.sprite.Group()
                     player2_group.add(player2)
-                    
+
                     player.enemygroup = player2_group
                     player2.enemygroup = player1_group
             '''
@@ -253,10 +254,10 @@ while running:
                     player2.enemy = player
                     player1_group = pygame.sprite.Group()
                     player1_group.add(player)
-                    
+
                     player2_group = pygame.sprite.Group()
                     player2_group.add(player2)
-                    
+
                     player.enemygroup = player2_group
                     player2.enemygroup = player1_group
                 else:
@@ -267,10 +268,10 @@ while running:
                     player2.enemy = player
                     player1_group = pygame.sprite.Group()
                     player1_group.add(player)
-                    
+
                     player2_group = pygame.sprite.Group()
                     player2_group.add(player2)
-                    
+
                     player.enemygroup = player2_group
                     player2.enemygroup = player1_group
 
@@ -345,10 +346,10 @@ while running:
                     player2.enemy = player
                     player1_group = pygame.sprite.Group()
                     player1_group.add(player)
-                    
+
                     player2_group = pygame.sprite.Group()
                     player2_group.add(player2)
-                    
+
                     player.enemygroup = player2_group
                     player2.enemygroup = player1_group
                 else:
@@ -359,10 +360,10 @@ while running:
                     player2.enemy = player
                     player1_group = pygame.sprite.Group()
                     player1_group.add(player)
-                    
+
                     player2_group = pygame.sprite.Group()
                     player2_group.add(player2)
-                    
+
                     player.enemygroup = player2_group
                     player2.enemygroup = player1_group
             if event.key == pygame.K_SPACE and flag == 2:
@@ -425,6 +426,54 @@ while running:
         player2.update2()
         player.update()
         player2.update()
+        player.draw()
+        player2.draw()
+
+        time = chr.time
+        if time == 1:
+            pil_string_image = pygame.image.tostring(player.image, "RGBA", False)
+            pil_image = image.frombytes('RGBA', (85, 100), bytes(pil_string_image))
+            pixels = pil_image.load()
+            x, y = pil_image.size
+            for i in range(x):
+                for j in range(y):
+                    lol = sum(pixels[i, j])
+                    if lol != 255 * 3:
+                        pixels[i, j] = *[lol // 3 - 1 if lol > 0 else lol], *[lol // 3 - 1 if lol > 0 else lol], *[
+                            lol // 3 - 1 if lol > 0 else lol]
+                    else:
+                        pixels[i, j] = 200, 200, 200
+                        # pixels[i, j] = lol // 3, lol // 3, lol // 3
+
+            mode = pil_image.mode
+            size = pil_image.size
+            data = pil_image.tobytes()
+
+            py_image = pygame.image.fromstring(data, size, mode)
+            py_image.set_colorkey((200, 200, 200))
+            screen.blit(py_image, player.rect)
+        if time == 2:
+            pil_string_image = pygame.image.tostring(player2.image, "RGBA", False)
+            pil_image = image.frombytes('RGBA', (85, 100), bytes(pil_string_image))
+            pixels = pil_image.load()
+            x, y = pil_image.size
+            for i in range(x):
+                for j in range(y):
+                    lol = sum(pixels[i, j])
+                    if lol != 255 * 3:
+                        pixels[i, j] = *[lol // 3 - 15 if lol > 16 else lol], *[lol // 3 - 15 if lol > 16 else lol], *[lol // 3 - 15 if lol > 16 else lol]
+                        #pixels[i, j] = lol // 3, lol // 3, lol // 3
+                    else:
+                        pixels[i, j] = 200, 200, 200
+
+            mode = pil_image.mode
+            size = pil_image.size
+            data = pil_image.tobytes()
+
+            py_image = pygame.image.fromstring(data, size, mode)
+            py_image.set_colorkey((200, 200, 200))
+            screen.blit(py_image, player2.rect)
+
         # print(f'canblock {player.canblock}, blockdur {player.blockdur}, dur {player.dur}')
         # print(f'canblock2 {player2.canblock}, blockdur2 {player2.blockdur}, dur2 {player2.dur}')
         # bullet1.update()
@@ -448,24 +497,9 @@ while running:
         screen.blit(t_ab2Desc, t_ab2Desc_rect)
         screen.blit(t_ab3Desc, t_ab3Desc_rect)
 
-'''
-    pil_string_image = pygame.image.tostring(screen, "RGBA", False)
-    pil_image = image.frombytes('RGBA', (1000, 650), bytes(pil_string_image))
-    pixels = pil_image.load()
-    x, y = pil_image.size
-    for i in range(x):
-        for j in range(y):
-            pixels[i, j] = sum(pixels[i, j]) // 3, sum(pixels[i, j]) // 3, sum(pixels[i, j]) // 3
-    mode = pil_image.mode
-    size = pil_image.size
-    data = pil_image.tobytes()
 
-    # Convert PIL image to pygame surface image
-    py_image = pygame.image.fromstring(data, size, mode)
-    screen.blit(py_image, (0, 0))
-'''
 
-    pygame.display.flip()
+    pygame.display.update()
 
 
 pygame.quit()
