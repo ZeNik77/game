@@ -18,6 +18,9 @@ def text(screen, phrase, coords):
     t_rect.centerx = coords[0]
     t_rect.y = coords[1] - 10
     screen.blit(t, t_rect)
+# сделай рекурентно чтобы записать вместе с функцией текста
+def particle_system_tm(screen, psize, x, y, xsize, ysize, freq, cnt, particles = []):
+    
 
 
 class Player(pygame.sprite.Sprite):
