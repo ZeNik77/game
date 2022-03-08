@@ -422,12 +422,12 @@ while running:
         pygame.draw.rect(screen, GREEN, (200, (75 + (1000 - player.hp) // 3.3 // 2), 30, player.hp // 3.3 // 2))
         pygame.draw.rect(screen, RED, (770, 75, 30, (1000 - player2.hp) // 3.3 // 2))
         pygame.draw.rect(screen, GREEN, (770, (75 + (1000 - player2.hp) // 3.3 // 2), 30, player2.hp // 3.3 // 2))
-        player.update2()
-        player2.update2()
         player.update()
         player2.update()
         player.draw()
         player2.draw()
+        player.update2()
+        player2.update2()
 
         time = chr.time
         if time == 1:

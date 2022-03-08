@@ -18,8 +18,28 @@ def text(screen, phrase, coords):
     t_rect.centerx = coords[0]
     t_rect.y = coords[1] - 10
     screen.blit(t, t_rect)
-# сделай рекурентно чтобы записать вместе с функцией текста
-def particle_system_tm(screen, psize, x, y, xsize, ysize, freq, cnt, particles = []):
+# сделай рекурентно чтобы вызывать вместе с функцией текста
+# экран, размер частиц, ху, размеры, частота вылета новых, счетчик, время в которое можно спавнить новые, время жизни частиц, движущиеся вверх и вниз
+def particle_system_tm(screen, particles):
+    for el in particles:
+        if el[3] == 1:
+            if el[2] > el[4]:
+                particles.remove(el)
+                continue
+            el[1].y -= 5
+            el[2] += 1
+            screen.blit(el[0], el[1])
+            print(el[1].x, el[1].y)
+        else:
+            if el[2] > el[4]:
+                particles.remove(el)
+                continue
+            el[1].y += 5
+            el[2] += 1
+            screen.blit(el[0], el[1])
+
+
+
     
 
 
@@ -112,6 +132,8 @@ class Player(pygame.sprite.Sprite):
             self.t_cd3_rect.right = 1000 - 240
         self.t_cd3_rect.y = 75 + 55 + 55
 
+        self.particles = []
+
     def attack(self):
         # , special_flags=pygame.BLEND_RGBA_MULT
         if not self.last:
@@ -126,6 +148,9 @@ class Player(pygame.sprite.Sprite):
             el[2] -= 1
             if el[2] <= self.rect.y - 95:
                 self.called_phrases.remove(el)
+        for el in self.particles:
+            particle_system_tm(self.screen, self.particles)
+
         self.t_cd1 = self.font2.render(self.ability1_name + f": {round((self.ability1_maxcd - self.ability1_cd)//60)}", True,
                                        self.font2_color, self.font2_background)
         self.t_cd1_rect = self.t_cd1.get_rect()
@@ -307,6 +332,19 @@ class Player(pygame.sprite.Sprite):
         # print(self.flag_ability)
     def draw(self):
         self.screen.blit(self.image, self.rect)
+    def add_particles(self, color, psize, x, y, xsize, ysize, freq, life):
+        particle = pygame.sprite.Sprite()
+        particle_image = pygame.Surface((psize, psize))
+        particle_image.fill(color)
+        particle.image = particle_image
+        particle.rect = particle.image.get_rect()
+
+        for i in range(x, x + xsize, freq):
+            for j in range(y, y + ysize, freq):
+                particle.rect.x = i
+                particle.rect.y = j
+                self.particles.append([particle.image, particle.rect, 0, random.randint(0, 1), life])
+
 class Kostya(Player, pygame.sprite.Sprite):
     def __init__(self, screen, colour):
         self.chr = 'Kostya'
@@ -2303,6 +2341,8 @@ class Lesha(Player, pygame.sprite.Sprite):
             self.laser_sound.play()
             self.laser_flag = True
         self.screen.blit(self.las.image, self.las.rect)
+        if self.ability1 % 15 == 0:
+            self.add_particles((255, 0, 0), 10, self.las.rect.x, self.las.rect.y, 300, 20, 10, 20)
         self.ability1 += 1
         if self.ability1 >= 45:
             self.ability1_cd = 1
