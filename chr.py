@@ -2345,7 +2345,7 @@ class Lesha(Player, pygame.sprite.Sprite):
         self.screen.blit(self.las.image, self.las.rect)
         if self.ability1 % 7 == 0:
             # def add_particles(self, color, psize, x, y, xsize, ysize, freq, life):
-            self.add_particles((255, 0, 0), 6, self.las.rect.x, self.las.rect.y, 300, 20, 15, 5)
+            self.add_particles((255, 0, 0), 6, self.las.rect.x, self.las.rect.centery - 2, 300, 20, 25, 3)
         self.ability1 += 1
         if self.ability1 >= 45:
             self.ability1_cd = 1
