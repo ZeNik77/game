@@ -1792,9 +1792,11 @@ class Grisha(Player, pygame.sprite.Sprite):
             self.starting_coords = [self.rect.x, self.rect.y]
         self.attackacount += 1
         if self.attackacount % 7 == 0:
-            self.add_particles((255, 0, 0), 6, self.starting_coords[0], self.starting_coords[1] + 20, 385, 60, 25, 3)
+            if self.last:
+                self.add_particles((255, 0, 0), 6, self.starting_coords[0], self.starting_coords[1] + 20, 385, 60, 25, 3)
+            else:
+                self.add_particles((255, 0, 0), 6, self.starting_coords[0] - 300, self.starting_coords[1] + 20, 385, 60, 25, 3)
         if self.attackacount >= 30:
-
             if not self.atk_2_flag:
                 self.atk_2_sound.play()
                 self.atk_2_flag = True
