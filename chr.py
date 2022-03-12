@@ -21,13 +21,17 @@ def text(screen, phrase, coords):
 # ХУЕСОС ИДЕЯ ЗАРУИНИЛА 2 ДНЯ РАБОТЫ -> сделай рекурентно чтобы вызывать вместе с функцией текста
 # экран, размер частиц, ху, размеры, частота вылета новых, счетчик, время в которое можно спавнить новые, время жизни частиц, движущиеся вверх и вниз
 def particle_system_tm(screen, particles):
-    # self.particles.append([particle.image, i, j, 0, random.randint(0, 1), life])
+    # self.particles.append([particle.image, i, j, 0, random.randint(0, 1), life, speed])
     for el in particles:
+        try:
+            speed = el[6]
+        except:
+            speed = 5
         if el[4] == 1:
             if el[3] > el[5]:
                 particles.remove(el)
                 continue
-            el[2] -= 5
+            el[2] -= speed
             el[3] += 1
             r = el[0].get_rect()
             r.x = el[1]
@@ -37,7 +41,7 @@ def particle_system_tm(screen, particles):
             if el[3] > el[5]:
                 particles.remove(el)
                 continue
-            el[2] += 5
+            el[2] += speed
             el[3] += 1
             r = el[0].get_rect()
             r.x = el[1]
@@ -338,14 +342,13 @@ class Player(pygame.sprite.Sprite):
         # print(self.flag_ability)
     def draw(self):
         self.screen.blit(self.image, self.rect)
-    def add_particles(self, color, psize, x, y, xsize, ysize, freq, life):
+    def add_particles(self, color, psize, x, y, xsize, ysize, freq, life, speed=5):
         particle_image = pygame.Surface((psize, psize))
         particle_image.fill(color)
 
         for i in range(x, x + xsize, freq):
             for j in range(y, y + ysize, freq):
-                print(i, j)
-                self.particles.append([particle_image, i, j, 0, random.randint(0, 1), life])
+                self.particles.append([particle_image, i, j, 0, random.randint(0, 1), life, speed])
 
 class Kostya(Player, pygame.sprite.Sprite):
     def __init__(self, screen, colour):
@@ -613,6 +616,8 @@ class Senia(Player, pygame.sprite.Sprite):
         if self.ability3 == 0:
             self.ult_sound.play()
             self.called_phrases.append(['Aaaaand you can\'t use your abilities now', self.rect.centerx, self.rect.y])
+        if self.ability3 % 55 == 0:
+            self.add_particles((255, 0, 0), 6, self.enemy.rect.x, self.enemy.rect.y + 10, 85, 80, 15, 5)
         try:
             self.enemy.ability3_cd = self.enemy.ability3_maxcd // self.blockade_multiplier
         except:
@@ -669,6 +674,7 @@ class Nikita(Player, pygame.sprite.Sprite):
         self.knifes_amount = 0
 
         self.awakening = 0
+        # СУПЕР КОММЕНТ ЧТОБЫ ИЗМЕНЯТЬ ПРОБУЖДЕНИЕ
         self.awakening_phase = 1
         self.awakening_cnt = 0
         self.awakening_cd = 0
@@ -725,6 +731,10 @@ class Nikita(Player, pygame.sprite.Sprite):
                 self.ability2_cd = 0
                 self.awakening_cd = 1
                 self.called_phrases.append(['To the greater form, I go', self.rect.centerx, self.rect.y])
+                if self.awakening_phase == 1:
+                    self.add_particles((255, 70, 0), 7, self.rect.x - 20, self.rect.y + 10, 120, 80, 15, 10)
+                else:
+                    self.add_particles((138, 43, 226), 7, self.rect.x - 20, self.rect.y + 10, 120, 80, 15, 10)
         elif self.awakening_phase == 1:
             self.ability1_name = 'Acceleration'
             self.ability1_maxcd = 180
@@ -801,10 +811,13 @@ class Nikita(Player, pygame.sprite.Sprite):
                 self.permhp = self.hp
             if (keystate[self.abkeys[0]] and not self.flag_ability or self.flag_ability1) and self.ability1_cd == 0:
                 self.epitaph()
+            if keystate[self.abkeys[1]] and self.flag_ability2 == False and self.ability2_cd == 0:
+                self.animcount = 1
             if (keystate[self.abkeys[1]] or self.flag_ability2) and self.ability2_cd == 0:
                 self.dash()
             if keystate[self.abkeys[2]] and not self.flag_ability and self.awakening_cd == 0:
-                self.called_phrases.append(['It\'s time to be the [[BIG SHOT]]', self.rect.centerx, self.rect.y])
+                self.add_particles((139, 0, 255), 7, self.rect.x - 20, self.rect.y + 10, 120, 80, 15, 10)
+                self.called_phrases.append(['It\'s time to be [[BIG SHOT]]', self.rect.centerx, self.rect.y])
                 self.awakening_sound.play()
                 self.dash_hp = self.hp
                 self.awakening_phase = 3
@@ -1243,6 +1256,8 @@ class Nikita(Player, pygame.sprite.Sprite):
             self.screen.blit(self.nebo.image, self.nebo.rect)
             self.screen.blit(self.image, self.rect)
             self.screen.blit(self.enemy.image, self.enemy.rect)
+            if self.ult_cnt % 150 == 0:
+                self.add_particles((138, 43, 226), 25, 0, 0, 1000, 650, 100, 180, speed=2)
             self.ult_cnt += 1
             if self.ult_cnt >= 90:
                 self.ability3_phase = 2
@@ -1263,6 +1278,7 @@ class Nikita(Player, pygame.sprite.Sprite):
             self.ult_cnt += 1
             if self.ult_cnt >= 90:
                 self.ability3_phase = 3
+
         elif self.ability3_phase == 3:
             global HEIGHT
             self.enemy.rect.centery = HEIGHT - 100
@@ -1556,9 +1572,14 @@ class Georg(Player, pygame.sprite.Sprite):
         if self.ability3 == 0:
             self.called_phrases.append(['WARNING, I\'M COMING', self.rect.centerx, self.rect.y])
             self.train_sound1.play()
+        if self.ability3 % 3 == 0:
+            if self.last:
+                self.add_particles((255, 127, 0), 5, self.rect.x, self.rect.y + 10, 10, 80, 7, 4)
+            else:
+                self.add_particles((255, 127, 0), 5, self.rect.x + 85, self.rect.y + 10, 10, 80, 7, 4)
         self.ability3 += 1
         if self.last:
-            if self.ability3 <= 61 and self.enemy.rect.x + 85 < 1000:
+            if self.ability3 <= 61 and self.enemy.rect.x + 85 < 999 or abs(self.rect.x - self.enemy.rect.x) >= 10:
                 self.rect.x += 10
                 hits = pygame.sprite.spritecollide(self, self.enemygroup, False)
                 for hit in hits:
@@ -1566,7 +1587,7 @@ class Georg(Player, pygame.sprite.Sprite):
                     hit.canmove = False
                     hit.flag_ability = True
                     hit.hp -= 2
-            elif self.enemy.rect.x + 85 >= 1000:
+            elif self.enemy.rect.x + 85 >= 1000 and abs(self.rect.x - self.enemy.rect.x) < 10:
                 self.ability3 = 0
                 self.flag_ability3 = False
                 self.flag_ability = False
@@ -1577,7 +1598,7 @@ class Georg(Player, pygame.sprite.Sprite):
                 self.enemy.flag_ability = False
                 self.train_sound2.play()
         else:
-            if self.ability3 <= 61 and self.enemy.rect.x > 0:
+            if self.ability3 <= 61 and self.enemy.rect.x > 1 or abs(self.rect.x - self.enemy.rect.x) >= 10:
                 self.rect.x -= 10
                 hits = pygame.sprite.spritecollide(self, self.enemygroup, False)
                 for hit in hits:
@@ -1587,7 +1608,7 @@ class Georg(Player, pygame.sprite.Sprite):
                     hit.hp -= 2
 
 
-            elif self.enemy.rect.x <= 0:
+            elif self.enemy.rect.x <= 0 and abs(self.rect.x - self.enemy.rect.x) < 10:
                 self.ability3 = 0
                 self.flag_ability3 = False
                 self.flag_ability = False
@@ -1650,10 +1671,13 @@ class Bogdan(Player, pygame.sprite.Sprite):
                 self.ability2_cd = 0
 
     def tp(self):
+        lol = [self.rect.x, self.rect.y]
         self.called_phrases.append(['bye lol', self.rect.centerx, self.rect.y])
         self.rect.x = random.randint(1, 1000)
         self.ability1_cd = 1
         self.tp_sound.play()
+        self.add_particles((139, 25, 155), 5, lol[0], lol[1] + 10, 85, 80, 10, 40)
+        self.add_particles((139, 25, 155), 5, self.rect.x, self.rect.y + 10, 85, 80, 10, 40)
 
     def stun(self):
         self.enemy.canmove = False
@@ -1669,6 +1693,8 @@ class Bogdan(Player, pygame.sprite.Sprite):
         if self.ability2 == 0:
             self.gravity_sound.play()
             self.called_phrases.append(['And now you\'re down', self.rect.centerx, self.rect.y])
+        if self.ability2 % 10 == 0:
+            self.add_particles((139, 25, 155), 6, self.enemy.rect.x, self.enemy.rect.bottomleft[1] - 5, 85, 10, 10, 2)
         self.ability2 += 1
         if self.ability2 == 180:
             self.enemy.rect.y = self.rect.y
@@ -1713,6 +1739,7 @@ class Grisha(Player, pygame.sprite.Sprite):
         self.ability2_desc = 'сильный ближний удар. большой урон если начинать удар близко к врагу(но не в упор)'
         self.ability3_desc = 'остановка времени'
         self.chr_desc = 'без таймстопа он почти ничего не сделает.'
+        self.starting_coords = [0, 0]
 
     def update2(self):
         keystate = pygame.key.get_pressed()
@@ -1744,6 +1771,8 @@ class Grisha(Player, pygame.sprite.Sprite):
             self.shield_sound.play()
             self.called_phrases.append(['HAHAHAHA LOOK AT YOU', self.rect.centerx, self.rect.y])
         self.hp = self.permhp
+        if self.ability1 % 10 == 0:
+            self.add_particles((0, 50, 255), 6, self.rect.topleft[0], self.rect.topleft[1] + 10, 85, 80, 20, 3)
         self.ability1 += 1
         if self.ability1 == 240:
             self.ability1 = 0
@@ -1760,8 +1789,12 @@ class Grisha(Player, pygame.sprite.Sprite):
         img_dir = path.join(path.dirname(__file__), 'Assets')
         if self.attackacount == 15:
             self.called_phrases.append(['YOU\'RE DEAD', self.rect.centerx, self.rect.y])
+            self.starting_coords = [self.rect.x, self.rect.y]
         self.attackacount += 1
+        if self.attackacount % 7 == 0:
+            self.add_particles((255, 0, 0), 6, self.starting_coords[0], self.starting_coords[1] + 20, 385, 60, 25, 3)
         if self.attackacount >= 30:
+
             if not self.atk_2_flag:
                 self.atk_2_sound.play()
                 self.atk_2_flag = True
@@ -2412,10 +2445,14 @@ class Lesha(Player, pygame.sprite.Sprite):
             self.bullets = []
             self.bullet_sprite = []
             self.trajectory = []
+            if self.rect.y % 2 == 0:
+                self.add_particles((239, 114, 21), 3, self.rect.bottomleft[0], self.rect.bottomleft[1] - 10, 85, 20, 5, 1)
             self.rect.y -= 3
             if self.rect.y <= 225:
                 self.ability3_phase = 1
         elif self.ability3_phase == 1:
+            if self.bullet_animcount % 2 == 0:
+                self.add_particles((239, 114, 21), 3, self.rect.bottomleft[0], self.rect.bottomleft[1] - 10, 85, 20, 5, 1)
             self.bullet_animcount += 1
             if self.bullet_animcount % 31 == 0:
                 self.ult_sound.play()
@@ -2451,6 +2488,8 @@ class Lesha(Player, pygame.sprite.Sprite):
             if self.bullet_animcount >= 151:
                 self.ability3_phase = 2
         elif self.ability3_phase == 2:
+            if self.rect.y % 2 == 0:
+                self.add_particles((239, 114, 21), 3, self.rect.bottomleft[0], self.rect.bottomleft[1] - 10, 85, 20, 5, 1)
             if self.rect.center[1] < HEIGHT - 100:
                 self.rect.y += 5
             elif self.rect.center[1] > HEIGHT - 100:
