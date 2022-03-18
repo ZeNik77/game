@@ -18,7 +18,7 @@ def text(screen, phrase, coords):
     t_rect.centerx = coords[0]
     t_rect.y = coords[1] - 10
     screen.blit(t, t_rect)
-# ХУЕСОС ИДЕЯ ЗАРУИНИЛА 2 ДНЯ РАБОТЫ -> сделай рекурентно чтобы вызывать вместе с функцией текста
+# Х**СОС ИДЕЯ ЗАРУИНИЛА 2 ДНЯ РАБОТЫ -> сделай рекурентно чтобы вызывать вместе с функцией текста
 # экран, размер частиц, ху, размеры, частота вылета новых, счетчик, время в которое можно спавнить новые, время жизни частиц, движущиеся вверх и вниз
 def particle_system_tm(screen, particles):
     # self.particles.append([particle.image, i, j, 0, random.randint(0, 1), life, speed])
