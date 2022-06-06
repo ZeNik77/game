@@ -18,7 +18,7 @@ def text(screen, phrase, coords):
     t_rect.centerx = coords[0]
     t_rect.y = coords[1] - 10
     screen.blit(t, t_rect)
-# Х**СОС ИДЕЯ ЗАРУИНИЛА 2 ДНЯ РАБОТЫ -> сделай рекурентно чтобы вызывать вместе с функцией текста
+# Х****С ИДЕЯ ЗАРУИНИЛА 2 ДНЯ РАБОТЫ -> сделай рекурентно чтобы вызывать вместе с функцией текста
 # экран, размер частиц, ху, размеры, частота вылета новых, счетчик, время в которое можно спавнить новые, время жизни частиц, движущиеся вверх и вниз
 def particle_system_tm(screen, particles):
     # self.particles.append([particle.image, i, j, 0, random.randint(0, 1), life, speed])
@@ -47,10 +47,6 @@ def particle_system_tm(screen, particles):
             r.x = el[1]
             r.y = el[2]
             screen.blit(el[0], r)
-
-
-
-    
 
 
 class Player(pygame.sprite.Sprite):
@@ -143,6 +139,7 @@ class Player(pygame.sprite.Sprite):
         self.t_cd3_rect.y = 75 + 55 + 55
 
         self.particles = []
+        self.vadim_multiplier = 1
 
     def attack(self):
         # , special_flags=pygame.BLEND_RGBA_MULT
@@ -318,7 +315,7 @@ class Player(pygame.sprite.Sprite):
                 hits = pygame.sprite.spritecollide(self.attack_r, self.enemygroup, False)
                 for hit in hits:
                     if not hit.blocking or hit.blockdur <= 0:
-                        hit.hp -= self.attack_damage
+                        hit.hp -= self.attack_damage * self.vadim_multiplier
                     else:
                         hit.blockdur -= 1
                 if self.attackacount >= 44:
@@ -350,6 +347,99 @@ class Player(pygame.sprite.Sprite):
             for j in range(y, y + ysize, freq):
                 self.particles.append([particle_image, i, j, 0, random.randint(0, 1), life, speed])
 
+class Vadim(Player, pygame.sprite.Sprite):
+    def __init__(self, screen, colour):
+        self.chr = 'Vadim'
+        self.colour = colour
+        self.ability1_cd = 0
+        self.ability2_cd = 0
+        self.ability3_cd = 0
+        Player.__init__(self, screen, colour)
+        pygame.sprite.Sprite.__init__(self)
+        self.ability1_name = 'enrage'
+        self.ability1_maxcd = 300
+        self.ability2_name = 'heal'
+        self.ability2_maxcd = 480
+        self.ability3_name = 'persistance'
+        self.ability3_maxcd = 600
+        self.ability1_desc = 'введение врага в ярость. повышает его атаку, но сильнее понижает защиту'
+        self.ability2_desc = 'лечение'
+        self.ability3_desc = 'повышение свей защиты'
+        self.chr_desc = 'Вадим - персонаж, манипулирующий своими и вражескими характеристиками'
+
+        img_dir = path.join(path.dirname(__file__), 'Assets')
+
+        self.enrage_sound = pygame.mixer.Sound(path.join(img_dir, 'enrage.wav'))
+        self.heal_sound = pygame.mixer.Sound(path.join(img_dir, 'heal.wav'))
+        self.guard_sound = pygame.mixer.Sound(path.join(img_dir, 'guard.wav'))
+
+        self.ability1 = 0
+        self.flag_ability1 = False
+
+        self.ability3 = 0
+        self.flag_ability3 = False
+    def update2(self):
+        keystate = pygame.key.get_pressed()
+        if (keystate[self.abkeys[2]] or self.flag_ability3) and self.ability3_cd == 0:
+            self.guard()
+        if (keystate[self.abkeys[0]] and not self.flag_ability or self.flag_ability1) and self.ability1_cd == 0:
+            self.enrage()
+        if keystate[self.abkeys[1]] and self.ability2_cd == 0 and not self.flag_ability:
+            self.heal()
+
+        if self.ability1_cd != 0:
+            self.ability1_cd += 1
+            if self.ability1_cd >= self.ability1_maxcd:
+                self.ability1_cd = 0
+        if self.ability2_cd != 0:
+            self.ability2_cd += 1
+            if self.ability2_cd >= self.ability2_maxcd:
+                self.ability2_cd = 0
+        if self.ability3_cd != 0:
+            self.ability3_cd += 1
+            if self.ability3_cd >= self.ability3_maxcd:
+                self.ability3_cd = 0
+
+
+    def enrage(self):
+        self.flag_ability1 = True
+        if self.ability1 == 0:
+            # self.add_particles(self, color, psize, x, y, xsize, ysize, freq, life)
+            self.vadim_multiplier *= 3.25
+            self.enemy.vadim_multiplier *= 2
+            self.called_phrases.append(['That\'s all you\'ve got?', self.rect.x, self.rect.y])
+            self.enrage_sound.play()
+        if self.ability1 % 90 == 0:
+            self.add_particles((255, 0, 0), 5, self.rect.x, self.rect.y, 85, 100, 20, 15, speed=3)
+            self.add_particles((255, 0, 0), 7, self.enemy.rect.x, self.enemy.rect.y, 85, 100, 20, 15, speed=3)
+        self.ability1 += 1
+
+        if self.ability1 == 600:
+            self.vadim_multiplier /= 3.25
+            self.enemy.vadim_multiplier /= 2
+            self.flag_ability1 = False
+            self.ability1 = 0
+            self.ability1_cd = 1
+    def heal(self):
+        self.called_phrases.append(['I feel alive', self.rect.x, self.rect.y])
+        self.hp = min(1000, self.hp + 100)
+        self.ability2_cd = 1
+        self.heal_sound.play()
+        self.add_particles((0, 255, 0), 10, self.rect.x, self.rect.y, 85, 100, 25, 60, speed=1)
+
+    def guard(self):
+        self.flag_ability3 = True
+        if self.ability3 == 0:
+            self.enemy.vadim_multiplier *= 0.3
+            self.called_phrases.append(['ДЯДЯ НЕ НАДО', self.rect.x, self.rect.y])
+            self.guard_sound.play()
+        self.ability3 += 1
+        if self.ability3 == 180:
+            self.enemy.vadim_multiplier /= 0.3
+            self.flag_ability3 = False
+            self.ability3 = 0
+            self.ability3_cd = 1
+
 class Kostya(Player, pygame.sprite.Sprite):
     def __init__(self, screen, colour):
         self.chr = 'Kostya'
@@ -367,7 +457,7 @@ class Kostya(Player, pygame.sprite.Sprite):
         # blockdur -= 2
         self.ability3_maxcd = 240
         self.ability1_desc = 'телепортация в сторону в которую смотрит персонаж'
-        self.ability2_desc = 'телепортация, если враг окажется в промежутке, то урон врагу'
+        self.ability2_desc = 'телепортация, если враг окажется в промежутке, то урон по врагу'
         self.ability3_desc = 'последовательно пускает 3 маленьких ножа'
         self.chr_desc = 'Костя мобильный и быстрый спам персонаж'
         
@@ -419,7 +509,7 @@ class Kostya(Player, pygame.sprite.Sprite):
                 if self.enemy.blocking:
                     self.enemy.blockdur = 0
                 else:
-                    self.enemy.hp -= 50
+                    self.enemy.hp -= 50 * self.vadim_multiplier
                 flag = True
             self.rect.x += 130
 
@@ -428,7 +518,7 @@ class Kostya(Player, pygame.sprite.Sprite):
                 if self.enemy.blocking:
                     self.enemy.blockdur = 0
                 else:
-                    self.enemy.hp -= 50
+                    self.enemy.hp -= 50 * self.vadim_multiplier
                 flag = True
             self.rect.x -= 130
         if flag:
@@ -474,7 +564,7 @@ class Kostya(Player, pygame.sprite.Sprite):
                 if hit.blocking:
                     hit.blockdur -= 2
                 else:
-                    hit.hp -= 10
+                    hit.hp -= 10 * self.vadim_multiplier
             self.screen.blit(knife[0].image, knife[0].rect)
         if self.ability3 >= 140:
             self.flag_ability3 = 0
@@ -598,7 +688,7 @@ class Senia(Player, pygame.sprite.Sprite):
             hits = pygame.sprite.spritecollide(self.blaster_rect, self.enemygroup, False)
             for hit in hits:
                 if not hit.blocking:
-                    hit.hp -= 4 * self.blaster_multiplier
+                    hit.hp -= 4 * self.blaster_multiplier * self.vadim_multiplier
                 else:
                     hit.blockdur -= 1
             self.ability2 += 1
@@ -765,7 +855,7 @@ class Nikita(Player, pygame.sprite.Sprite):
                 self.punch()
             hits = pygame.sprite.spritecollide(self, self.enemygroup, False)
             for hit in hits:
-                hit.hp -= 0.9
+                hit.hp -= 0.9 * self.vadim_multiplier
             if self.awakening_cnt >= 720:
                 self.ability1_name = 'rat'
                 self.ability1_maxcd = 480
@@ -968,7 +1058,7 @@ class Nikita(Player, pygame.sprite.Sprite):
             hits = pygame.sprite.spritecollide(self.attack_r, self.enemygroup, False)
             for hit in hits:
                 if not self.enemy.blocking:
-                    hit.hp -= 3
+                    hit.hp -= 3 * self.vadim_multiplier
                 else:
                     hit.blockdur -= 1
             if self.attackacount >= 44:
@@ -1013,7 +1103,7 @@ class Nikita(Player, pygame.sprite.Sprite):
                 self.attack()
                 hits = pygame.sprite.spritecollide(self.attack_r, self.enemygroup, False)
                 for hit in hits:
-                    hit.hp -= 10
+                    hit.hp -= 10 * self.vadim_multiplier
                 if self.attackacount >= 44:
                     self.ability2_phase = 2
             else:
@@ -1070,7 +1160,7 @@ class Nikita(Player, pygame.sprite.Sprite):
             hits = pygame.sprite.spritecollide(self.attack_r, self.enemygroup, False)
             for hit in hits:
                 if not hit.blocking:
-                    hit.hp -= 70
+                    hit.hp -= 70 * self.vadim_multiplier
                     self.punch_flag = 1
                     self.atk_sound.play()
                 else:
@@ -1353,7 +1443,7 @@ class Nikita(Player, pygame.sprite.Sprite):
                 self.screen.blit(self.moving_right[i].image, self.moving_right[i].rect)
                 hits = pygame.sprite.spritecollide(self.moving_right[i], self.enemygroup, False)
                 for hit in hits:
-                    hit.hp -= 0.1
+                    hit.hp -= 0.1 * self.vadim_multiplier
                 if self.moving_right[i].rect.x >= 800:
                     del self.moving_right[i]
                 i += 1
@@ -1364,7 +1454,7 @@ class Nikita(Player, pygame.sprite.Sprite):
                 self.screen.blit(self.moving_left[i].image, self.moving_left[i].rect)
                 hits = pygame.sprite.spritecollide(self.moving_left[i], self.enemygroup, False)
                 for hit in hits:
-                    hit.hp -= 0.1
+                    hit.hp -= 0.1 * self.vadim_multiplier
                 if self.moving_left[i].rect.x >= 800:
                     del self.moving_left[i]
                 i += 1
@@ -1381,7 +1471,7 @@ class Nikita(Player, pygame.sprite.Sprite):
                     self.ability3_phase = 200
                 hits = pygame.sprite.spritecollide(knife, self.enemygroup, False)
                 for hit in hits:
-                    hit.hp -= 0.2
+                    hit.hp -= 0.2 * self.vadim_multiplier
                 self.screen.blit(knife.image, knife.rect)
 
             for knife in self.knifes_right:
@@ -1390,7 +1480,7 @@ class Nikita(Player, pygame.sprite.Sprite):
                     self.ability3_phase = 200
                 hits = pygame.sprite.spritecollide(knife, self.enemygroup, False)
                 for hit in hits:
-                    hit.hp -= 0.2
+                    hit.hp -= 0.2 * self.vadim_multiplier
                 self.screen.blit(knife.image, knife.rect)
             for knife in self.knifes_left:
                 knife.rect.x += 20
@@ -1398,7 +1488,7 @@ class Nikita(Player, pygame.sprite.Sprite):
                     self.ability3_phase = 200
                 hits = pygame.sprite.spritecollide(knife, self.enemygroup, False)
                 for hit in hits:
-                    hit.hp -= 0.5
+                    hit.hp -= 0.5 * self.vadim_multiplier
                 self.screen.blit(knife.image, knife.rect)
         else:
             self.canmove = True
@@ -1510,7 +1600,7 @@ class Georg(Player, pygame.sprite.Sprite):
         self.screen.blit(self.fires.image, self.fires.rect)
         hits = pygame.sprite.spritecollide(self.fires, self.enemygroup, False)
         for hit in hits:
-            hit.hp -= 10
+            hit.hp -= 10 * self.vadim_multiplier
         if self.ability1 >= 90:
             self.ability1 = 0
             self.flag_ability1 = False
@@ -1555,7 +1645,7 @@ class Georg(Player, pygame.sprite.Sprite):
             hits = pygame.sprite.spritecollide(self.main_bullet, self.enemygroup, False)
             for hit in hits:
                 if not hit.blocking or hit.blockdur <= 0:
-                    hit.hp -= 12.5
+                    hit.hp -= 12.5 * self.vadim_multiplier
                 else:
                     hit.blockdur -= 1
         if self.ability2_phase == 3:
@@ -1586,14 +1676,14 @@ class Georg(Player, pygame.sprite.Sprite):
                     hit.rect.x += 10
                     hit.canmove = False
                     hit.flag_ability = True
-                    hit.hp -= 2
+                    hit.hp -= 2 * self.vadim_multiplier
             elif self.enemy.rect.x + 85 >= 1000 and abs(self.rect.x - self.enemy.rect.x) < 10:
                 self.ability3 = 0
                 self.flag_ability3 = False
                 self.flag_ability = False
                 self.ability3_cd = 1
                 self.ability1_cd = 420
-                self.enemy.hp -= min(350 - 4 * self.ability3, 250)
+                self.enemy.hp -= min(350 - 4 * self.ability3, 250) * self.vadim_multiplier
                 self.enemy.canmove = True
                 self.enemy.flag_ability = False
                 self.train_sound2.play()
@@ -1605,7 +1695,7 @@ class Georg(Player, pygame.sprite.Sprite):
                     hit.rect.x -= 10
                     hit.canmove = False
                     hit.flag_ability = True
-                    hit.hp -= 2
+                    hit.hp -= 2 * self.vadim_multiplier
 
 
             elif self.enemy.rect.x <= 0 and abs(self.rect.x - self.enemy.rect.x) < 10:
@@ -1614,7 +1704,7 @@ class Georg(Player, pygame.sprite.Sprite):
                 self.flag_ability = False
                 self.ability3_cd = 1
                 self.ability1_cd = 420
-                self.enemy.hp -= min(350 - 4 * self.ability3, 250)
+                self.enemy.hp -= min(350 - 4 * self.ability3, 250) * self.vadim_multiplier
                 self.enemy.canmove = True
                 self.enemy.flag_ability = False
                 self.train_sound2.play()
@@ -1814,7 +1904,7 @@ class Grisha(Player, pygame.sprite.Sprite):
         hits = pygame.sprite.spritecollide(self.attack_r, self.enemygroup, False)
         for hit in hits:
             if not hit.blocking or hit.blockdur <= 0:
-                hit.hp -= 5
+                hit.hp -= 5 * self.vadim_multiplier
             else:
                 hit.blockdur -= 1
         if self.attackacount >= 44:
@@ -1852,7 +1942,7 @@ class Grisha(Player, pygame.sprite.Sprite):
             self.enemy.flag_ability = False
             self.flag_ability3 = False
             self.ability3 = 0
-            self.enemy.hp -= self.ab3_difference
+            self.enemy.hp -= self.ab3_difference * self.vadim_multiplier
             self.ab3_permhp = 0
             self.ab3_difference = 0
             self.ability3_cd = 1
@@ -2142,49 +2232,49 @@ class Nikita_Dev(Player, pygame.sprite.Sprite):
             hits = pygame.sprite.spritecollide(self.bone1, self.enemygroup, False)
             for hit in hits:
                 if not hit.blocking or hit.blockdur <= 0:
-                    hit.hp -= 0.25
+                    hit.hp -= 0.25 * self.vadim_multiplier
                 else:
                     hit.blockdur -= 1
             hits = pygame.sprite.spritecollide(self.bone2, self.enemygroup, False)
             for hit in hits:
                 if not hit.blocking or hit.blockdur <= 0:
-                    hit.hp -= 0.25
+                    hit.hp -= 0.25 * self.vadim_multiplier
                 else:
                     hit.blockdur -= 1
             hits = pygame.sprite.spritecollide(self.bone3, self.enemygroup, False)
             for hit in hits:
                 if not hit.blocking or hit.blockdur <= 0:
-                    hit.hp -= 0.25
+                    hit.hp -= 0.25 * self.vadim_multiplier
                 else:
                     hit.blockdur -= 1
             hits = pygame.sprite.spritecollide(self.b1_laser, self.enemygroup, False)
             for hit in hits:
                 if not hit.blocking or hit.blockdur <= 0:
-                    hit.hp -= 0.25
+                    hit.hp -= 0.25 * self.vadim_multiplier
                 else:
                     hit.blockdur -= 1
             hits = pygame.sprite.spritecollide(self.b2_laser, self.enemygroup, False)
             for hit in hits:
                 if not hit.blocking or hit.blockdur <= 0:
-                    hit.hp -= 0.25
+                    hit.hp -= 0.25 * self.vadim_multiplier
                 else:
                     hit.blockdur -= 1
             hits = pygame.sprite.spritecollide(self.b3_laser, self.enemygroup, False)
             for hit in hits:
                 if not hit.blocking or hit.blockdur <= 0:
-                    hit.hp -= 0.25
+                    hit.hp -= 0.25 * self.vadim_multiplier
                 else:
                     hit.blockdur -= 1
             hits = pygame.sprite.spritecollide(self.rhand_blaster, self.enemygroup, False)
             for hit in hits:
                 if not hit.blocking or hit.blockdur <= 0:
-                    hit.hp -= 0.25
+                    hit.hp -= 0.25 * self.vadim_multiplier
                 else:
                     hit.blockdur -= 1
             hits = pygame.sprite.spritecollide(self.lhand_blaster, self.enemygroup, False)
             for hit in hits:
                 if not hit.blocking or hit.blockdur <= 0:
-                    hit.hp -= 0.25
+                    hit.hp -= 0.25 * self.vadim_multiplier
                 else:
                     hit.blockdur -= 1
 
@@ -2245,7 +2335,7 @@ class Nikita_Dev(Player, pygame.sprite.Sprite):
                 hits = pygame.sprite.spritecollide(self.knife1, self.enemygroup, False)
                 for hit in hits:
                     if not hit.blocking or hit.blockdur <= 0:
-                        hit.hp -= 1
+                        hit.hp -= 1 * self.vadim_multiplier
                     else:
                         hit.blockdur -= 1
             if self.a2flag2:
@@ -2253,14 +2343,14 @@ class Nikita_Dev(Player, pygame.sprite.Sprite):
                 hits = pygame.sprite.spritecollide(self.knife2, self.enemygroup, False)
                 for hit in hits:
                     if not hit.blocking or hit.blockdur <= 0:
-                        hit.hp -= 1
+                        hit.hp -= 1 * self.vadim_multiplier
                     else:
                         hit.blockdur -= 1
             if self.a2flag3:
                 self.screen.blit(self.knife3.image, self.knife3.rect)
                 hits = pygame.sprite.spritecollide(self.knife3, self.enemygroup, False)
                 for hit in hits:
-                    hit.hp -= 15
+                    hit.hp -= 15 * self.vadim_multiplier
             self.ability2 += 1
             if self.ability2 == 120:
                 self.canmove = True
@@ -2278,7 +2368,7 @@ class Nikita_Dev(Player, pygame.sprite.Sprite):
         self.screen.blit(self.it.image, self.it.rect)
         hits = pygame.sprite.spritecollide(self.it, self.enemygroup, False)
         for hit in hits:
-            hit.hp -= 1.3
+            hit.hp -= 1.3 * self.vadim_multiplier
         if self.ability3 == 240:
             self.flag_ability3 = False
             self.enemy.canmove = True
@@ -2471,7 +2561,7 @@ class Lesha(Player, pygame.sprite.Sprite):
                     hits = pygame.sprite.spritecollide(b, self.enemygroup, False)
                     for hit in hits:
                         if not hit.blocking or hit.blockdur <= 0:
-                            hit.hp -= 0.75
+                            hit.hp -= 0.75 * self.vadim_multiplier
                         else:
                             hit.blockdur -= 1
                     self.screen.blit(b.image, b.rect)
