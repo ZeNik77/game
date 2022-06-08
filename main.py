@@ -23,14 +23,17 @@ clock = pygame.time.Clock()
 img_dir = path.join(path.dirname(__file__), 'Assets')
 
 all_sprites = pygame.sprite.Group()
-player = chr.Lesha(screen, 'blue')
-player2 = chr.Lesha(screen, 'red')
+#chr.Lesha(screen, 'blue')
+#player2 = chr.Lesha(screen, 'red')
 # dummy = chr.Dummy(screen)
 
-flag = True
-select_phase = False
+flag = 1
+select_phase = 1
+starting_screen = pygame.image.load(path.join(img_dir, 'starting_screen.png')).convert()
+starting_screen_rect = starting_screen.get_rect()
 main_menu = pygame.image.load(path.join(img_dir, 'main_menu.png')).convert()
 main_menu_rect = main_menu.get_rect()
+main_menu_rect.x, main_menu_rect.y = 1000, 0
 bg = pygame.image.load(path.join(img_dir, 'image.png')).convert()
 bg_rect = bg.get_rect()
 font = pygame.font.Font(None, 40)
@@ -38,56 +41,19 @@ font_color = (0, 160, 145)
 font_2 = pygame.font.Font(None, 40)
 font_2_color = (255, 10, 100)
 
-if player.chr == 'Nikita_Dev':
-    a = 'NikitaDev'
-    p = 'a.png'
-elif player.chr == 'Lesha':
-    a = 'Lesha'
-    p = 'lesha.png'
+font_menu = pygame.font.Font(None, 32)
+font_menu_color = (255, 153, 0)
+t_main_menu = font_menu.render('Player ' + str(select_phase) + ', choose the character. Arrows to navigate, "O" to show description', True, font_menu_color)
+t_main_menu_rect = t_main_menu.get_rect()
+t_main_menu_rect.x, t_main_menu_rect.y = 1060, -50
 
-if player2.chr == 'Nikita_Dev':
-    a2 = 'NikitaDev'
-    p2 = 'gaster.png'
-elif player2.chr == 'Lesha':
-    a2 = 'Lesha'
-    p2 = 'lesha.png'
-
-chr_1 = pygame.image.load(path.join(img_dir, p)).convert()
-chr1_rect = chr_1.get_rect()
-chr1_rect.centerx = 120
-chr1_rect.centery = 150
-
-chr_2 = pygame.image.load(path.join(img_dir, p2)).convert()
-chr2_rect = chr_2.get_rect()
-chr2_rect.centerx = WIDTH - 120
-chr2_rect.centery = 150
-
-t_chr1 = font.render('Player 1: '+ a, True, font_color)
-t_chr1_rect = t_chr1.get_rect()
-t_chr1_rect.x = 20
-t_chr1_rect.centery = 30
-
-t_chr2 = font_2.render('Player 2: '+ a2, True, font_2_color)
-t_chr2_rect = t_chr2.get_rect()
-t_chr2_rect.centerx = WIDTH - 170
-t_chr2_rect.centery = 30
 
 font2 = pygame.font.Font(None, 50)
-font2_color = (0,255,220)
-font2_background = (0,0,0)
-t = font2.render("game xd. press z to start, o for character selection", True, font2_color, font2_background)
+font2_color = (0,200,150)
+t = font2.render("game xd. press z to proceed(OMG Z??????)", True, font2_color)
 t_rect = t.get_rect()
-t_rect.centerx, t_rect.centery = 500, 50
-
-font3 = pygame.font.Font(None, 35)
-font3_color = (0,255,255)
-if not select_phase:
-    c = 'first'
-else:
-    c = 'second'
-t_choice = font3.render("space for changing player, 1 - NikitaDev, 2 - Lesha, current: " + c + ' z to start', True, font2_color)
-t_choice_rect = t.get_rect()
-t_choice_rect.centerx, t_rect.centery = 450, 30
+t_rect.centerx, t_rect.centery = 500, -10
+'''
 player1_group = pygame.sprite.Group()
 player1_group.add(player)
 player2_group = pygame.sprite.Group()
@@ -96,303 +62,58 @@ player.enemy = player2
 player2.enemy = player
 player.enemygroup = player2_group
 player2.enemygroup = player1_group
-
-# 320 строка
+'''
 font_desc = pygame.font.Font(None, 25)
 font_desc_color = (0, 255, 240)
-t_chrDesc = font_desc.render('', True, font_desc_color)
-t_chrDesc_rect = t_chrDesc.get_rect()
-t_ab1Desc = font_desc.render('', True, font_desc_color)
-t_ab1Desc_rect = t_ab1Desc.get_rect()
-t_ab2Desc = font_desc.render('', True, font_desc_color)
-t_ab2Desc_rect = t_ab2Desc.get_rect()
-t_ab3Desc = font_desc.render('', True, font_desc_color)
-t_ab3Desc_rect = t_ab3Desc.get_rect()
 
+curchr = 1
+chrs = ['', 'NikitaDev', 'Lesha', 'Grisha', 'Bogdan', 'Georg', 'Nikita', 'Senia', 'Kostya', 'Vadim']
+classes = ['', chr.Player, chr.Lesha, chr.Grisha, chr.Bogdan, chr.Georg, chr.Nikita, chr.Senia, chr.Kostya, chr.Vadim]
+imgs = ['', 'Nikita.png', 'lesha.png', 'Grisha.png', 'Bogdan.png', 'Georg.png', 'Nikita.png', 'Senia.png', 'Kostya.png', 'Vadim.png']
 
+font3 = pygame.font.Font(None, 30)
+font3_color = (0, 204, 0)
+t_chr = font.render('< '+chrs[curchr]+' >', True, font3_color)
+t_chr_rect = t_chr.get_rect()
+t_chr_rect.centerx = 450
+t_chr_rect.y = 350
+
+select_cd = 1
 # bullet1 = chr.TestingBullet(enemygroup=player1_group, screen=screen, speed=10, x=540)
 
 # Цикл игры
-running = True
-while running:
-    clock.tick(FPS)
-    for event in pygame.event.get():
-        if event.type == pygame.QUIT:
-            running = False
-        if event.type == pygame.KEYDOWN:
-            if event.key == pygame.K_z and flag:
-                flag = 0
-            if event.key == pygame.K_o and flag:
-                flag = 2
-            if event.key == pygame.K_3 and flag == 2:
+'''
                 if not select_phase:
-                    a = 'Grisha'
-                    p = 'Grisha.png'
-                    player = chr.Grisha(screen, 'blue')
-                    player.enemy = player2
-                    player2.enemy = player
-                    player1_group = pygame.sprite.Group()
-                    player1_group.add(player)
+                    if not select_phase:
+                        a = 'NikitaDev'
+                        p = 'Nikita.png'
+                        player = chr.Player(screen, 'blue')
+                        player.enemy = player2
+                        player2.enemy = player
+                        player1_group = pygame.sprite.Group()
+                        player1_group.add(player)
 
-                    player2_group = pygame.sprite.Group()
-                    player2_group.add(player2)
+                        player2_group = pygame.sprite.Group()
+                        player2_group.add(player2)
 
-                    player.enemygroup = player2_group
-                    player2.enemygroup = player1_group
-                else:
-                    a2 = 'Grisha'
-                    p2 = 'Grisha.png'
-                    player2 = chr.Grisha(screen, 'red')
-                    player.enemy = player2
-                    player2.enemy = player
-                    player1_group = pygame.sprite.Group()
-                    player1_group.add(player)
+                        player.enemygroup = player2_group
+                        player2.enemygroup = player1_group
+                    else:
+                        a2 = 'NikitaDev'
+                        p2 = 'Nikita.png'
+                        player2 = chr.Player(screen, 'red')
+                        player.enemy = player2
+                        player2.enemy = player
+                        player1_group = pygame.sprite.Group()
+                        player1_group.add(player)
 
-                    player2_group = pygame.sprite.Group()
-                    player2_group.add(player2)
+                        player2_group = pygame.sprite.Group()
+                        player2_group.add(player2)
 
-                    player.enemygroup = player2_group
-                    player2.enemygroup = player1_group
-            if event.key == pygame.K_4 and flag == 2:
-                if not select_phase:
-                    a = 'Bogdan'
-                    p = 'Bogdan.png'
-                    player = chr.Bogdan(screen, 'blue')
-                    player.enemy = player2
-                    player2.enemy = player
-                    player1_group = pygame.sprite.Group()
-                    player1_group.add(player)
-
-                    player2_group = pygame.sprite.Group()
-                    player2_group.add(player2)
-
-                    player.enemygroup = player2_group
-                    player2.enemygroup = player1_group
-                else:
-                    a2 = 'Bogdan'
-                    p2 = 'Bogdan.png'
-                    player2 = chr.Bogdan(screen, 'red')
-                    player.enemy = player2
-                    player2.enemy = player
-                    player1_group = pygame.sprite.Group()
-                    player1_group.add(player)
-
-                    player2_group = pygame.sprite.Group()
-                    player2_group.add(player2)
-
-                    player.enemygroup = player2_group
-                    player2.enemygroup = player1_group
-            '''
-            if event.key == pygame.K_1 and flag == 2:
-                if not select_phase:
-                    a = 'NikitaDev'
-                    p = 'gaster.png'
-                    player = chr.Nikita_Dev(screen, 'blue')
-                    player.enemy = player2
-                    player2.enemy = player
-                    player1_group = pygame.sprite.Group()
-                    player1_group.add(player)
-                    
-                    player2_group = pygame.sprite.Group()
-                    player2_group.add(player2)
-                    
-                    player.enemygroup = player2_group
-                    player2.enemygroup = player1_group
-                else:
-                    a2 = 'NikitaDev'
-                    p2 = 'gaster.png'
-                    player2 = chr.Nikita_Dev(screen, 'red')
-                    player.enemy = player2
-                    player2.enemy = player
-                    player1_group = pygame.sprite.Group()
-                    player1_group.add(player)
-                    
-                    player2_group = pygame.sprite.Group()
-                    player2_group.add(player2)
-                    
-                    player.enemygroup = player2_group
-                    player2.enemygroup = player1_group
-            '''
-            if event.key == pygame.K_5 and flag == 2:
-                if not select_phase:
-                    a = 'Georg'
-                    p = 'Georg.png'
-                    player = chr.Georg(screen, 'blue')
-                    player.enemy = player2
-                    player2.enemy = player
-                    player1_group = pygame.sprite.Group()
-                    player1_group.add(player)
-
-                    player2_group = pygame.sprite.Group()
-                    player2_group.add(player2)
-
-                    player.enemygroup = player2_group
-                    player2.enemygroup = player1_group
-                else:
-                    a2 = 'Georg'
-                    p2 = 'Georg.png'
-                    player2 = chr.Georg(screen, 'red')
-                    player.enemy = player2
-                    player2.enemy = player
-                    player1_group = pygame.sprite.Group()
-                    player1_group.add(player)
-
-                    player2_group = pygame.sprite.Group()
-                    player2_group.add(player2)
-
-                    player.enemygroup = player2_group
-                    player2.enemygroup = player1_group
-            if event.key == pygame.K_6 and flag == 2:
-                if not select_phase:
-                    a = 'Nikita'
-                    p = 'Nikita.png'
-                    player = chr.Nikita(screen, 'blue')
-                    player.enemy = player2
-                    player2.enemy = player
-                    player1_group = pygame.sprite.Group()
-                    player1_group.add(player)
-
-                    player2_group = pygame.sprite.Group()
-                    player2_group.add(player2)
-
-                    player.enemygroup = player2_group
-                    player2.enemygroup = player1_group
-                else:
-                    a2 = 'Nikita'
-                    p2 = 'Nikita.png'
-                    player2 = chr.Nikita(screen, 'red')
-                    player.enemy = player2
-                    player2.enemy = player
-                    player1_group = pygame.sprite.Group()
-                    player1_group.add(player)
-
-                    player2_group = pygame.sprite.Group()
-                    player2_group.add(player2)
-
-                    player.enemygroup = player2_group
-                    player2.enemygroup = player1_group
-            if event.key == pygame.K_7 and flag == 2:
-                if not select_phase:
-                    a = 'Senia'
-                    p = 'Senia.png'
-                    player = chr.Senia(screen, 'blue')
-                    player.enemy = player2
-                    player2.enemy = player
-                    player1_group = pygame.sprite.Group()
-                    player1_group.add(player)
-
-                    player2_group = pygame.sprite.Group()
-                    player2_group.add(player2)
-
-                    player.enemygroup = player2_group
-                    player2.enemygroup = player1_group
-                else:
-                    a2 = 'Senia'
-                    p2 = 'Senia.png'
-                    player2 = chr.Senia(screen, 'red')
-                    player.enemy = player2
-                    player2.enemy = player
-                    player1_group = pygame.sprite.Group()
-                    player1_group.add(player)
-
-                    player2_group = pygame.sprite.Group()
-                    player2_group.add(player2)
-
-                    player.enemygroup = player2_group
-                    player2.enemygroup = player1_group
-            if event.key == pygame.K_8 and flag == 2:
-                if not select_phase:
-                    a = 'Kostya'
-                    p = 'Kostya.png'
-                    player = chr.Kostya(screen, 'blue')
-                    player.enemy = player2
-                    player2.enemy = player
-                    player1_group = pygame.sprite.Group()
-                    player1_group.add(player)
-
-                    player2_group = pygame.sprite.Group()
-                    player2_group.add(player2)
-
-                    player.enemygroup = player2_group
-                    player2.enemygroup = player1_group
-                else:
-                    a2 = 'Kostya'
-                    p2 = 'Kostya.png'
-                    player2 = chr.Kostya(screen, 'red')
-                    player.enemy = player2
-                    player2.enemy = player
-                    player1_group = pygame.sprite.Group()
-                    player1_group.add(player)
-
-                    player2_group = pygame.sprite.Group()
-                    player2_group.add(player2)
-
-                    player.enemygroup = player2_group
-                    player2.enemygroup = player1_group
-            if event.key == pygame.K_9 and flag == 2:
-                if not select_phase:
-                    a = 'Vadim'
-                    p = 'Vadim.png'
-                    player = chr.Vadim(screen, 'blue')
-                    player.enemy = player2
-                    player2.enemy = player
-                    player1_group = pygame.sprite.Group()
-                    player1_group.add(player)
-
-                    player2_group = pygame.sprite.Group()
-                    player2_group.add(player2)
-
-                    player.enemygroup = player2_group
-                    player2.enemygroup = player1_group
-                else:
-                    a2 = 'Vadim'
-                    p2 = 'Vadim.png'
-                    player2 = chr.Vadim(screen, 'red')
-                    player.enemy = player2
-                    player2.enemy = player
-                    player1_group = pygame.sprite.Group()
-                    player1_group.add(player)
-
-                    player2_group = pygame.sprite.Group()
-                    player2_group.add(player2)
-
-                    player.enemygroup = player2_group
-                    player2.enemygroup = player1_group
-
-
-            if event.key == pygame.K_2 and flag == 2:
-                if not select_phase:
-                    a = 'Lesha'
-                    p = 'lesha.png'
-                    player = chr.Lesha(screen, 'blue')
-                    player.enemy = player2
-                    player2.enemy = player
-                    player1_group = pygame.sprite.Group()
-                    player1_group.add(player)
-
-                    player2_group = pygame.sprite.Group()
-                    player2_group.add(player2)
-
-                    player.enemygroup = player2_group
-                    player2.enemygroup = player1_group
-                else:
-                    a2 = 'Lesha'
-                    p2 = 'lesha.png'
-                    player2 = chr.Lesha(screen, 'red')
-                    player.enemy = player2
-                    player2.enemy = player
-                    player1_group = pygame.sprite.Group()
-                    player1_group.add(player)
-
-                    player2_group = pygame.sprite.Group()
-                    player2_group.add(player2)
-
-                    player.enemygroup = player2_group
-                    player2.enemygroup = player1_group
-            if event.key == pygame.K_SPACE and flag == 2:
-                select_phase = not select_phase
-    if flag == 2:
-        if not select_phase:
+                        player.enemygroup = player2_group
+                        player2.enemygroup = player1_group
+                        
+                        
             font_desc_color = (0, 255, 240)
             t_chrDesc = font_desc.render(player.chr + '        ' + player.chr_desc, True, font_desc_color)
             t_ab1Desc = font_desc.render(player.ability1_name + '        ' + player.ability1_desc, True, font_desc_color)
@@ -401,40 +122,116 @@ while running:
                 t_ab3Desc = font_desc.render(player.ability3_name + '        ' + player.ability3_desc, True, font_desc_color)
             else:
                 t_ab3Desc = font_desc.render('', True, font_desc_color)
-        else:
-            font_desc_color = (255, 10, 100)
-            t_chrDesc = font_desc.render(player2.chr + '        ' + player2.chr_desc, True, font_desc_color)
-            t_ab1Desc = font_desc.render(player2.ability1_name + '        ' + player2.ability1_desc, True, font_desc_color)
-            t_ab2Desc = font_desc.render(player2.ability2_name + '        ' + player2.ability2_desc, True, font_desc_color)
-            if player2.ability3_name != '':
-                t_ab3Desc = font_desc.render(player2.ability3_name + '        ' + player2.ability3_desc, True, font_desc_color)
-            else:
-                t_ab3Desc = font_desc.render('', True, font_desc_color)
-        t_chrDesc_rect.x, t_chrDesc_rect.y = 10, 40
-        t_ab1Desc_rect.x, t_ab1Desc_rect.y = 10, 120
-        t_ab2Desc_rect.x, t_ab2Desc_rect.y = 10, 200
-        t_ab3Desc_rect.x, t_ab3Desc_rect.y = 10, 280
-        chr_1 = pygame.image.load(path.join(img_dir, p)).convert()
-        chr1_rect = chr_1.get_rect()
-        chr1_rect.centerx = 120
-        chr1_rect.centery = 150
+'''
+running = True
+while running:
+    # print(flag, select_phase)
+    clock.tick(FPS)
+    for event in pygame.event.get():
+        if event.type == pygame.QUIT:
+            running = False
+            continue
+        if event.type == pygame.KEYUP:
+            if event.key == pygame.K_z and flag == 1:
+                flag = 2
+                break
+            if event.key == pygame.K_RIGHT and flag == 2:
+                curchr += 1
+                if curchr > len(chrs) - 1:
+                    curchr = 1
+                t_chr = font.render('< '+chrs[curchr]+' >', True, font3_color)
+                t_chr_rect = t_chr.get_rect()
+                t_chr_rect.centerx = 450
+                t_chr_rect.y = 350
+            if event.key == pygame.K_LEFT and flag == 2:
+                curchr -= 1
+                if curchr < 1:
+                    curchr = len(chrs) - 1
+                t_chr = font.render('< ' + chrs[curchr] + ' >', True, font3_color)
+                t_chr_rect = t_chr.get_rect()
+                t_chr_rect.centerx = 450
+                t_chr_rect.y = 350
+            if event.key == pygame.K_z and flag == 2 and select_phase == 1:
+                a = chrs[curchr]
+                p = imgs[curchr]
+                player = classes[curchr](screen, 'blue')
+                select_phase = 2
+                curchr = 1
+                t_main_menu = font_menu.render('Player ' + str(select_phase) + ', choose the character. Arrows to navigate, "O" to show description', True, font_menu_color)
 
-        chr_2 = pygame.image.load(path.join(img_dir, p2)).convert()
-        chr2_rect = chr_2.get_rect()
-        chr2_rect.centerx = WIDTH - 120
-        chr2_rect.centery = 150
+                break
+            if event.key == pygame.K_z and flag == 2 and select_phase == 2:
+                a2 = chrs[curchr]
+                p2 = imgs[curchr]
+                player2 = classes[curchr](screen, 'red')
+                player.enemy = player2
+                player2.enemy = player
+                player1_group = pygame.sprite.Group()
+                player1_group.add(player)
 
-        t_chr1 = font.render('Player 1: ' + a, True, font_color)
-        t_chr1_rect = t_chr1.get_rect()
-        t_chr1_rect.x = 20
-        t_chr1_rect.centery = 30
+                player2_group = pygame.sprite.Group()
+                player2_group.add(player2)
 
-        t_chr2 = font_2.render('Player 2: ' + a2, True, font_2_color)
-        t_chr2_rect = t_chr2.get_rect()
-        t_chr2_rect.right = WIDTH - 20
-        t_chr2_rect.centery = 30
-    # all_sprites.update()
-    screen.fill(BLACK)
+                player.enemygroup = player2_group
+                player2.enemygroup = player1_group
+                chr_1 = pygame.image.load(path.join(img_dir, p)).convert()
+                chr1_rect = chr_1.get_rect()
+                chr1_rect.centerx = 120
+                chr1_rect.centery = 150
+
+                chr_2 = pygame.image.load(path.join(img_dir, p2)).convert()
+                chr2_rect = chr_2.get_rect()
+                chr2_rect.centerx = WIDTH - 120
+                chr2_rect.centery = 150
+
+                t_chr1 = font.render('Player 1: ' + a, True, font_color)
+                t_chr1_rect = t_chr1.get_rect()
+                t_chr1_rect.x = 20
+                t_chr1_rect.centery = 30
+
+                t_chr2 = font_2.render('Player 2: ' + a2, True, font_2_color)
+                t_chr2_rect = t_chr2.get_rect()
+                t_chr2_rect.centerx = WIDTH - 170
+                t_chr2_rect.centery = 30
+
+                flag = 0
+            if event.key == pygame.K_o and flag == 2:
+                flag = 3
+                chr_1 = pygame.image.load(path.join(img_dir, imgs[curchr])).convert()
+                chr1_rect = chr_1.get_rect()
+                chr1_rect.x = 10
+                chr1_rect.y = 10
+                xd = classes[curchr](screen, 'blue')
+                chr_desc = font_desc.render(xd.chr_desc, True, font_desc_color)
+                chr_desc_rect = chr_desc.get_rect()
+                ab1_desc = font_desc.render(xd.ability1_desc, True, font_desc_color)
+                ab1_desc_rect = ab1_desc.get_rect()
+                ab2_desc = font_desc.render(xd.ability2_desc, True, font_desc_color)
+                ab2_desc_rect = ab2_desc.get_rect()
+                ab3_desc = font_desc.render(xd.ability3_desc, True, font_desc_color)
+                ab3_desc_rect = ab3_desc.get_rect()
+                ab1_name = font_desc.render(xd.ability1_name, True, font_desc_color)
+                ab1_name_rect = ab1_name.get_rect()
+                ab2_name = font_desc.render(xd.ability2_name, True, font_desc_color)
+                ab2_name_rect = ab2_name.get_rect()
+                ab3_name = font_desc.render(xd.ability3_name, True, font_desc_color)
+                ab3_name_rect = ab3_name.get_rect()
+
+                chr_desc_rect.x, chr_desc_rect.y = 50, 170-180
+
+                ab1_desc_rect.x, ab1_desc_rect.y = 150-180, 340
+                ab1_name_rect.x, ab1_name_rect.y = 10-180, 340
+
+                ab2_desc_rect.x, ab2_desc_rect.y = 150+180, 410
+                ab2_name_rect.x, ab2_name_rect.y = 10+180, 410
+
+                ab3_desc_rect.x, ab3_desc_rect.y = 150-180, 480
+                ab3_name_rect.x, ab3_name_rect.y = 10-180, 480
+
+
+            if event.key == pygame.K_x and flag == 3:
+                flag = 2
+
     if not flag:
         # 195, 225
         screen.blit(bg, bg_rect)
@@ -503,23 +300,43 @@ while running:
         # bullet1.update()
         screen.blit(chr_1, chr1_rect)
         screen.blit(chr_2, chr2_rect)
-    elif flag == 1:
-        screen.blit(main_menu, main_menu_rect)
+    if flag == 1:
+        screen.blit(starting_screen, starting_screen_rect)
         screen.blit(t, t_rect)
+        if t_rect.y < 50:
+            t_rect.y += 5
     elif flag == 2:
-        screen.fill((50, 50, 50))
-        if not select_phase:
-            c = 'first'
+        screen.blit(main_menu, main_menu_rect)
+        screen.blit(t_main_menu, t_main_menu_rect)
+        if starting_screen_rect.x >= -1000:
+            screen.blit(starting_screen, starting_screen_rect)
+            screen.blit(t, t_rect)
+            starting_screen_rect.x -= 20
+            t_rect.x -= 20
+            main_menu_rect.x -= 20
+            t_main_menu_rect.x -= 20
         else:
-            c = 'second'
-        t_choice = font3.render("space to change player, 1 - NikitaDev, 2 - Lesha, 3 - Grisha, 4 - Bogdan, 5 - Georg, 6 - Nikita, current: " + c + ' z to start', True, font2_color)
-        t_choice_rect = t.get_rect()
-        t_choice_rect.centerx, t_rect.centery = 450, 30
-        screen.blit(t_choice, t_choice_rect)
-        screen.blit(t_chrDesc, t_chrDesc_rect)
-        screen.blit(t_ab1Desc, t_ab1Desc_rect)
-        screen.blit(t_ab2Desc, t_ab2Desc_rect)
-        screen.blit(t_ab3Desc, t_ab3Desc_rect)
+            if t_main_menu_rect.y < 30:
+                t_main_menu_rect.y += 5
+            screen.blit(t_chr, t_chr_rect)
+    elif flag == 3:
+        screen.fill(BLACK)
+        screen.blit(chr_1, chr1_rect)
+        screen.blit(chr_desc, chr_desc_rect)
+        screen.blit(ab1_desc, ab1_desc_rect)
+        screen.blit(ab2_desc, ab2_desc_rect)
+        screen.blit(ab3_desc, ab3_desc_rect)
+        screen.blit(ab1_name, ab1_name_rect)
+        screen.blit(ab2_name, ab2_name_rect)
+        screen.blit(ab3_name, ab3_name_rect)
+        if chr_desc_rect.y < 170:
+            chr_desc_rect.y += 3
+            ab1_desc_rect.x += 3
+            ab1_name_rect.x += 3
+            ab2_desc_rect.x -= 3
+            ab2_name_rect.x -= 3
+            ab3_desc_rect.x += 3
+            ab3_name_rect.x += 3
 
 
 

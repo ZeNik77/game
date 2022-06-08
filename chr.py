@@ -52,6 +52,20 @@ def particle_system_tm(screen, particles):
 class Player(pygame.sprite.Sprite):
 
     def __init__(self, screen, colour):
+        self.chr = 'NikitaDev'
+        self.ability1_name = '-'
+        self.ability2_name = '-'
+        self.ability3_name = '-'
+        self.ability1_desc = ''
+        self.ability2_desc = ''
+        self.ability3_desc = ''
+        self.chr_desc = 'Персонаж без способностей'
+        self.ability1_cd = 0
+        self.ability2_cd = 0
+        self.ability3_cd = 0
+        self.ability1_maxcd = 0
+        self.ability2_maxcd = 0
+        self.ability3_maxcd = 0
         self.called_phrases = []
         self.dur = 0
         self.blockdur = 45
@@ -337,6 +351,8 @@ class Player(pygame.sprite.Sprite):
         if self.rect.left < 0:
             self.rect.left = 0
         # print(self.flag_ability)
+    def update2(self):
+        pass
     def draw(self):
         self.screen.blit(self.image, self.rect)
     def add_particles(self, color, psize, x, y, xsize, ysize, freq, life, speed=5):
@@ -460,7 +476,7 @@ class Kostya(Player, pygame.sprite.Sprite):
         self.ability2_desc = 'телепортация, если враг окажется в промежутке, то урон по врагу'
         self.ability3_desc = 'последовательно пускает 3 маленьких ножа'
         self.chr_desc = 'Костя мобильный и быстрый спам персонаж'
-        
+
         self.knife_flag = False
         self.flag_ability3 = False
         self.knife_cnt = 0
@@ -648,11 +664,12 @@ class Senia(Player, pygame.sprite.Sprite):
                 self.ability3_cd = 0
 
     def improve(self):
-        self.permpermspeed += 0.1
+        self.permpermspeed += 0.05
         self.permattack += 0.3
         self.blaster_multiplier += 0.3
         self.blockade_multiplier += 0.1
         self.ability1_cd = 1
+        self.enemy.vadim_multiplier *= 0.9
         self.improve_sound.play()
         self.called_phrases.append(['New knowledge will someday come in handy', self.rect.centerx, self.rect.y])
 
