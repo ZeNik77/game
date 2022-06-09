@@ -46,87 +46,59 @@ font_menu_color = (255, 153, 0)
 t_main_menu = font_menu.render('Player ' + str(select_phase) + ', choose the character. Arrows to navigate, "O" to show description', True, font_menu_color)
 t_main_menu_rect = t_main_menu.get_rect()
 t_main_menu_rect.x, t_main_menu_rect.y = 1060, -50
-
-
+flag_x = False
+flag_d = False
 font2 = pygame.font.Font(None, 50)
 font2_color = (0,200,150)
 t = font2.render("game xd. press z to proceed(OMG Z??????)", True, font2_color)
 t_rect = t.get_rect()
 t_rect.centerx, t_rect.centery = 500, -10
-'''
-player1_group = pygame.sprite.Group()
-player1_group.add(player)
-player2_group = pygame.sprite.Group()
-player2_group.add(player2)
-player.enemy = player2
-player2.enemy = player
-player.enemygroup = player2_group
-player2.enemygroup = player1_group
-'''
 font_desc = pygame.font.Font(None, 25)
 font_desc_color = (0, 255, 240)
 
 curchr = 1
-chrs = ['', 'NikitaDev', 'Lesha', 'Grisha', 'Bogdan', 'Georg', 'Nikita', 'Senia', 'Kostya', 'Vadim']
+chrs = ['', 'Player', 'Lesha', 'Grisha', 'Bogdan', 'Georg', 'Nikita', 'Senia', 'Kostya', 'Vadim']
 classes = ['', chr.Player, chr.Lesha, chr.Grisha, chr.Bogdan, chr.Georg, chr.Nikita, chr.Senia, chr.Kostya, chr.Vadim]
-imgs = ['', 'Nikita.png', 'lesha.png', 'Grisha.png', 'Bogdan.png', 'Georg.png', 'Nikita.png', 'Senia.png', 'Kostya.png', 'Vadim.png']
+imgs = ['', 'blue1_3.png', 'lesha.png', 'Grisha.png', 'Bogdan.png', 'Georg.png', 'Nikita.png', 'Senia.png', 'Kostya.png', 'Vadim.png']
 
 font3 = pygame.font.Font(None, 30)
 font3_color = (0, 204, 0)
 t_chr = font.render('< '+chrs[curchr]+' >', True, font3_color)
 t_chr_rect = t_chr.get_rect()
-t_chr_rect.centerx = 450
-t_chr_rect.y = 350
+t_chr_rect.centerx = 500
+t_chr_rect.y = 300
 
 select_cd = 1
+info = font_desc.render('X to exit', True, font_desc_color)
+info_rect = info.get_rect()
+info_rect.x = 300
+info_rect.y = 10
+
 # bullet1 = chr.TestingBullet(enemygroup=player1_group, screen=screen, speed=10, x=540)
 
 # Цикл игры
-'''
-                if not select_phase:
-                    if not select_phase:
-                        a = 'NikitaDev'
-                        p = 'Nikita.png'
-                        player = chr.Player(screen, 'blue')
-                        player.enemy = player2
-                        player2.enemy = player
-                        player1_group = pygame.sprite.Group()
-                        player1_group.add(player)
-
-                        player2_group = pygame.sprite.Group()
-                        player2_group.add(player2)
-
-                        player.enemygroup = player2_group
-                        player2.enemygroup = player1_group
-                    else:
-                        a2 = 'NikitaDev'
-                        p2 = 'Nikita.png'
-                        player2 = chr.Player(screen, 'red')
-                        player.enemy = player2
-                        player2.enemy = player
-                        player1_group = pygame.sprite.Group()
-                        player1_group.add(player)
-
-                        player2_group = pygame.sprite.Group()
-                        player2_group.add(player2)
-
-                        player.enemygroup = player2_group
-                        player2.enemygroup = player1_group
-                        
-                        
-            font_desc_color = (0, 255, 240)
-            t_chrDesc = font_desc.render(player.chr + '        ' + player.chr_desc, True, font_desc_color)
-            t_ab1Desc = font_desc.render(player.ability1_name + '        ' + player.ability1_desc, True, font_desc_color)
-            t_ab2Desc = font_desc.render(player.ability2_name + '        ' + player.ability2_desc, True, font_desc_color)
-            if player.ability3_name != '':
-                t_ab3Desc = font_desc.render(player.ability3_name + '        ' + player.ability3_desc, True, font_desc_color)
-            else:
-                t_ab3Desc = font_desc.render('', True, font_desc_color)
-'''
 running = True
 while running:
     # print(flag, select_phase)
     clock.tick(FPS)
+    if flag == 2:
+        if flag_x and flag_d:
+            chrs[1] = 'NikitaDev'
+            classes[1] = chr.Nikita_Dev
+            imgs[1] = 'gaster.png'
+            t_chr = font.render('< ' + chrs[curchr] + ' >', True, font3_color)
+            t_chr_rect = t_chr.get_rect()
+            t_chr_rect.centerx = 500
+            t_chr_rect.y = 300
+
+        else:
+            chrs[1] = 'Player'
+            classes[1] = chr.Player
+            imgs[1] = 'blue1_3.png'
+            t_chr = font.render('< ' + chrs[curchr] + ' >', True, font3_color)
+            t_chr_rect = t_chr.get_rect()
+            t_chr_rect.centerx = 500
+            t_chr_rect.y = 300
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
             running = False
@@ -135,22 +107,36 @@ while running:
             if event.key == pygame.K_z and flag == 1:
                 flag = 2
                 break
+            if event.key == pygame.K_x and flag == 1:
+                if flag_d:
+                    flag_x = False
+                    flag_d = False
+                else:
+                    flag_x = True
+            if event.key == pygame.K_d and flag == 1:
+                if flag_d:
+                    flag_x = False
+                    flag_d = False
+                else:
+                    if flag_x:
+                        flag_d = True
+                        pygame.mixer.Sound(path.join(img_dir, 'teleport.wav')).play()
             if event.key == pygame.K_RIGHT and flag == 2:
                 curchr += 1
                 if curchr > len(chrs) - 1:
                     curchr = 1
                 t_chr = font.render('< '+chrs[curchr]+' >', True, font3_color)
                 t_chr_rect = t_chr.get_rect()
-                t_chr_rect.centerx = 450
-                t_chr_rect.y = 350
+                t_chr_rect.centerx = 500
+                t_chr_rect.y = 300
             if event.key == pygame.K_LEFT and flag == 2:
                 curchr -= 1
                 if curchr < 1:
                     curchr = len(chrs) - 1
                 t_chr = font.render('< ' + chrs[curchr] + ' >', True, font3_color)
                 t_chr_rect = t_chr.get_rect()
-                t_chr_rect.centerx = 450
-                t_chr_rect.y = 350
+                t_chr_rect.centerx = 500
+                t_chr_rect.y = 300
             if event.key == pygame.K_z and flag == 2 and select_phase == 1:
                 a = chrs[curchr]
                 p = imgs[curchr]
@@ -158,6 +144,10 @@ while running:
                 select_phase = 2
                 curchr = 1
                 t_main_menu = font_menu.render('Player ' + str(select_phase) + ', choose the character. Arrows to navigate, "O" to show description', True, font_menu_color)
+                t_chr = font.render('< ' + chrs[curchr] + ' >', True, font3_color)
+                t_chr_rect = t_chr.get_rect()
+                t_chr_rect.centerx = 500
+                t_chr_rect.y = 300
 
                 break
             if event.key == pygame.K_z and flag == 2 and select_phase == 2:
@@ -194,6 +184,7 @@ while running:
                 t_chr2_rect.centerx = WIDTH - 170
                 t_chr2_rect.centery = 30
 
+
                 flag = 0
             if event.key == pygame.K_o and flag == 2:
                 flag = 3
@@ -227,7 +218,6 @@ while running:
 
                 ab3_desc_rect.x, ab3_desc_rect.y = 150-180, 480
                 ab3_name_rect.x, ab3_name_rect.y = 10-180, 480
-
 
             if event.key == pygame.K_x and flag == 3:
                 flag = 2
@@ -329,6 +319,7 @@ while running:
         screen.blit(ab1_name, ab1_name_rect)
         screen.blit(ab2_name, ab2_name_rect)
         screen.blit(ab3_name, ab3_name_rect)
+        screen.blit(info, info_rect)
         if chr_desc_rect.y < 170:
             chr_desc_rect.y += 3
             ab1_desc_rect.x += 3
@@ -337,10 +328,5 @@ while running:
             ab2_name_rect.x -= 3
             ab3_desc_rect.x += 3
             ab3_name_rect.x += 3
-
-
-
     pygame.display.update()
-
-
 pygame.quit()
