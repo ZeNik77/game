@@ -2,6 +2,7 @@ import pygame
 from os import path
 from PIL import Image as image
 import chr
+import os
 from chr import time
 #import io
 WIDTH = 1000
@@ -74,6 +75,8 @@ info_rect = info.get_rect()
 info_rect.x = 300
 info_rect.y = 10
 
+pygame.mixer.music.load(path.join(img_dir, 'menu.wav'))
+pygame.mixer.music.play(loops=999)
 # bullet1 = chr.TestingBullet(enemygroup=player1_group, screen=screen, speed=10, x=540)
 
 # Цикл игры
@@ -223,7 +226,8 @@ while running:
                 flag = 2
 
     if not flag:
-        # 195, 225
+        #pygame.mixer.music.load(path.join(img_dir, '.mp3'))
+        pygame.mixer.music.stop()
         screen.blit(bg, bg_rect)
         screen.blit(t_chr1, t_chr1_rect)
         screen.blit(t_chr2, t_chr2_rect)

@@ -2347,7 +2347,7 @@ class Nikita_Dev(Player, pygame.sprite.Sprite):
             self.knife3.rect.centerx = self.enemy.rect.centerx
             self.knife3.rect.y = self.enemy.rect.y - 120 - 60
             if self.ability2 == 0:
-                self.called_phrases.append(['RUN INTO THE KNIVES AHAHAHA', self.rect.centerx, self.rect.y])
+                self.called_phrases.append(['RUN INTO THE KNIVES HAHAHA', self.rect.centerx, self.rect.y])
             self.ability2 += 1
 
             if self.ability2 == 20:
