@@ -1,4 +1,10 @@
-[33mcommit 09358c9fd51a88f8670e9f46ad2473b56a389d15[m[33m ([m[1;36mHEAD -> [m[1;32mmain[m[33m, [m[1;31morigin/main[m[33m, [m[1;31morigin/HEAD[m[33m, [m[1;32mtime_machine[m[33m)[m
+[33mcommit 5b8dd479a6dd5b969922f70b9d71cddd3b4b68f9[m[33m ([m[1;36mHEAD -> [m[1;32mmain[m[33m)[m
+Author: ZeNik77 <nikitkazel@gmail.com>
+Date:   Sun Oct 23 07:44:54 2022 +0200
+
+    wanna go back in time so commit
+
+[33mcommit 09358c9fd51a88f8670e9f46ad2473b56a389d15[m[33m ([m[1;31morigin/main[m[33m, [m[1;31morigin/HEAD[m[33m)[m
 Author: ZeNik77 <42634950+ZeNik77@users.noreply.github.com>
 Date:   Sun Jun 26 22:52:48 2022 +0200
 
@@ -288,4 +294,533 @@ Date:   Fri Dec 24 08:10:20 2021 +0200
     Everything but ult for Senia
 
 [33mcommit 99c9b522692ce27f430fe22c5be7bdb45092bc4b[m
-Author: ZeNi
+Author: ZeNik77 <42634950+ZeNik77@users.noreply.github.com>
+Date:   Sun Dec 19 13:49:39 2021 +0200
+
+    Senia 1
+    
+    every Senia's ability but ult
+
+[33mcommit bd821cfc31af2b108bab8980d4012f9262e25789[m
+Author: ZeNik77 <42634950+ZeNik77@users.noreply.github.com>
+Date:   Tue Dec 14 20:27:30 2021 +0200
+
+    Bugfixes
+    
+    fixed epitaph
+
+[33mcommit 7eb80a8570d19b10b8c38b07b520515325fb84c7[m
+Author: ZeNik77 <42634950+ZeNik77@users.noreply.github.com>
+Date:   Tue Dec 14 17:37:41 2021 +0200
+
+    Nikita
+    
+    Nikita is fully coded into the game
+
+[33mcommit f6118f5fcd3a52ec2505f785a0ad53c081aeaacb[m
+Author: ZeNik77 <42634950+ZeNik77@users.noreply.github.com>
+Date:   Sun Dec 12 19:44:04 2021 +0200
+
+    Update chr.py
+
+[33mcommit d7839ca6a24f04543ce9717863878dc984a829b5[m
+Author: ZeNik77 <42634950+ZeNik77@users.noreply.github.com>
+Date:   Sun Dec 12 18:11:28 2021 +0200
+
+    work on Nikita
+    
+    The only thing remaining is the hard part
+
+[33mcommit ec3b0d23dd5e29ee915df97bf828aa1e64a01ccb[m
+Author: ZeNik77 <42634950+ZeNik77@users.noreply.github.com>
+Date:   Sun Dec 12 16:31:11 2021 +0200
+
+    Concentration
+    
+    Coded Nikita's Concentration into the game, getting ready for the full concentration
+
+[33mcommit 6fb087b7d82e343312ba4972b56754a78edb9eec[m
+Author: ZeNik77 <42634950+ZeNik77@users.noreply.github.com>
+Date:   Sun Dec 12 15:19:52 2021 +0200
+
+    update t x4
+    
+    xd
+
+[33mcommit 119872c929276d2b48b9275e452f922ac133c922[m
+Author: ZeNik77 <42634950+ZeNik77@users.noreply.github.com>
+Date:   Sun Dec 12 14:53:34 2021 +0200
+
+    update t x3
+    
+    xd
+
+[33mcommit 171a30e50c57c6165427a45bd2d379cd53886eaf[m
+Author: ZeNik77 <42634950+ZeNik77@users.noreply.github.com>
+Date:   Sun Dec 12 14:53:09 2021 +0200
+
+    bruh t again
+    
+    bruh
+
+[33mcommit 4c47b229f046257ed6f4344d8df1357a3881d4da[m
+Author: ZeNik77 <42634950+ZeNik77@users.noreply.github.com>
+Date:   Sun Dec 12 14:52:46 2021 +0200
+
+    minor t update
+    
+    P U N C H
+
+[33mcommit 1a3bac820e899d646d7c56d783618ee47b533744[m
+Author: ZeNik77 <42634950+ZeNik77@users.noreply.github.com>
+Date:   Sun Dec 12 14:51:19 2021 +0200
+
+    Create t.txt
+
+[33mcommit 39cbfe76a0c1db6daa01ab5d6cd172759d9b75fe[m
+Author: ZeNik77 <42634950+ZeNik77@users.noreply.github.com>
+Date:   Sun Dec 12 08:49:22 2021 +0200
+
+    Rage
+    
+    Coded Nikita's rage into the game
+
+[33mcommit d2708936d3fb39499f54904e1c1bc59f00a8cf42[m
+Author: ZeNik77 <42634950+ZeNik77@users.noreply.github.com>
+Date:   Sat Dec 11 21:44:08 2021 +0200
+
+    Nikita abilities
+    
+    Non-awakening abilities for Nikita
+
+[33mcommit bb35bc9a01c57af65ca66f249cf03cf6814ba880[m
+Author: ZeNik77 <42634950+ZeNik77@users.noreply.github.com>
+Date:   Sat Dec 11 19:45:29 2021 +0200
+
+    Grisha fix
+    
+    Fixed Grisha getting stuck in block after long attack
+
+[33mcommit 58d42a95cc43d6f5b8caaff2cd6cc70d5e8a5772[m
+Author: ZeNik77 <42634950+ZeNik77@users.noreply.github.com>
+Date:   Sat Dec 11 17:28:28 2021 +0200
+
+    Bogdan block fix
+    
+    ez
+
+[33mcommit bf93a5572f8edd478250c45c3ec321bf97427180[m
+Author: ZeNik77 <42634950+ZeNik77@users.noreply.github.com>
+Date:   Sat Dec 11 16:55:47 2021 +0200
+
+    guard ts fix
+    
+    fixed block working in Grisha's timestop
+
+[33mcommit 0040c19a7f70a6eb544080a2f169db19f178909a[m
+Author: ZeNik77 <42634950+ZeNik77@users.noreply.github.com>
+Date:   Sat Dec 11 16:50:56 2021 +0200
+
+    GUARD REWORK
+    
+    this was easier than i thought
+
+[33mcommit 15cdaf98a140ce359993db84225a20bfde2a031f[m
+Author: ZeNik77 <42634950+ZeNik77@users.noreply.github.com>
+Date:   Sun Dec 5 08:16:03 2021 +0200
+
+    Lesha 2
+    
+    buffed Lesha cuz he was W E A K
+
+[33mcommit e49d0b0d429b6c9804592f049cdf753708d7f052[m
+Author: ZeNik77 <42634950+ZeNik77@users.noreply.github.com>
+Date:   Sat Dec 4 22:50:47 2021 +0200
+
+    Georg
+    
+    (almost) fully implemented Georg
+
+[33mcommit 9282599aae118eca12aa074ab24e05b7bf62051c[m
+Author: ZeNik77 <42634950+ZeNik77@users.noreply.github.com>
+Date:   Tue Nov 16 20:27:45 2021 +0200
+
+    fire-georg
+    
+    coded fire for Georg
+
+[33mcommit 72b054eea733ad9a60bda18fefa6764e014f62c5[m
+Author: ZeNik77 <42634950+ZeNik77@users.noreply.github.com>
+Date:   Thu Nov 4 16:21:26 2021 +0200
+
+    Bogdan
+    
+    Bogdan is fully coded into the game
+
+[33mcommit ae424fb38e65fc68fd6974c6f9c7c6fd54bb9a86[m
+Author: ZeNik77 <42634950+ZeNik77@users.noreply.github.com>
+Date:   Thu Nov 4 08:43:15 2021 +0200
+
+    Grisha
+    
+    Grisha is fully coded into the game
+
+[33mcommit 02ceb669c383d2edb52eb3ba3a154b8005b25c92[m
+Author: ZeNik77 <42634950+ZeNik77@users.noreply.github.com>
+Date:   Wed Nov 3 21:47:25 2021 +0200
+
+    NikitaDev
+    
+    Nikita[Developer mode] is fully coded
+
+[33mcommit 356d2eb52f852d58161ea7b4a17c321124df7480[m
+Author: ZeNik77 <42634950+ZeNik77@users.noreply.github.com>
+Date:   Wed Nov 3 11:19:01 2021 +0200
+
+    OW 5 and KNIFES
+    
+    added 2 attacks to NikitaDev
+
+[33mcommit 29c607c6269cf7f965fde8b78116a277de403924[m
+Author: ZeNik77 <42634950+ZeNik77@users.noreply.github.com>
+Date:   Tue Nov 2 10:46:08 2021 +0200
+
+    fixes 2
+    
+    fixed invincibility if someone takes another character
+
+[33mcommit 9cc957b2db46f53bcd0f12c7574030389a607eca[m
+Author: ZeNik77 <42634950+ZeNik77@users.noreply.github.com>
+Date:   Tue Nov 2 10:27:32 2021 +0200
+
+    healthbars
+    
+    added healthbars
+
+[33mcommit 74e8787d41dd0e0bb9ebe6339a49aae178859215[m
+Author: ZeNik77 <42634950+ZeNik77@users.noreply.github.com>
+Date:   Tue Nov 2 09:34:51 2021 +0200
+
+    fixes
+    
+    player selection fixes
+
+[33mcommit eaf4352096584d29986df7d4392477937c8c589e[m
+Author: ZeNik77 <42634950+ZeNik77@users.noreply.github.com>
+Date:   Tue Nov 2 09:04:02 2021 +0200
+
+    character selection
+
+[33mcommit 3c6ef9868a0e8f7c459bf582814f71171bad112c[m
+Author: ZeNik77 <42634950+ZeNik77@users.noreply.github.com>
+Date:   Mon Nov 1 21:17:30 2021 +0200
+
+    fixes
+    
+    fixed Lesha's slowness effect and 2p mode is ready
+
+[33mcommit d778ef58c9b5bd0945e8a3cb1b6b73824313d01a[m
+Author: ZeNik77 <42634950+ZeNik77@users.noreply.github.com>
+Date:   Mon Nov 1 19:48:42 2021 +0200
+
+    SECOND PLAYER SPRITESSSSS
+    
+    second player sprites are drawn and coded
+
+[33mcommit 014257a8c37e1e52fc6693d426a36aa15ea1993b[m
+Author: ZeNik77 <42634950+ZeNik77@users.noreply.github.com>
+Date:   Mon Nov 1 09:43:24 2021 +0200
+
+    Lesha
+    
+    Lesha's character is done.
+
+[33mcommit fbc05be5dccacefa2016f9d033f410449fe97ec1[m
+Author: ZeNik77 <42634950+ZeNik77@users.noreply.github.com>
+Date:   Mon Nov 1 08:47:58 2021 +0200
+
+    hm
+    
+    nothing
+
+[33mcommit 956a19ac4a5e1ca3dd931b26c1b9949388ed5347[m
+Author: ZeNik77 <42634950+ZeNik77@users.noreply.github.com>
+Date:   Sun Oct 31 20:44:01 2021 +0200
+
+    m
+    
+    some preparations for Lesh's ult
+
+[33mcommit 3154abd958f29303398138b0d0148962fdf3c8a7[m
+Author: ZeNik77 <42634950+ZeNik77@users.noreply.github.com>
+Date:   Sun Oct 31 20:08:59 2021 +0200
+
+    minor
+    
+    lowered maxHP
+
+[33mcommit 11b4b9c00cb0938b978105e16aa8107e15fcbe24[m
+Author: ZeNik77 <42634950+ZeNik77@users.noreply.github.com>
+Date:   Sun Oct 31 19:31:27 2021 +0200
+
+    slowness
+    
+    the second Lesha's ability is coded
+
+[33mcommit 64d51de18fcd8d8849f2f89d21cb6c4fa516aadf[m
+Author: ZeNik77 <42634950+ZeNik77@users.noreply.github.com>
+Date:   Sun Oct 31 18:07:50 2021 +0200
+
+    laser buff
+    
+    added laser cd and length
+
+[33mcommit a13e238322efb2864f5325e8a47f1fc341aa31b9[m
+Author: ZeNik77 <42634950+ZeNik77@users.noreply.github.com>
+Date:   Sun Oct 31 17:22:08 2021 +0200
+
+    first ability
+    
+    added laser
+
+[33mcommit e2096f4eb7f1f9181bc4139b3532beca894a6b3a[m
+Author: ZeNik77 <42634950+ZeNik77@users.noreply.github.com>
+Date:   Sun Oct 31 16:18:15 2021 +0200
+
+    movement 2
+    
+    preparation for 2 players
+
+[33mcommit 959def33dff22d352d6805d7fb33bf623efda07b[m
+Author: ZeNik77 <42634950+ZeNik77@users.noreply.github.com>
+Date:   Sun Oct 31 16:03:19 2021 +0200
+
+    minor
+    
+    minor updates to block
+
+[33mcommit 9ed7c72948404166090ef9c42fe5708990e07063[m
+Author: ZeNik77 <42634950+ZeNik77@users.noreply.github.com>
+Date:   Sun Oct 31 15:16:00 2021 +0200
+
+    block 2
+    
+    fully coded block and Testingbullet
+
+[33mcommit d3890f0a731ec828241b2596320ecdd4dff1c282[m
+Author: ZeNik77 <42634950+ZeNik77@users.noreply.github.com>
+Date:   Sun Oct 31 13:04:56 2021 +0200
+
+    attack 2
+    
+    fully codded attack and hp
+
+[33mcommit 2d9e1d9e67c149f791c7a25325a83213d1ceb366[m
+Author: ZeNik77 <42634950+ZeNik77@users.noreply.github.com>
+Date:   Sun Oct 31 09:22:19 2021 +0200
+
+    attack 1
+    
+    coded attack and rectangle with it
+
+[33mcommit f816fe360d4800101244d1d6fa5378295c49aa30[m
+Author: ZeNik77 <42634950+ZeNik77@users.noreply.github.com>
+Date:   Sun Oct 31 08:51:57 2021 +0200
+
+    attack sprites
+    
+    added attack sprites for blue player
+
+[33mcommit 5adc0009dd8a24978b88198e6c6d9b5d2d536e39[m
+Author: ZeNik77 <42634950+ZeNik77@users.noreply.github.com>
+Date:   Sun Oct 31 08:17:50 2021 +0200
+
+    some chr.cpython-39.pyc
+    
+    who?
+
+[33mcommit 4a22a01f73e3f30ede8ecc4c0374b6a456df1883[m
+Author: ZeNik77 <42634950+ZeNik77@users.noreply.github.com>
+Date:   Sat Oct 30 19:30:19 2021 +0200
+
+    nothing
+    
+    1 ultraminor change
+
+[33mcommit 06dd6d90cc5644328761d9d5e92715bf57674cf4[m
+Author: ZeNik77 <42634950+ZeNik77@users.noreply.github.com>
+Date:   Sat Oct 30 19:24:02 2021 +0200
+
+    block-1
+    
+    creating a rectangle that will block incoming damage
+
+[33mcommit f60a8204418ec4928c9abb5f611736919122a4dc[m
+Author: ZeNik77 <42634950+ZeNik77@users.noreply.github.com>
+Date:   Sat Oct 30 17:41:06 2021 +0200
+
+    minor 2
+    
+    visual blocking, preparing for next changes
+
+[33mcommit ff9164d95f35c527a1295dd00e3deee87213ae24[m
+Author: ZeNik77 <42634950+ZeNik77@users.noreply.github.com>
+Date:   Sat Oct 30 17:05:42 2021 +0200
+
+    minor 1
+    
+    prepared the character choice and minor fixes, updates
+
+[33mcommit 9685975a734a0a1931b98f2f665d546415801adc[m
+Author: ZeNik77 <42634950+ZeNik77@users.noreply.github.com>
+Date:   Sat Oct 30 12:32:05 2021 +0200
+
+    python 3.9
+    
+    changed interpreter due to errors
+
+[33mcommit dfde25b0fa2b47eb3e8c493197a8950053b89b5d[m
+Author: ZeNik77 <42634950+ZeNik77@users.noreply.github.com>
+Date:   Sat Oct 30 08:55:40 2021 +0200
+
+    xd
+    
+    minor fixes
+
+[33mcommit 377bf1333798fddb00cc31c508bae10d591522b8[m
+Author: ZeNik77 <42634950+ZeNik77@users.noreply.github.com>
+Date:   Sat Oct 30 08:28:12 2021 +0200
+
+    abilities blank
+    
+    added keystate() for abilities
+
+[33mcommit 305a8f2380acd0aa1f93e3c93e3bffbee34c25c7[m
+Author: ZeNik77 <42634950+ZeNik77@users.noreply.github.com>
+Date:   Fri Oct 29 22:09:37 2021 +0200
+
+    main menu 1
+    
+    added test main menu
+
+[33mcommit cc0e7bc1d2251b8154d905f2f5c998c4a16926db[m
+Author: ZeNik77 <42634950+ZeNik77@users.noreply.github.com>
+Date:   Fri Oct 29 21:46:52 2021 +0200
+
+    what?
+    
+    some shit
+
+[33mcommit 85e8b103fe1bbfdd664016a18c15466368acdf3e[m
+Author: ZeNik77 <42634950+ZeNik77@users.noreply.github.com>
+Date:   Fri Oct 29 14:43:27 2021 +0200
+
+    chr.py
+    
+    file for character. class Player() is there now
+
+[33mcommit 815befd8906b4939725bf23049e83ae3bcc3c693[m
+Author: ZeNik77 <42634950+ZeNik77@users.noreply.github.com>
+Date:   Fri Oct 29 14:15:40 2021 +0200
+
+    blue1 2
+    
+    coded blue1 anim
+
+[33mcommit b6348df5e64db02212b8059121d8ac091ebcbee0[m
+Author: ZeNik77 <42634950+ZeNik77@users.noreply.github.com>
+Date:   Fri Oct 29 14:13:04 2021 +0200
+
+    blue1
+    
+    sprites for blue1
+
+[33mcommit 8d3cf964fd6a9dc17c1ad452b1aa24a82daa02f5[m
+Author: ZeNik77 <42634950+ZeNik77@users.noreply.github.com>
+Date:   Fri Oct 29 09:48:22 2021 +0200
+
+    blue2 anim 2
+    
+    animation is coded
+
+[33mcommit 0fce856d020e23c22d5eb2323cfc0623364e8680[m
+Author: ZeNik77 <42634950+ZeNik77@users.noreply.github.com>
+Date:   Fri Oct 29 09:21:14 2021 +0200
+
+    blue2 anim
+    
+    full animation for blue2
+
+[33mcommit e29261deccf4230c6671978d645635756925d56b[m
+Author: ZeNik77 <42634950+ZeNik77@users.noreply.github.com>
+Date:   Thu Oct 28 17:43:50 2021 +0200
+
+    sprite rework 2
+    
+    xd
+
+[33mcommit 181b61d68473974f0ffdb767dc8931435dd12649[m
+Author: ZeNik77 <42634950+ZeNik77@users.noreply.github.com>
+Date:   Thu Oct 28 17:36:31 2021 +0200
+
+    sprite-rework
+    
+    added blue sprite
+
+[33mcommit 1518422dc8c5a8e47890aad22b64fc2189228b47[m
+Author: ZeNik77 <42634950+ZeNik77@users.noreply.github.com>
+Date:   Thu Oct 28 14:20:26 2021 +0200
+
+    Update main.py
+
+[33mcommit 4ecb15d68593a947418cdb2e0b2fbf5cbbf61079[m
+Author: ZeNik77 <42634950+ZeNik77@users.noreply.github.com>
+Date:   Thu Oct 28 14:09:28 2021 +0200
+
+    updated movement
+    
+    xd
+
+[33mcommit 8d70c0816ce68bd67ad2017a836ed1398ef16022[m
+Author: ZeNik77 <42634950+ZeNik77@users.noreply.github.com>
+Date:   Thu Oct 28 13:10:46 2021 +0200
+
+    commit1
+    
+    movement + sprite updates
+
+[33mcommit d93c2dac1508127dfd559cd9ce1f7ee0fefda7c9[m
+Author: ZeNik77 <42634950+ZeNik77@users.noreply.github.com>
+Date:   Thu Oct 28 11:47:08 2021 +0200
+
+    +sprites
+    
+    xd
+
+[33mcommit 439405dda0301e4cedad756cd287aeb8042aa7f3[m
+Author: ZeNik77 <42634950+ZeNik77@users.noreply.github.com>
+Date:   Thu Oct 28 11:18:28 2021 +0200
+
+    player sprite 1
+
+[33mcommit 9bd9249f337c9684045304aa464082f116c990af[m
+Author: ZeNik77 <42634950+ZeNik77@users.noreply.github.com>
+Date:   Thu Oct 28 11:16:37 2021 +0200
+
+    venv
+    
+    for pycharm
+
+[33mcommit 977aa63b17bb492af93278c544f2852ef880f3f3[m
+Author: ZeNik77 <42634950+ZeNik77@users.noreply.github.com>
+Date:   Thu Oct 28 11:06:48 2021 +0200
+
+    first commit
+    
+    xd
+
+[33mcommit 6bc4122e0629c4a4e55aeaad91e5c11539c43af0[m
+Author: ZeNik77 <42634950+ZeNik77@users.noreply.github.com>
+Date:   Thu Oct 28 12:03:57 2021 +0300
+
+    Initial commit
