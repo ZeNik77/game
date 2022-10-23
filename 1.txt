@@ -1,0 +1,291 @@
+[33mcommit 09358c9fd51a88f8670e9f46ad2473b56a389d15[m[33m ([m[1;36mHEAD -> [m[1;32mmain[m[33m, [m[1;31morigin/main[m[33m, [m[1;31morigin/HEAD[m[33m, [m[1;32mtime_machine[m[33m)[m
+Author: ZeNik77 <42634950+ZeNik77@users.noreply.github.com>
+Date:   Sun Jun 26 22:52:48 2022 +0200
+
+    Update menu.wav
+    
+    added 3 notes and now it kinda sounds better
+
+[33mcommit d313c8e3e06e66af057ad57b55e750dac4af1857[m
+Author: ZeNik77 <42634950+ZeNik77@users.noreply.github.com>
+Date:   Sun Jun 26 22:09:28 2022 +0200
+
+    main menu music
+    
+    added crappy placeholder for the main menu music
+
+[33mcommit 25029de07fb74a916dea5b3f6b5b6da74ac0de50[m
+Author: ZeNik77 <42634950+ZeNik77@users.noreply.github.com>
+Date:   Thu Jun 9 09:51:42 2022 +0200
+
+    NikitaDev revival
+    
+    NikitaDev is back as an easter egg
+
+[33mcommit f15fe79cbeda5a787e9fca2db2f791ce60a4169b[m
+Author: ZeNik77 <42634950+ZeNik77@users.noreply.github.com>
+Date:   Wed Jun 8 20:20:56 2022 +0200
+
+    main menu + minor changes
+    
+    changed senia a bit and improved main menu
+
+[33mcommit 6394ad92ea525ebcb6e6979d9b14c6acb4ca4723[m
+Author: ZeNik77 <42634950+ZeNik77@users.noreply.github.com>
+Date:   Mon Jun 6 10:21:18 2022 +0200
+
+    Vadim
+    
+    Coded Vadim into the game
+
+[33mcommit c1cbb9c9d8e569a8612a11b25fe614822b980262[m
+Author: ZeNik77 <42634950+ZeNik77@users.noreply.github.com>
+Date:   Fri Mar 18 19:18:39 2022 +0200
+
+    FIX
+    
+    swearing's not allowed. even in the code comments
+
+[33mcommit aa582b8963dcf453cf740de2e11766f0bbb0215a[m
+Author: ZeNik77 <42634950+ZeNik77@users.noreply.github.com>
+Date:   Thu Mar 17 07:45:51 2022 +0200
+
+    Nikita
+    
+    Picture update
+
+[33mcommit 7860423fefdf3dc5f48af527e2459ba82ddf7291[m
+Author: ZeNik77 <42634950+ZeNik77@users.noreply.github.com>
+Date:   Sat Mar 12 20:11:03 2022 +0200
+
+    what
+    
+    i'm not sure if there are some changes lol, but if there are, then cool
+
+[33mcommit de620eb1c84595237b010f14c7d4e2d1f7d58c14[m
+Author: ZeNik77 <42634950+ZeNik77@users.noreply.github.com>
+Date:   Sat Mar 12 10:10:24 2022 +0200
+
+    particles
+    
+    added particles for all characters
+
+[33mcommit ffb30871d563471632c097c76116c52764cb65f4[m
+Author: ZeNik77 <42634950+ZeNik77@users.noreply.github.com>
+Date:   Fri Mar 11 19:37:50 2022 +0200
+
+    Lesha's laser particles
+    
+    particles
+
+[33mcommit e008823e651eb43dea50366335f6645fd5cc8062[m
+Author: ZeNik77 <42634950+ZeNik77@users.noreply.github.com>
+Date:   Fri Mar 11 19:35:10 2022 +0200
+
+    UNITY PARTICLE SYSTEM
+    
+    IT'S A GREAT SYSTEM
+
+[33mcommit 877d55c30b4e225ea36c43463c355e6e9013e0f8[m
+Author: ZeNik77 <42634950+ZeNik77@users.noreply.github.com>
+Date:   Tue Mar 8 15:46:28 2022 +0200
+
+    lol not working
+    
+    just to transfer
+
+[33mcommit 3cfaa597bb24e39fea4989cdf4d18ff03221ef52[m
+Author: ZeNik77 <42634950+ZeNik77@users.noreply.github.com>
+Date:   Mon Mar 7 15:27:44 2022 +0200
+
+    global changes 2
+    
+    stronger than previous global changes
+
+[33mcommit 62ca5e582c1b291b3161e2a39a3badb80bc191b6[m
+Author: ZeNik77 <42634950+ZeNik77@users.noreply.github.com>
+Date:   Mon Mar 7 15:23:48 2022 +0200
+
+    global changes
+    
+    stronger than climate change
+
+[33mcommit abecc715498d1cf13f96081cd2458e1082279078[m
+Author: ZeNik77 <42634950+ZeNik77@users.noreply.github.com>
+Date:   Sun Mar 6 08:08:07 2022 +0200
+
+    Grisha ts filter
+    
+    Added monochrome filter to the Grisha's enemy while timestop is running
+
+[33mcommit 51e62c5a6e3011a78781ef9739e8001f050094b7[m
+Author: ZeNik77 <42634950+ZeNik77@users.noreply.github.com>
+Date:   Wed Feb 23 18:39:12 2022 +0200
+
+    working
+    
+    there are comments that will help
+
+[33mcommit 69c6bdddf4d1afc278d2a2129870a3f73a1ce899[m
+Author: ZeNik77 <42634950+ZeNik77@users.noreply.github.com>
+Date:   Fri Jan 28 19:07:23 2022 +0200
+
+    sans's
+    
+    sans'
+
+[33mcommit ad5d506840f0ac36c12d62dea7cde6a2590dbb69[m
+Author: ZeNik77 <42634950+ZeNik77@users.noreply.github.com>
+Date:   Fri Jan 28 18:52:14 2022 +0200
+
+    Kostya fix
+    
+    tried to fix Kostya but fuk
+
+[33mcommit 8e3273c7f182810cb3ef7b52519b154e7cd25339[m
+Author: ZeNik77 <42634950+ZeNik77@users.noreply.github.com>
+Date:   Wed Jan 26 10:36:01 2022 +0200
+
+    LESHA
+    
+    TRIED TO FIX LESHA BUT HE'S FUCKED
+
+[33mcommit fa9c8916b0ab7e1883653588628447567c1d62d1[m
+Author: ZeNik77 <42634950+ZeNik77@users.noreply.github.com>
+Date:   Wed Jan 26 09:40:56 2022 +0200
+
+    Kostya
+    
+    full
+
+[33mcommit d2b9dce10afaaff7002a5a4d56ff6afed993e0a7[m
+Author: ZeNik77 <42634950+ZeNik77@users.noreply.github.com>
+Date:   Tue Jan 25 21:12:06 2022 +0200
+
+    Kostya's ult
+    
+    Kostya is fully done now
+
+[33mcommit 7a559d80c9fea98f5d176adfc0c3dab2372ec82c[m
+Author: ZeNik77 <42634950+ZeNik77@users.noreply.github.com>
+Date:   Sat Jan 22 11:38:49 2022 +0200
+
+    Kostya's abilities
+    
+    Some balance changes and 2 of Kostya's abilities
+
+[33mcommit e21cc23fac7f7234f42ad777fec1091ca3070785[m
+Author: ZeNik77 <42634950+ZeNik77@users.noreply.github.com>
+Date:   Sat Jan 8 22:30:00 2022 +0200
+
+    Balance changes
+    
+    Some Grisha's shield and NIkita's dash changes
+
+[33mcommit cbd7c8293c6c12ebb7c026cd5269e7313b55a2e9[m
+Author: ZeNik77 <42634950+ZeNik77@users.noreply.github.com>
+Date:   Sat Jan 8 12:48:43 2022 +0200
+
+    Text
+    
+    text above the characters when they use abilities
+
+[33mcommit a9756f95835e235379396d8c7563481e9f58cebf[m
+Author: ZeNik77 <42634950+ZeNik77@users.noreply.github.com>
+Date:   Fri Jan 7 18:27:49 2022 +0200
+
+    Hp and bugfixes
+    
+    Doubled hp and fixed some eternal bugs  from the beginning of the game. Probably fixed possibility to use moves in timestop
+
+[33mcommit f040f75a030de2c96eaf1bc1012309d0e06bc428[m
+Author: ZeNik77 <42634950+ZeNik77@users.noreply.github.com>
+Date:   Fri Jan 7 16:23:33 2022 +0200
+
+    Lesha nerf
+    
+    Nerfed Lesha's laser damage
+
+[33mcommit 3790ca026564da0774564e813dd78a5a7f846489[m
+Author: ZeNik77 <42634950+ZeNik77@users.noreply.github.com>
+Date:   Fri Jan 7 16:17:16 2022 +0200
+
+    minor changes
+    
+    made names like more beautiful
+
+[33mcommit 5da348a83f7474c9e6e9208b005b2b8590916595[m
+Author: ZeNik77 <42634950+ZeNik77@users.noreply.github.com>
+Date:   Fri Jan 7 15:22:38 2022 +0200
+
+    Character descriptions
+    
+    Added character description for all characters(but NikitaDev)
+
+[33mcommit e29985c3f6deb779235c1de509a0a3e50f25f449[m
+Author: ZeNik77 <42634950+ZeNik77@users.noreply.github.com>
+Date:   Thu Jan 6 22:12:14 2022 +0200
+
+    Cooldowns
+    
+    Cooldowns are added and working now
+    Also nerfed Senia
+
+[33mcommit a3a385a7b61312662dc6e2ba2b43601a5e618c9b[m
+Author: ZeNik77 <42634950+ZeNik77@users.noreply.github.com>
+Date:   Wed Jan 5 09:42:10 2022 +0200
+
+    Some changes
+    
+    Added sounds to the guard, nerfed Georg 2 key kill combo
+
+[33mcommit ad04c9812316854f209e1e9f09597f62f38324b5[m
+Author: ZeNik77 <42634950+ZeNik77@users.noreply.github.com>
+Date:   Tue Jan 4 21:34:30 2022 +0200
+
+    Senia buff + sounds
+    
+    Sounds are fully added(all but NikitaDev) and buffs to the blaster
+
+[33mcommit 00569bad8ef943c283c3a3bdc1a9dd3fa6b3420b[m
+Author: ZeNik77 <42634950+ZeNik77@users.noreply.github.com>
+Date:   Tue Jan 4 20:53:51 2022 +0200
+
+    bruh
+    
+    some cpython crap
+
+[33mcommit 5fe4cc4b70e82d4539dbeee32caa2b62446f9c21[m
+Author: ZeNik77 <42634950+ZeNik77@users.noreply.github.com>
+Date:   Tue Jan 4 20:53:04 2022 +0200
+
+    Sounds for Nikita
+    
+    Sounds for Nikita + minor buffs
+
+[33mcommit 00951b4071be54ac042948692eedd29233e6b664[m
+Author: ZeNik77 <42634950+ZeNik77@users.noreply.github.com>
+Date:   Mon Jan 3 10:44:04 2022 +0200
+
+    some sounds
+    
+    like half of 'em
+
+[33mcommit 6987c22ca201b8dc90c2b44069ddef46f339fe64[m
+Author: ZeNik77 <42634950+ZeNik77@users.noreply.github.com>
+Date:   Sun Jan 2 20:34:28 2022 +0200
+
+    Senia
+    
+    Senia is fully implemented(there may be bugs XD)
+
+[33mcommit 5c7f8d302279552938fffd0a7b35f3d5016881d3[m
+Author: ZeNik77 <42634950+ZeNik77@users.noreply.github.com>
+Date:   Fri Dec 24 08:10:20 2021 +0200
+
+    Almost Senia
+    
+    Everything but ult for Senia
+
+[33mcommit 99c9b522692ce27f430fe22c5be7bdb45092bc4b[m
+Author: ZeNi
